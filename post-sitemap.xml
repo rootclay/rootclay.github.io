@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>http://rootclay.com/2017/05/01/linux_doc_shell/</loc>
+        <lastmod>2017-06-24T13:56:45.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>http://rootclay.com/2017/03/18/hexo-theme-beantech/</loc>
         <lastmod>2017-04-06T07:55:26.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -17,14 +25,6 @@
     <url>
         <loc>http://rootclay.com/2017/05/01/lfi_ssh/</loc>
         <lastmod>2017-03-23T07:06:35.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://rootclay.com/2017/05/01/linux_doc_shell/</loc>
-        <lastmod>2017-01-26T06:10:07.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
