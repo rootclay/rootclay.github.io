@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="sitemap.xsl"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>http://yoursite.com</loc>
+        <loc>http://rootclay.com</loc>
         <changefreq>daily</changefreq>
         <priority>1</priority>
     </url>
 
     <url>
-        <loc>http://yoursite.com/2017/05/01/linux_doc_shell/</loc>
-        <lastmod>2017-06-24T13:56:45.000Z</lastmod>
+        <loc>http://rootclay.com/2017/03/18/linux_doc_shell/</loc>
+        <lastmod>2017-06-24T14:36:50.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>http://yoursite.com/2017/03/18/hexo-theme-beantech/</loc>
+        <loc>http://rootclay.com/2017/03/18/lfi_ssh/</loc>
+        <lastmod>2017-06-24T14:35:27.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.com/2017/06/24/burp/</loc>
+        <lastmod>2017-06-24T14:32:49.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.com/2017/03/18/hexo-theme-beantech/</loc>
         <lastmod>2017-04-06T07:55:26.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>http://yoursite.com/2017/05/01/lfi_ssh/</loc>
-        <lastmod>2017-03-23T07:06:35.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

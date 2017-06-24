@@ -2,15 +2,50 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
-        <loc>http://yoursite.com/tags/Hexo/</loc>
+        <loc>http://rootclay.com/tags/Hexo/</loc>
         <lastmod>2017-04-06T07:55:26.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
-        <loc>http://yoursite.com/tags/Blog/</loc>
+        <loc>http://rootclay.com/tags/Blog/</loc>
         <lastmod>2017-04-06T07:55:26.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://rootclay.com/tags/Tools/</loc>
+        <lastmod>2017-06-24T14:32:49.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://rootclay.com/tags/SSH/</loc>
+        <lastmod>2017-06-24T14:35:27.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://rootclay.com/tags/LFI/</loc>
+        <lastmod>2017-06-24T14:35:27.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://rootclay.com/tags/Web/</loc>
+        <lastmod>2017-06-24T14:36:50.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://rootclay.com/tags/Linux/</loc>
+        <lastmod>2017-06-24T14:36:50.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
