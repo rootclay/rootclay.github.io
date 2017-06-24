@@ -7,14 +7,14 @@
     </url>
     
     <url>
-        <loc>http://rootclay.com/404.html</loc>
-        <lastmod>2017-04-06T07:55:26.000Z</lastmod>
+        <loc>http://rootclay.com/about/</loc>
+        <lastmod>2017-06-24T12:59:32.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
-        <loc>http://rootclay.com/about/</loc>
+        <loc>http://rootclay.com/404.html</loc>
         <lastmod>2017-04-06T07:55:26.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>

