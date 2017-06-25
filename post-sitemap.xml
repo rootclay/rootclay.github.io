@@ -1,38 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="sitemap.xsl"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc>http://rootclay.com</loc>
+        <loc>http://rootclay.github.io</loc>
         <changefreq>daily</changefreq>
         <priority>1</priority>
     </url>
 
     <url>
-        <loc>http://rootclay.com/2017/03/18/linux_doc_shell/</loc>
-        <lastmod>2017-06-24T14:36:50.000Z</lastmod>
+        <loc>http://rootclay.github.io/2017/05/29/%E5%86%85%E7%BD%91/</loc>
+        <lastmod>2017-06-25T09:18:12.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>http://rootclay.com/2017/03/18/lfi_ssh/</loc>
-        <lastmod>2017-06-24T14:35:27.000Z</lastmod>
+        <loc>http://rootclay.github.io/2017/05/29/xxe/</loc>
+        <lastmod>2017-06-25T09:11:15.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>http://rootclay.com/2017/06/24/burp/</loc>
-        <lastmod>2017-06-24T14:32:49.000Z</lastmod>
+        <loc>http://rootclay.github.io/2017/03/19/struts2/</loc>
+        <lastmod>2017-06-25T09:02:16.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>http://rootclay.com/2017/03/18/hexo-theme-beantech/</loc>
-        <lastmod>2017-04-06T07:55:26.000Z</lastmod>
+        <loc>http://rootclay.github.io/2017/04/09/Mysql_oob/</loc>
+        <lastmod>2017-06-25T08:56:51.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/23/mysql%E6%97%A5%E5%BF%97%E5%8C%85%E5%90%AB%E6%8B%BFshell/</loc>
+        <lastmod>2017-06-25T08:54:34.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/15/nmap/</loc>
+        <lastmod>2017-06-25T08:51:07.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/18/Burp_bypass_plugin/</loc>
+        <lastmod>2017-06-25T08:47:21.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/20/docker%E4%B8%89%E5%89%91%E5%AE%A2/</loc>
+        <lastmod>2017-06-25T08:42:00.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/08/dockerfile%E5%9F%BA%E7%A1%80/</loc>
+        <lastmod>2017-06-25T08:39:05.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/08/docker%E4%BA%91%E5%8A%A0%E9%80%9F%E6%96%87%E7%AB%A0/</loc>
+        <lastmod>2017-06-25T08:31:36.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/18/burp/</loc>
+        <lastmod>2017-06-25T08:24:48.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/23/lfi_ssh/</loc>
+        <lastmod>2017-06-25T08:24:47.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/04/21/MySQL%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB%E4%B8%8E%E9%98%B2%E5%BE%A1/</loc>
+        <lastmod>2017-06-25T08:16:58.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/01/26/linux_doc_shell/</loc>
+        <lastmod>2017-06-25T08:10:41.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</loc>
+        <lastmod>2017-06-25T08:10:41.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/01/24/js_hosting/</loc>
+        <lastmod>2017-06-25T08:10:40.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

