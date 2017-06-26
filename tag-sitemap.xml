@@ -37,13 +37,6 @@
     </url>
 
     <url>
-        <loc>http://rootclay.github.io/tags/LFI/</loc>
-        <lastmod>2017-06-25T08:24:47.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://rootclay.github.io/tags/Docker/</loc>
         <lastmod>2017-06-25T08:42:00.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -58,15 +51,22 @@
     </url>
 
     <url>
-        <loc>http://rootclay.github.io/tags/SQL/</loc>
-        <lastmod>2017-06-25T08:56:51.000Z</lastmod>
+        <loc>http://rootclay.github.io/tags/LFI/</loc>
+        <lastmod>2017-06-25T10:02:23.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>http://rootclay.github.io/tags/Web/</loc>
-        <lastmod>2017-06-25T09:18:12.000Z</lastmod>
+        <lastmod>2017-06-25T10:31:10.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/tags/SQL/</loc>
+        <lastmod>2017-06-25T10:31:10.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

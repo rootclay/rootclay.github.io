@@ -7,8 +7,32 @@
     </url>
 
     <url>
-        <loc>http://rootclay.github.io/2017/05/29/%E5%86%85%E7%BD%91/</loc>
-        <lastmod>2017-06-25T09:18:12.000Z</lastmod>
+        <loc>http://rootclay.github.io/2017/05/04/MSSQL%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB%E4%B8%8E%E9%98%B2%E5%BE%A1/</loc>
+        <lastmod>2017-06-25T10:31:10.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/06/01/Esrc%E8%AE%AE%E9%A2%98/</loc>
+        <lastmod>2017-06-25T10:25:14.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/03/15/lfi/</loc>
+        <lastmod>2017-06-25T10:02:23.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/05/10/%E5%86%85%E7%BD%91/</loc>
+        <lastmod>2017-06-25T09:34:13.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

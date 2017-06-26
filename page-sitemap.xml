@@ -7,21 +7,21 @@
     </url>
     
     <url>
+        <loc>http://rootclay.github.io/archive/</loc>
+        <lastmod>2017-06-25T10:33:37.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
         <loc>http://rootclay.github.io/about/</loc>
-        <lastmod>2017-06-24T12:59:32.000Z</lastmod>
+        <lastmod>2017-06-25T10:32:59.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
     
     <url>
         <loc>http://rootclay.github.io/404.html</loc>
-        <lastmod>2017-04-06T07:55:26.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>http://rootclay.github.io/archive/</loc>
         <lastmod>2017-04-06T07:55:26.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
