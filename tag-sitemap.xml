@@ -16,20 +16,6 @@
     </url>
 
     <url>
-        <loc>http://rootclay.github.io/tags/Hexo/</loc>
-        <lastmod>2017-06-25T08:10:41.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>http://rootclay.github.io/tags/Blog/</loc>
-        <lastmod>2017-06-25T08:10:41.000Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>http://rootclay.github.io/tags/SSH/</loc>
         <lastmod>2017-06-25T08:24:47.000Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -66,7 +52,7 @@
 
     <url>
         <loc>http://rootclay.github.io/tags/Web/</loc>
-        <lastmod>2017-07-25T09:26:56.000Z</lastmod>
+        <lastmod>2017-07-25T09:41:38.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

