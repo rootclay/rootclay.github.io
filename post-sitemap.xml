@@ -7,7 +7,15 @@
     </url>
 
     <url>
-        <loc>http://rootclay.github.io/2017/08/02/%E6%97%A5%E5%BF%97%E6%B8%85%E7%90%86/</loc>
+        <loc>http://rootclay.github.io/2017/07/25/msf/</loc>
+        <lastmod>2017-08-07T14:52:43.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>http://rootclay.github.io/2017/08/02/clean_log/</loc>
         <lastmod>2017-08-03T07:37:48.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -23,7 +31,7 @@
     </url>
 
     <url>
-        <loc>http://rootclay.github.io/2017/07/25/%E5%86%85%E7%BD%91%E4%BB%A3%E7%90%86/</loc>
+        <loc>http://rootclay.github.io/2017/07/25/Innet_proxy/</loc>
         <lastmod>2017-08-01T07:16:55.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -55,7 +63,7 @@
     </url>
 
     <url>
-        <loc>http://rootclay.github.io/2017/05/10/%E5%86%85%E7%BD%91/</loc>
+        <loc>http://rootclay.github.io/2017/05/10/Lemon_Intranet/</loc>
         <lastmod>2017-06-25T09:34:13.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
