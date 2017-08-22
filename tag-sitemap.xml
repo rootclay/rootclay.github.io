@@ -51,8 +51,15 @@
     </url>
 
     <url>
+        <loc>http://rootclay.github.io/tags/%E5%86%85%E7%BD%91/</loc>
+        <lastmod>2017-08-21T06:46:56.000Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>http://rootclay.github.io/tags/Web/</loc>
-        <lastmod>2017-08-18T10:13:33.000Z</lastmod>
+        <lastmod>2017-08-21T09:46:59.000Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
