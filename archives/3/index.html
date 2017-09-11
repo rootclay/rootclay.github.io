@@ -209,20 +209,25 @@
 
 <div class="post-preview">
 
-    <a href="/2017/03/15/lfi/">
+    <a href="/2017/03/15/nmap/">
         <h2 class="post-title">
-            FILE INCLUDE
+            HACK LIKE A PRO
         </h2>
         <h3 class="post-subtitle">
-            总结几个协议包含.
+            HACK LIKE A PRO ------- nmap.
         </h3>
         <div class="post-content-preview">
             
-这里就不多BB了，现在是使用到的文件包含多位协议包含，所以这里总结几个协议包含
+本文主要是记录一些自己在学习Nmap的过程中积累的东西，分享出来供大家交流学习
 
-php://
-php://input
-123php://input 是个可以访问请求的原始数据的只读流。 POST 请求的情况下，最好使用 php://input 来代替$HTTP_RAW_POST_DATA，因为它不依赖于特定的 php.ini 指令。 这样的情况下 $HTTP_RAW_POST_DATA ......
+TCP连接过程：三次与四次握手
+
+SYN: (同步序列编号,Synchronize Sequenc7、e Numbers)
+ACK: (确认编号,Acknowledgement Number) 
+FIN: (结束标志,FINish) 
+
+
+首先Client端发送连接请求报文，Server段接受连接后回复ACK......
         </div>
     </a>
     
@@ -234,7 +239,43 @@ php://input
             
               <a href="/tags/#Web" title="Web">Web</a>
             
-              <a href="/tags/#LFI" title="LFI">LFI</a>
+              <a href="/tags/#Tools" title="Tools">Tools</a>
+            
+        </div>
+    
+
+</div>
+<hr>
+
+<div class="post-preview">
+
+    <a href="/2017/03/08/dockerfile基础/">
+        <h2 class="post-title">
+            Dockerfile
+        </h2>
+        <h3 class="post-subtitle">
+            Dockerfile 基础.
+        </h3>
+        <div class="post-content-preview">
+            build context，一个自定义的文件夹，里面放置Dockerfile和一些需要的文件。比如：
+Dockerfile…这个是必须的
+sources.list…自己在官方社区找的ubuntu的源
+12345.├── baseimage│   ├── Dockerfile│   ├── README.md│   ├── sources.list
+制作image有两种方法：
+
+从现有容器通过......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Rootclay on
+            2017-03-08
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#Tools" title="Tools">Tools</a>
+            
+              <a href="/tags/#Docker" title="Docker">Docker</a>
             
         </div>
     
@@ -268,42 +309,6 @@ php://input
 
 
 注册/登录后，进入Docker 镜像仓库 (https://......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Rootclay on
-            2017-03-08
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#Tools" title="Tools">Tools</a>
-            
-              <a href="/tags/#Docker" title="Docker">Docker</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2017/03/08/dockerfile基础/">
-        <h2 class="post-title">
-            Dockerfile
-        </h2>
-        <h3 class="post-subtitle">
-            Dockerfile 基础.
-        </h3>
-        <div class="post-content-preview">
-            build context，一个自定义的文件夹，里面放置Dockerfile和一些需要的文件。比如：
-Dockerfile…这个是必须的
-sources.list…自己在官方社区找的ubuntu的源
-12345.├── baseimage│   ├── Dockerfile│   ├── README.md│   ├── sources.list
-制作image有两种方法：
-
-从现有容器通过......
         </div>
     </a>
     
